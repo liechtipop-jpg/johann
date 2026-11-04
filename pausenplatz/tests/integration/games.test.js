@@ -11,7 +11,7 @@ after(async () => server.close());
 
 const TOTAL = Number(process.env.GAMES_PER_GAME ?? 50);
 
-for (const game of GAMES) {
+for (const game of GAMES.filter((g) => !process.env.GAME_FILTER || process.env.GAME_FILTER.split(',').includes(g.id))) {
   const modes = game.modes.filter((m) => ['1v1', '2v2', '3v3', 'group'].includes(m));
   describe(`${game.name}: ${TOTAL} Partien mit zufälligen Zügen`, { timeout: 600000 }, () => {
     modes.forEach((mode, index) => {

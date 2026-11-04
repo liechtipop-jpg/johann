@@ -2,6 +2,7 @@
 import tictactoe from './tictactoe.js';
 import muehle from './muehle.js';
 import schiffe from './schiffe.js';
+import schach from './schach.js';
 
-export const AI = { tictactoe, muehle, schiffe };
+export const AI = { tictactoe, muehle, schiffe, schach };
 export const hasAi = (gameId) => Boolean(AI[gameId]);

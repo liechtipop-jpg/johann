@@ -60,10 +60,12 @@ export async function playRandom(clients, { seed = 1, timeout = 30000 } = {}) {
   await new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error(`Spiel hängt (Aktionen: ${actions})`)), timeout);
     const step = async (c) => {
-      if (c.busy) return;
+      if (c.busy) return void (c.dirty = true);
       c.busy = true;
       try {
-        for (let guard = 0; guard < 6; guard++) {
+        let errors = 0;
+        for (let guard = 0; guard < 50; guard++) {
+          c.dirty = false;
           const p = c.last;
           if (!p) break;
           if (p.result?.over) {
@@ -74,12 +76,16 @@ export async function playRandom(clients, { seed = 1, timeout = 30000 } = {}) {
             }
             break;
           }
-          if (!p.legal?.length) break;
+          if (!p.legal?.length || (p === c.acted && !c.retry)) {
+            if (!c.dirty) break;
+            continue;
+          }
           const action = randomAction(p.legal, rng);
+          c.acted = p;
           const res = await c.emit('game:action', { action });
           actions++;
-          if (!res.error) break;
-          await wait(5);
+          c.retry = Boolean(res.error) && ++errors < 6;
+          if (res.error) await wait(2);
         }
       } finally {
         c.busy = false;

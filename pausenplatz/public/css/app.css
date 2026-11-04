@@ -215,3 +215,8 @@ dialog.sheet::backdrop { background: rgb(5 7 12 / 0.6); }
 .ship-chip[aria-pressed='true'] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .ship-chip[data-placed='true'] { opacity: 0.7; }
 .ship-bar { display: inline-block; height: 10px; width: calc(var(--len) * 9px); border-radius: 6px; background: #8a97a8; }
+.chess-box { display: grid; gap: 8px; width: min(100%, 640px); }
+.chess { width: 100%; }
+.chess-meta { justify-content: space-between; }
+.captured { font-size: 18px; color: var(--text-2); min-height: 24px; letter-spacing: 1px; }
+.timer.idle { opacity: 0.6; }

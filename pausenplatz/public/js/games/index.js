@@ -3,5 +3,6 @@ export const RENDERERS = {
   tictactoe: () => import('./tictactoe.js'),
   muehle: () => import('./muehle.js'),
   schiffe: () => import('./schiffe.js'),
+  schach: () => import('./schach.js'),
 };
 export const CATEGORY_OF = (game) => game.category;

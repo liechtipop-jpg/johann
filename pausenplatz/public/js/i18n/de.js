@@ -67,6 +67,21 @@ export const de = {
       ],
       reasons: { fleet: 'Alle Schiffe versenkt' },
     },
+    schach: {
+      name: 'Schach', short: 'Der Klassiker – auch als Staffel im Team und gegen den Computer.',
+      options: { time: 'Bedenkzeit' }, values: { time: { none: 'Ohne', '1+0': '1+0', '3+2': '3+2', '5+0': '5+0', '10+0': '10+0', '15+10': '15+10' } },
+      board: 'Schachbrett', colors: ['Weiss', 'Schwarz'], promote: 'Umwandeln in …', captured: 'Geschlagene Figuren',
+      offerDraw: 'Remis anbieten', drawPending: 'Remis angeboten', drawOffered: 'Remis angeboten', accept: 'Annehmen', decline: 'Ablehnen', resign: 'Aufgeben', resignVoted: 'Aufgabe gewünscht', pgn: 'PGN kopieren',
+      rules: [
+        ['Ziel', 'Setz den gegnerischen König matt: Er steht im Schach und kann nicht mehr entkommen.'],
+        ['Züge', 'Tippe eine Figur an (oder zieh sie) – mögliche Züge erscheinen als Punkte. Bauern werden auf der letzten Reihe umgewandelt; du wählst die Figur.'],
+        ['Sonderzüge', 'Rochade (nicht aus dem, durch das oder ins Schach), en passant und Umwandlung sind alle erlaubt.'],
+        ['Remis', 'Patt, dreifache Stellungswiederholung, 50-Züge-Regel, ungenügendes Material oder Einigung.'],
+        ['Bedenkzeit', 'Bei 3+2 hat jede Seite 3 Minuten und bekommt pro Zug 2 Sekunden dazu. Wer die Zeit überschreitet, verliert – ausser der Gegner kann gar nicht mehr mattsetzen.'],
+        ['Staffel (2v2, 3v3)', 'Die Mitglieder eines Teams ziehen reihum für ihre Farbe und dürfen sich im Team-Chat absprechen. Remis und Aufgabe entscheidet die Mehrheit im Team.'],
+      ],
+      reasons: { checkmate: 'Schachmatt', stalemate: 'Patt', insufficient: 'Ungenügendes Material', threefold: 'Dreifache Stellungswiederholung', fifty: '50-Züge-Regel', timeout: 'Zeit abgelaufen', timeoutDraw: 'Zeit abgelaufen, aber kein Matt mehr möglich', resign: 'Aufgabe', agreement: 'Remis vereinbart' },
+    },
     // GAMES_END
   },
 };

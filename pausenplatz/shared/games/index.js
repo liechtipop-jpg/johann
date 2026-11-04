@@ -2,7 +2,8 @@
 import tictactoe from './tictactoe.js';
 import muehle from './muehle.js';
 import schiffe from './schiffe.js';
+import schach from './schach.js';
 
-export const GAMES = [muehle, schiffe, tictactoe];
+export const GAMES = [schach, muehle, schiffe, tictactoe];
 export const GAME_MAP = new Map(GAMES.map((g) => [g.id, g]));
 export const getGame = (id) => GAME_MAP.get(id);
