@@ -36,11 +36,16 @@ export const PROMOTION_SOURCE = {
 } as const;
 
 export const ROUNDING_OPTIONS = [
-  { value: 0.5, label: 'Halbe Noten' },
-  { value: 0.25, label: 'Viertelnoten' },
-  { value: 0.1, label: 'Zehntelnoten' },
-  { value: 0, label: 'Nicht runden' },
+  { value: 0.5, label: 'Halbe Noten', phrase: 'halbe Noten' },
+  { value: 0.25, label: 'Viertelnoten', phrase: 'Viertelnoten' },
+  { value: 0.1, label: 'Zehntelnoten', phrase: 'Zehntelnoten' },
+  { value: 0, label: 'Nicht runden', phrase: 'nicht gerundet' },
 ] as const;
+
+/** «halbe Noten», «Viertelnoten» … für Sätze wie «gerundet auf halbe Noten». */
+export function roundingPhrase(step: number): string {
+  return ROUNDING_OPTIONS.find((o) => o.value === step)?.phrase ?? `${step}er-Schritte`;
+}
 
 export const COMPENSATION_OPTIONS = [
   { value: 2, label: 'Doppelt' },
@@ -62,11 +67,8 @@ export function rulesEqual(a: PromotionRules, b: PromotionRules): boolean {
 /** Regeln in Alltagssprache (für Onboarding und Einstellungen). */
 export function describeRules(rules: PromotionRules): string[] {
   const lines: string[] = [];
-  const rounding = ROUNDING_OPTIONS.find((o) => o.value === rules.roundingStep);
   lines.push(
-    rules.roundingStep > 0
-      ? `Zeugnisnoten werden auf ${rounding ? rounding.label.toLowerCase() : rules.roundingStep} gerundet.`
-      : 'Zeugnisnoten werden nicht gerundet.',
+    rules.roundingStep > 0 ? `Zeugnisnoten werden auf ${roundingPhrase(rules.roundingStep)} gerundet.` : 'Zeugnisnoten werden nicht gerundet.',
   );
   lines.push(
     `Höchstens ${rules.maxInsufficient} ungenügende ${rules.maxInsufficient === 1 ? 'Note' : 'Noten'} (unter ${rules.passMark}) in den Promotionsfächern.`,

@@ -1,10 +1,12 @@
-import { BookOpen } from 'lucide-react';
+import { BookOpen, Trash2 } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { db } from '@/db/db';
 import { useSemesters, useSubjects } from '@/db/hooks';
+import type { Grade } from '@/db/schemas';
 import { patchSetting } from '@/db/settings';
 import { useSettings } from '@/db/settingsContext';
+import { deleteWithUndo } from '@/db/undo';
 import { cn } from '@/lib/cn';
 import { isISODate, semesterForDate, todayISO } from '@/lib/dates';
 import { formatGrade, parseGrade, parseWeight } from '@/lib/format';
@@ -22,22 +24,26 @@ const WEIGHT_PRESETS = [
   { value: '2', label: '2' },
 ];
 
-export function GradeForm({ onDone, onBack }: { onDone: () => void; onBack?: () => void }) {
+interface GradeFormProps {
+  onDone: () => void;
+  onBack?: () => void;
+  /** Bearbeiten statt neu erfassen */
+  initial?: Grade;
+  defaultSubjectId?: string;
+}
+
+export function GradeForm({ onDone, onBack, initial, defaultSubjectId }: GradeFormProps) {
   const settings = useSettings();
   const subjects = useSubjects();
   const semesters = useSemesters();
   const navigate = useNavigate();
-  const [subjectId, setSubjectId] = useState<string | undefined>(settings.ui.lastSubjectId);
-  const [valueText, setValueText] = useState('');
-  const [weightText, setWeightText] = useState('1');
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState(() => todayISO());
-  const [semesterChoice, setSemesterChoice] = useState('auto');
-  const [errors, setErrors] = useState<{
-    value?: string;
-    weight?: string;
-    date?: string;
-  }>({});
+  const [subjectId, setSubjectId] = useState<string | undefined>(initial?.subjectId ?? defaultSubjectId ?? settings.ui.lastSubjectId);
+  const [valueText, setValueText] = useState(initial ? formatGrade(initial.value) : '');
+  const [weightText, setWeightText] = useState(initial ? String(initial.weight) : '1');
+  const [title, setTitle] = useState(initial?.title ?? '');
+  const [date, setDate] = useState(() => initial?.date ?? todayISO());
+  const [semesterChoice, setSemesterChoice] = useState(initial?.semesterId ?? 'auto');
+  const [errors, setErrors] = useState<{ value?: string; weight?: string; date?: string }>({});
 
   if (!subjects || !semesters) return null;
   if (subjects.length === 0 || semesters.length === 0) {
@@ -63,9 +69,11 @@ export function GradeForm({ onDone, onBack }: { onDone: () => void; onBack?: () 
     );
   }
 
+  const editing = Boolean(initial);
+  // Beim Bearbeiten darf auch ein inzwischen archiviertes Fach erhalten bleiben.
   const subject = subjects.find((s) => s.id === subjectId) ?? subjects[0];
   const autoSemester = semesterForDate(semesters, isISODate(date) ? date : todayISO());
-  const semester = semesters.find((s) => s.id === semesterChoice) ?? autoSemester;
+  const semester = semesterChoice === 'auto' ? autoSemester : (semesters.find((s) => s.id === semesterChoice) ?? autoSemester);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
@@ -77,19 +85,17 @@ export function GradeForm({ onDone, onBack }: { onDone: () => void; onBack?: () 
     if (!isISODate(date)) next.date = 'Bitte ein gültiges Datum wählen.';
     setErrors(next);
     if (value === null || weight === null || !isISODate(date) || !semester) return;
-    const id = newId();
-    await db.grades.add({
-      id,
-      subjectId: subject.id,
-      semesterId: semester.id,
-      value,
-      weight,
-      date,
-      title: title.trim() || undefined,
-      createdAt: Date.now(),
-    });
+
+    const data = { subjectId: subject.id, semesterId: semester.id, value, weight, date, title: title.trim() || undefined };
+    if (initial) {
+      await db.grades.put({ ...initial, ...data });
+      toastUndo(`Note ${formatGrade(value)} geändert`, () => db.grades.put(initial));
+    } else {
+      const id = newId();
+      await db.grades.add({ id, ...data, createdAt: Date.now() });
+      toastUndo(`Note ${formatGrade(value)} in ${subject.name} gespeichert`, () => db.grades.delete(id));
+    }
     await patchSetting('ui', { lastSubjectId: subject.id });
-    toastUndo(`Note ${formatGrade(value)} in ${subject.name} gespeichert`, () => db.grades.delete(id));
     onDone();
   }
 
@@ -116,16 +122,14 @@ export function GradeForm({ onDone, onBack }: { onDone: () => void; onBack?: () 
         </Field>
         <Field label="Gewicht" error={errors.weight}>
           {(p) => (
-            <div className="space-y-2">
-              <Input
-                {...p}
-                inputMode="decimal"
-                autoComplete="off"
-                value={weightText}
-                onChange={(e) => setWeightText(e.target.value)}
-                className="h-14 text-center text-2xl font-semibold tabular-nums lg:text-2xl"
-              />
-            </div>
+            <Input
+              {...p}
+              inputMode="decimal"
+              autoComplete="off"
+              value={weightText}
+              onChange={(e) => setWeightText(e.target.value)}
+              className="h-14 text-center text-2xl font-semibold tabular-nums lg:text-2xl"
+            />
           )}
         </Field>
       </div>
@@ -155,9 +159,9 @@ export function GradeForm({ onDone, onBack }: { onDone: () => void; onBack?: () 
         <Field label="Semester">
           {(p) => (
             <Select {...p} value={semesterChoice} onChange={(e) => setSemesterChoice(e.target.value)}>
-              <option value="auto">{autoSemester ? autoSemester.name : 'automatisch'}</option>
+              {!editing && <option value="auto">{autoSemester ? autoSemester.name : 'automatisch'}</option>}
               {semesters
-                .filter((s) => s.id !== autoSemester?.id)
+                .filter((s) => editing || s.id !== autoSemester?.id)
                 .map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
@@ -167,7 +171,21 @@ export function GradeForm({ onDone, onBack }: { onDone: () => void; onBack?: () 
           )}
         </Field>
       </div>
-      <FormActions submitLabel="Note speichern" onBack={onBack} />
+      {initial && (
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Trash2 size={16} aria-hidden />}
+          className="text-danger"
+          onClick={() => {
+            void deleteWithUndo(db.grades, [initial.id], `Note ${formatGrade(initial.value)} gelöscht`);
+            onDone();
+          }}
+        >
+          Note löschen
+        </Button>
+      )}
+      <FormActions submitLabel={editing ? 'Änderungen speichern' : 'Note speichern'} onBack={onBack} />
     </form>
   );
 }

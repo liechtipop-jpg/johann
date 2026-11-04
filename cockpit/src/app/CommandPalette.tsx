@@ -133,7 +133,7 @@ function buildCommands(navigate: NavigateFunction, subjects: Subject[]): Command
       group: 'Fach',
       subject,
       keywords: 'fach noten',
-      run: go(`/noten#fach-${subject.id}`),
+      run: go(`/noten/fach/${subject.id}`),
     })),
   ];
 }

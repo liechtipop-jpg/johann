@@ -98,6 +98,9 @@
     --danger-soft: #f9e3e1;
     --shadow-overlay: 0 1px 2px rgb(29 27 24 / 0.06), 0 12px 32px rgb(29 27 24 / 0.14);
     --toast-action: #aab6ff;
+    /* Diagramme: divergierendes Paar (über / unter der Grenze), geprüft auf Farbsehschwäche */
+    --chart-pos: #3366e0;
+    --chart-neg: #d4483f;
 
     /* Fächerfarben */
     --subject-red: #e5484d;
@@ -138,6 +141,8 @@
     --danger-soft: rgb(255 122 114 / 0.14);
     --shadow-overlay: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px rgb(0 0 0 / 0.5);
     --toast-action: #2e4df2;
+    --chart-pos: #6a84ec;
+    --chart-neg: #e2615a;
 
     --subject-red: #f0686c;
     --subject-orange: #f28a3e;
@@ -190,6 +195,8 @@
   .subject {
     --sc-soft: color-mix(in oklab, var(--sc) 14%, var(--surface));
     --sc-text: color-mix(in oklab, var(--sc) 62%, var(--ink));
+    /* Datenpunkte in Diagrammen: kräftig genug für 3:1 Kontrast auf der Fläche */
+    --sc-mark: color-mix(in oklab, var(--sc) 85%, var(--ink));
   }
 
   /* Fortschrittsring: füllt sich beim Erscheinen und bei Änderungen. */

@@ -13,6 +13,8 @@ import { Toaster } from './ui/Toaster';
 const TodayPage = lazy(() => import('./features/today/TodayPage'));
 const PlannerPage = lazy(() => import('./features/planner/PlannerPage'));
 const GradesPage = lazy(() => import('./features/grades/GradesPage'));
+const SubjectGradesPage = lazy(() => import('./features/grades/SubjectGradesPage'));
+const PromotionPage = lazy(() => import('./features/grades/PromotionPage'));
 const SettingsPage = lazy(() => import('./features/settings/SettingsPage'));
 const OnboardingPage = lazy(() => import('./features/onboarding/OnboardingPage'));
 const MorePage = lazy(() => import('./app/MorePage'));
@@ -34,6 +36,8 @@ const router = createBrowserRouter([
       { index: true, element: <TodayPage /> },
       { path: 'planer', element: <PlannerPage /> },
       { path: 'noten', element: <GradesPage /> },
+      { path: 'noten/fach/:subjectId', element: <SubjectGradesPage /> },
+      { path: 'noten/promotion', element: <PromotionPage /> },
       { path: 'karten', element: <ComingSoon title="Karteikarten" phase={4} icon={Layers} /> },
       { path: 'klavier', element: <ComingSoon title="Klavier" phase={6} icon={Piano} /> },
       { path: 'fokus', element: <ComingSoon title="Fokus-Timer" phase={6} icon={Timer} /> },

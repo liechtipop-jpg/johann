@@ -18,7 +18,7 @@ const TITLES: Record<QuickAddType, string> = { grade: 'Note erfassen', exam: 'Pr
 /** Schnellerfassung: Plus → Typ → Formular (zwei Taps). */
 export function QuickAddSheet() {
   const { quickAdd } = useUI();
-  const { open, type } = quickAdd;
+  const { open, type, defaults } = quickAdd;
   const back = () => ui.setQuickAddType(null);
 
   function onKeyDown(event: KeyboardEvent<HTMLDivElement>) {
@@ -56,8 +56,8 @@ export function QuickAddSheet() {
           ))}
         </div>
       )}
-      {type === 'grade' && <GradeForm onDone={ui.closeQuickAdd} onBack={back} />}
-      {type === 'exam' && <ExamForm onDone={ui.closeQuickAdd} onBack={back} />}
+      {type === 'grade' && <GradeForm onDone={ui.closeQuickAdd} onBack={back} defaultSubjectId={defaults.subjectId} />}
+      {type === 'exam' && <ExamForm onDone={ui.closeQuickAdd} onBack={back} defaultSubjectId={defaults.subjectId} />}
       {type === 'task' && <TaskForm onDone={ui.closeQuickAdd} onBack={back} />}
     </Sheet>
   );

@@ -1,7 +1,7 @@
 # PLAN – Cockpit
 
 Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
-**Status:** Phase 1 erledigt – wartet auf «weiter» für Phase 2.
+**Status:** Phase 2 erledigt – wartet auf «weiter» für Phase 3.
 
 ---
 
@@ -55,16 +55,20 @@ Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
 - Karten, Klavier, Fokus und Kompass zeigen «Kommt bald»; diese Hinweise verschwinden mit ihrer Phase.
 - Deploy-Konfiguration: `netlify.toml` im Repo-Hauptordner und `vercel.json`.
 
-### Phase 2 – Noten & Promotion
+### Phase 2 – Noten & Promotion ✅
 - [x] Recherche Promotionsreglement Zürcher Mittelschulen (in Phase 1 vorgezogen). Quelle ist in den Einstellungen verlinkt; nicht sicher Verifiziertes trägt den Hinweis «bitte mit dem Reglement deiner Schule prüfen».
-- [ ] Noten erfassen und bearbeiten: Note (Komma oder Punkt), Gewicht, Titel, Datum, Fach, Semester
-- [ ] Semesterübersicht: alle Fächer mit gewichtetem Schnitt und gerundeter Zeugnisnote
-- [ ] Fach-Detail: Notenliste, Verlauf als Diagramm (Einzelnoten und laufender Schnitt), Wunschnoten-Rechner mit Rundungsgrenze
-- [ ] Promotionsrechner pro Semester:
+- [x] Noten erfassen und bearbeiten: Note (Komma oder Punkt), Gewicht, Titel, Datum, Fach, Semester
+- [x] Semesterübersicht: alle Fächer mit gewichtetem Schnitt und gerundeter Zeugnisnote
+- [x] Fach-Detail: Notenliste, Verlauf als Diagramm (Einzelnoten und laufender Schnitt), Wunschnoten-Rechner mit Rundungsgrenze
+- [x] Promotionsrechner pro Semester:
   - Ampel immer mit Symbol und Text
   - Kompensationsbilanz («+1.5 Punkte Reserve»)
   - Prüfung jeder Regel und Beitrag pro Fach
-- [ ] Tests: Schnitt, Rundung, Wunschnote, Promotion inkl. Kompensation
+- [x] Tests: Schnitt, Rundung, Wunschnote, Promotion inkl. Kompensation
+
+**Stand Phase 2:**
+- Seiten: `/noten` (Übersicht mit Promotionskarte), `/noten/fach/:id` (Zeugnisnote, Wunschnote, Verlauf, Noten bearbeiten) und `/noten/promotion` (Ampel, Regelprüfung, Kompensationsbilanz, Promotionsfächer umschalten).
+- Diagramme: Recharts wird nur auf der Fachseite nachgeladen. Das Farbpaar für Plus/Minus ist mit dem Palette-Validator geprüft (hell und dunkel, Farbsehschwäche).
 
 ### Phase 3 – Prüfungen, Aufgaben & Lernplan
 - [ ] Prüfungen: Fach, Titel, Datum (Zeit optional), Gewicht, Themen mit Aufwand S/M/L, Notizen. Nach der Prüfung «Note eintragen».

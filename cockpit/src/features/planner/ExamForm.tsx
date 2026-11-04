@@ -18,11 +18,11 @@ import { SubjectPicker } from '@/ui/Subject';
 import { toastUndo } from '@/ui/toast';
 import { EFFORT_OPTIONS } from './effort';
 
-export function ExamForm({ onDone, onBack }: { onDone: () => void; onBack?: () => void }) {
+export function ExamForm({ onDone, onBack, defaultSubjectId }: { onDone: () => void; onBack?: () => void; defaultSubjectId?: string }) {
   const settings = useSettings();
   const subjects = useSubjects();
   const navigate = useNavigate();
-  const [subjectId, setSubjectId] = useState<string | undefined>(settings.ui.lastSubjectId);
+  const [subjectId, setSubjectId] = useState<string | undefined>(defaultSubjectId ?? settings.ui.lastSubjectId);
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(() => addDays(todayISO(), 7));
   const [time, setTime] = useState('');

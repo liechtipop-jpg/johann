@@ -61,3 +61,44 @@ test('Rückgängig nach dem Löschen einer Aufgabe', async ({ page }) => {
   await page.getByRole('button', { name: 'Rückgängig' }).click();
   await expect(page.getByRole('checkbox', { name: 'Aufsatz abgeben erledigt' })).toBeVisible();
 });
+
+test('Noten: Zeugnisnote, Wunschnote und Promotion', async ({ page }) => {
+  await page.goto('/willkommen');
+  await page.getByLabel('Wie heisst du?').fill('Test');
+  await page.getByRole('button', { name: 'Weiter' }).click();
+  await page.getByRole('button', { name: 'Mathematik' }).click();
+  await page.getByRole('button', { name: 'Physik' }).click();
+  for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Weiter' }).click();
+  await page.getByRole('button', { name: 'Los geht’s' }).click();
+  await expect(page).toHaveURL(/\/$/);
+
+  async function addGrade(subject: string, value: string) {
+    await page.getByRole('button', { name: 'Schnell erfassen' }).click();
+    await page.getByRole('button', { name: /^Note/ }).click();
+    await page.getByRole('radio', { name: subject }).click();
+    await page.getByLabel('Note', { exact: true }).fill(value);
+    await page.getByRole('button', { name: 'Note speichern' }).click();
+    await expect(page.getByText(`in ${subject} gespeichert`)).toBeVisible();
+  }
+  await addGrade('Mathematik', '5');
+  await addGrade('Mathematik', '4.5'); // Schnitt 4.75 → Zeugnisnote 5
+  await addGrade('Physik', '3.5');
+
+  await page.goto('/noten');
+  const math = page.getByRole('link', { name: /Mathematik/ });
+  await expect(math).toContainText('5');
+  // Plus 1, Minus 0.5 doppelt = 1 → Reserve 0 → knapp
+  await expect(page.getByText('Stand jetzt knapp')).toBeVisible();
+
+  await math.click();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Mathematik');
+  await page.getByLabel('Zeugnisnote mindestens').selectOption('5.5');
+  // (9.5 + x) / 3 ≥ 5.25 → x ≥ 6.25 → nicht erreichbar
+  await expect(page.getByText('Nicht erreichbar')).toBeVisible();
+  await page.getByLabel('Zeugnisnote mindestens').selectOption('5');
+  await expect(page.getByText('Rundungsgrenze: Ab einem Schnitt von 4.75 wird auf 5 gerundet.')).toBeVisible();
+
+  await page.goto('/noten/promotion');
+  await expect(page.getByText('Doppelte Kompensation', { exact: true })).toBeVisible();
+  await expect(page.getByRole('row', { name: /Physik/ })).toContainText('−1');
+});
