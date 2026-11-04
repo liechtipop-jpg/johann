@@ -176,7 +176,10 @@ export default function StudyPage() {
           <X size={22} aria-hidden />
         </Link>
         <div className="min-w-0 flex-1 text-center">
-          <p className="truncate text-[15px] font-semibold">{deckName ?? ''}</p>
+          <h1 className="truncate text-[15px] font-semibold">
+            <span className="sr-only">Lernen: </span>
+            {deckName ?? ''}
+          </h1>
           {queue && !done && <p className="text-[13px] text-ink-2 tabular-nums">noch {queue.length}</p>}
         </div>
         <IconButton label="Letzte Bewertung zurücknehmen" disabled={history.length === 0} onClick={() => void undo()}>
@@ -201,7 +204,7 @@ export default function StudyPage() {
 
       {done && (
         <div className="flex flex-1 flex-col items-center justify-center py-12 text-center">
-          <h1 className="font-serif text-[40px] leading-tight">{reviewed ? 'Geschafft!' : 'Alles erledigt'}</h1>
+          <h2 className="font-serif text-[40px] leading-tight">{reviewed ? 'Geschafft!' : 'Alles erledigt'}</h2>
           <p className="mt-2 max-w-sm text-[17px] text-ink-2">
             {reviewed
               ? `Du hast ${plural(reviewed, 'Karte', 'Karten')} wiederholt und ${Math.round((known / reviewed) * 100)} % gewusst.`

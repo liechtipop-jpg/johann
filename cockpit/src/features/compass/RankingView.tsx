@@ -134,6 +134,14 @@ function WhatItTakes({ data, targetId, onTarget }: { data: CompassData; targetId
                 <Change key={c.criterionId} change={c} label={criterion(c.criterionId)} kind="rating" />
               ))}
             </Section>
+            <Section
+              title={`Eine Bewertung von «${rival}» senken`}
+              empty={`Auch eine schlechtere Bewertung von «${rival}» allein reicht nicht.`}
+            >
+              {analysis.rivalChanges.map((c) => (
+                <Change key={c.criterionId} change={c} label={criterion(c.criterionId)} kind="rating" />
+              ))}
+            </Section>
             <Section title="Ein Gewicht ändern" empty="Keine einzelne Gewichtung reicht, damit die Option vorne liegt.">
               {analysis.weightChanges.map((c) => (
                 <Change key={c.criterionId} change={c} label={criterion(c.criterionId)} kind="weight" />

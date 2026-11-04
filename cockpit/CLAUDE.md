@@ -12,7 +12,7 @@ React + TypeScript (strict) + Vite, React Router, Tailwind CSS v4, Dexie + dexie
 - `npm run preview` – Build lokal ansehen (mit Service Worker)
 - `npm run lint` – ESLint
 - `npm test` – Unit-Tests (Vitest)
-- `npm run test:e2e` – Playwright-Tests (vorher `npm run build`; läuft gegen `vite preview`)
+- `npm run test:e2e` – Playwright-Tests inkl. Offline-Test und axe-Prüfung (WCAG 2.1 AA) aller Seiten (vorher `npm run build`; läuft gegen `vite preview`)
 - `npm run format` – Prettier (einfache Anführungszeichen, 140 Zeichen)
 - `npm run screenshots` – Screenshots aller Seiten (390/1440 px, hell/dunkel)
 

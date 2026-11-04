@@ -298,3 +298,25 @@ test('Studienwahl-Kompass: Vorschläge, Bewerten, Ranking mit Analyse, Zeitstrah
   await page.getByRole('button', { name: 'Link hinzufügen' }).click();
   await expect(page.getByRole('link', { name: 'Studiengang' })).toHaveAttribute('href', 'https://example.org/informatik');
 });
+
+test('Offline: nach dem ersten Besuch läuft die App ohne Netz', async ({ page, context }) => {
+  await quickOnboarding(page, 'Deutsch');
+  // Warten, bis der Service Worker alles vorab gespeichert hat und die Seite steuert
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => navigator.serviceWorker.controller !== null)).toBe(true);
+
+  await context.setOffline(true);
+  await page.reload();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Test');
+  // Direkt aufgerufene Seite (Navigation) und nachgeladene Seite (Lazy-Chunk) ohne Netz
+  await page.goto('/kompass');
+  await expect(page.getByRole('heading', { level: 1, name: 'Studienwahl-Kompass' })).toBeVisible();
+  await page.getByRole('link', { name: 'Noten' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Noten' })).toBeVisible();
+  await page.goto('/klavier?tab=metronom');
+  await expect(page.getByRole('slider', { name: 'Tempo in BPM' })).toBeVisible();
+  await context.setOffline(false);
+});

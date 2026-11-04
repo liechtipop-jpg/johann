@@ -278,47 +278,49 @@ export function MetronomePanel() {
               onChange={(enabled) => update({ trainer: { ...config.trainer, enabled } })}
               label="Tempo-Trainer an"
             />
-            <div className={cn('grid grid-cols-1 gap-3 sm:grid-cols-2', !config.trainer.enabled && 'opacity-60')}>
-              <Row label="Start">
-                <Stepper
-                  label="Start-Tempo"
-                  value={config.trainer.start}
-                  min={MIN_BPM}
-                  max={MAX_BPM}
-                  step={2}
-                  onChange={(start) => update({ trainer: { ...config.trainer, start } })}
-                />
-              </Row>
-              <Row label="Ziel">
-                <Stepper
-                  label="Ziel-Tempo"
-                  value={config.trainer.target}
-                  min={MIN_BPM}
-                  max={MAX_BPM}
-                  step={2}
-                  onChange={(target) => update({ trainer: { ...config.trainer, target } })}
-                />
-              </Row>
-              <Row label="Schritt">
-                <Stepper
-                  label="BPM pro Schritt"
-                  value={config.trainer.step}
-                  min={1}
-                  max={30}
-                  format={(v) => `+${v}`}
-                  onChange={(step) => update({ trainer: { ...config.trainer, step } })}
-                />
-              </Row>
-              <Row label="alle … Takte">
-                <Stepper
-                  label="Takte pro Schritt"
-                  value={config.trainer.everyBars}
-                  min={1}
-                  max={64}
-                  onChange={(everyBars) => update({ trainer: { ...config.trainer, everyBars } })}
-                />
-              </Row>
-            </div>
+            {config.trainer.enabled && (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Row label="Start">
+                  <Stepper
+                    label="Start-Tempo"
+                    value={config.trainer.start}
+                    min={MIN_BPM}
+                    max={MAX_BPM}
+                    step={2}
+                    onChange={(start) => update({ trainer: { ...config.trainer, start } })}
+                  />
+                </Row>
+                <Row label="Ziel">
+                  <Stepper
+                    label="Ziel-Tempo"
+                    value={config.trainer.target}
+                    min={MIN_BPM}
+                    max={MAX_BPM}
+                    step={2}
+                    onChange={(target) => update({ trainer: { ...config.trainer, target } })}
+                  />
+                </Row>
+                <Row label="Schritt">
+                  <Stepper
+                    label="BPM pro Schritt"
+                    value={config.trainer.step}
+                    min={1}
+                    max={30}
+                    format={(v) => `+${v}`}
+                    onChange={(step) => update({ trainer: { ...config.trainer, step } })}
+                  />
+                </Row>
+                <Row label="alle … Takte">
+                  <Stepper
+                    label="Takte pro Schritt"
+                    value={config.trainer.everyBars}
+                    min={1}
+                    max={64}
+                    onChange={(everyBars) => update({ trainer: { ...config.trainer, everyBars } })}
+                  />
+                </Row>
+              </div>
+            )}
           </div>
         </Card>
 
@@ -329,26 +331,28 @@ export function MetronomePanel() {
               onChange={(enabled) => update({ gap: { ...config.gap, enabled } })}
               label="Stumme Takte an"
             />
-            <div className={cn('grid grid-cols-1 gap-3 sm:grid-cols-2', !config.gap.enabled && 'opacity-60')}>
-              <Row label="hörbar">
-                <Stepper
-                  label="Hörbare Takte"
-                  value={config.gap.play}
-                  min={1}
-                  max={16}
-                  onChange={(play) => update({ gap: { ...config.gap, play } })}
-                />
-              </Row>
-              <Row label="stumm">
-                <Stepper
-                  label="Stumme Takte"
-                  value={config.gap.mute}
-                  min={1}
-                  max={16}
-                  onChange={(mute) => update({ gap: { ...config.gap, mute } })}
-                />
-              </Row>
-            </div>
+            {config.gap.enabled && (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <Row label="hörbar">
+                  <Stepper
+                    label="Hörbare Takte"
+                    value={config.gap.play}
+                    min={1}
+                    max={16}
+                    onChange={(play) => update({ gap: { ...config.gap, play } })}
+                  />
+                </Row>
+                <Row label="stumm">
+                  <Stepper
+                    label="Stumme Takte"
+                    value={config.gap.mute}
+                    min={1}
+                    max={16}
+                    onChange={(mute) => update({ gap: { ...config.gap, mute } })}
+                  />
+                </Row>
+              </div>
+            )}
           </div>
         </Card>
       </div>

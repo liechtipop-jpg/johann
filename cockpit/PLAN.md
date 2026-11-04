@@ -1,7 +1,7 @@
 # PLAN – Cockpit
 
 Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
-**Status:** Phase 7 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
+**Status:** Stufe 1 und 2 fertig (Phasen 1–8). Stufe 3 folgt nur auf ausdrückliches Kommando.
 
 ---
 
@@ -168,12 +168,27 @@ Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
   - Stanford MS&E: Datum offen, mit Hinweis auf die Frist vom 1. Dezember 2026 für den Start im Herbst 2027
 - 163 Unit-Tests und 8 End-to-End-Tests.
 
-### Phase 8 – Feinschliff
-- [ ] Barrierefreiheit: Tastatur, Fokus, Kontrast, Labels für Screenreader
-- [ ] Performance: Bundle-Grösse, Lazy-Loading
-- [ ] Offline-Test mit Playwright
-- [ ] Visuelle Kontrolle, Runde 2
-- [ ] README: lokal starten, Netlify/Vercel, aufs Handy installieren, Daten übertragen
+### Phase 8 – Feinschliff ✅
+- [x] Barrierefreiheit: Tastatur, Fokus, Kontrast, Labels für Screenreader
+- [x] Performance: Bundle-Grösse, Lazy-Loading
+- [x] Offline-Test mit Playwright
+- [x] Visuelle Kontrolle, Runde 2
+- [x] README: lokal starten, Netlify/Vercel, aufs Handy installieren, Daten übertragen
+
+**Stand Phase 8:**
+- Barrierefreiheit: axe prüft alle 23 Seiten plus Schnellerfassung und Befehlspalette, auf dem Handy und dem Desktop, hell und dunkel (`e2e/a11y.spec.ts`). Ergebnis: 0 Verstösse gegen WCAG 2.1 A/AA.
+  - Der gedämpfte Textton (`ink-3`) ist dunkler bzw. heller geworden und erreicht jetzt auf allen Flächen mindestens 4.5:1.
+  - Tempo-Trainer und stumme Takte zeigen ihre Einstellungen erst beim Einschalten, statt sie abzublenden.
+  - Die Lernansicht hat eine Überschrift.
+  - Heatmap und Wochensäulen sind mit Knöpfen «Vorheriger/Nächster Tag» bedienbar, mit Textalternative.
+- Performance:
+  - Alle Seiten werden nachgeladen, Diagramme (Recharts) und Startdecks nur bei Bedarf.
+  - Erster Aufruf: etwa 200 kB JavaScript (gzip, inkl. React, Dexie und Zod). Vorab-Cache für offline: 119 Dateien, 1.7 MB.
+  - Die Kompass-Matrix rendert nur die passende Ansicht (Karten oder Tabelle).
+- Offline: Nach dem ersten Besuch lädt die App ohne Netz neu und öffnet auch direkt aufgerufene und nachgeladene Seiten (`e2e/smoke.spec.ts`).
+- Visuelle Kontrolle, Runde 2: 100 Screenshots. Behoben wurden lange Titel ohne Umbruch (Silbentrennung) und die zu breite Kompass-Tabelle (feste Spalten, alle Optionen sichtbar).
+- README mit Anleitung. Dazu kommt `public/_redirects`, damit auch das Hochladen per Drag & Drop auf Netlify funktioniert.
+- 164 Unit-Tests und 13 End-to-End-Tests grün, Lint und Build ohne Fehler.
 
 ### Stufe 3 – nur auf Kommando
 - [ ] 9 Bewerbungen: Kanban mit dnd-kit, der nächste Schritt erscheint auf «Heute»
@@ -327,7 +342,7 @@ Die Startwerte der Promotionsregeln kommen aus der Recherche in Phase 2.
   - eine Bewertung von X erhöhen (höchstens bis 10)
   - eine Bewertung des Spitzenreiters senken
   - ein Gewicht im Bereich 0–10 ändern
-- Angezeigt wird die kleinste Änderung, die X an die Spitze bringt. Reicht keine einzelne Änderung, erscheint «Keine einzelne Änderung reicht – Abstand 1.3 Punkte».
+- Pro Art werden bis zu drei kleinste Änderungen gezeigt, die X allein an die Spitze bringen, dazu der Abstand und die Kriterien, in denen die Rivalin besser abschneidet. Reicht keine einzelne Änderung, steht das ausdrücklich da.
 
 ---
 
@@ -455,7 +470,11 @@ cockpit/
   - Datumshelfer
   - Tap-Tempo, Tempo-Trainer, Streak/Heatmap, Fokus-Timer
   - Kompass-Analyse
-- **E2E (Playwright):** Onboarding → Note erfassen → Schnitt sichtbar; Karte lernen; offline neu laden.
+- **E2E (Playwright):**
+  - Onboarding und Noten, Rückgängig, Promotion, Lernplan und .ics, Karteikarten
+  - Klavier mit Metronom, Fokus-Timer (mit vorgespulter Uhr), Kompass
+  - offline neu laden
+  - axe-Prüfung aller Seiten
 - **Screenshots:** `npm run screenshots` für alle Seiten, 390 und 1440 px, hell und dunkel, mit Demo-Daten.
 
 ## Recherche (höchstens ca. 10 Suchen, nur offizielle Quellen)

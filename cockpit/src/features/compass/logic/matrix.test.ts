@@ -67,6 +67,14 @@ describe('Entscheidungsmatrix', () => {
     expect(a.ratingChanges).toContainEqual({ criterionId: 'safety', from: 6, to: 8 });
   });
 
+  it('findet die kleinste Senkung einer Bewertung der Rivalin', () => {
+    const a = analyze(input, 'eth')!;
+    // uzh Lohn 9 → 8: uzh (64 + 36 + 16) / 16 = 7.25 < 7.625
+    expect(a.rivalChanges[0]).toEqual({ criterionId: 'pay', from: 9, to: 8 });
+    // uzh Sicherheit 8 → 7 ergibt nur Gleichstand (7.625), 8 → 6 reicht: (72 + 36 + 12) / 16 = 7.5
+    expect(a.rivalChanges).toContainEqual({ criterionId: 'safety', from: 8, to: 6 });
+  });
+
   it('findet die kleinste einzelne Gewichtsänderung', () => {
     const a = analyze(input, 'eth')!;
     // Interesse 6 → 7: eth (56 + 63 + 12) / 17 ≈ 7.71 · uzh (72 + 42 + 16) / 17 ≈ 7.65 → eth vorne
@@ -77,7 +85,7 @@ describe('Entscheidungsmatrix', () => {
 
   it('meldet, wenn eine Option bereits vorne liegt', () => {
     const a = analyze(input, 'uzh')!;
-    expect(a).toMatchObject({ isLeader: true, rivalId: 'eth', ratingChanges: [], weightChanges: [] });
+    expect(a).toMatchObject({ isLeader: true, rivalId: 'eth', ratingChanges: [], rivalChanges: [], weightChanges: [] });
     expect(a.reasons.map((x) => x.criterionId)).toEqual(['pay', 'safety']);
   });
 
@@ -90,5 +98,7 @@ describe('Entscheidungsmatrix', () => {
     )!;
     expect(hopeless.ratingChanges).toEqual([]);
     expect(hopeless.weightChanges).toEqual([]);
+    // Gleichstand: die Rivalin bei «Lohn» schlechter zu bewerten reicht
+    expect(hopeless.rivalChanges).toEqual([{ criterionId: 'pay', from: 10, to: 9 }]);
   });
 });

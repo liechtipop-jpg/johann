@@ -113,6 +113,8 @@ export interface Analysis {
   reasons: Reason[];
   /** Kleinste Änderung einer einzelnen Bewertung, mit der die Option allein vorne läge */
   ratingChanges: WhatIf[];
+  /** Kleinste Senkung einer Bewertung der Rivalin, mit der die Option allein vorne läge */
+  rivalChanges: WhatIf[];
   /** Kleinste Änderung eines einzelnen Gewichts, mit der die Option allein vorne läge */
   weightChanges: WhatIf[];
 }
@@ -149,6 +151,7 @@ export function analyze(input: MatrixInput, targetId: string, limit = 3): Analys
   }
 
   const ratingChanges: WhatIf[] = [];
+  const rivalChanges: WhatIf[] = [];
   const weightChanges: WhatIf[] = [];
   if (!isLeader && rival) {
     // Eine Bewertung anheben (oder ein noch offenes Kriterium bewerten)
@@ -165,6 +168,21 @@ export function analyze(input: MatrixInput, targetId: string, limit = 3): Analys
       }
     }
     ratingChanges.sort((a, b) => (a.from === null ? 1 : 0) - (b.from === null ? 1 : 0) || a.to - (a.from ?? 0) - (b.to - (b.from ?? 0)));
+
+    // Eine Bewertung der Rivalin senken (eine dritte Option muss dann ebenfalls geschlagen sein)
+    for (const c of input.criteria) {
+      const current = map.get(rival.optionId)?.get(c.id);
+      if (c.weight <= 0 || current === undefined) continue;
+      for (let to = current - 1; to >= 1; to--) {
+        const trial: RatingMap = new Map(map);
+        trial.set(rival.optionId, new Map(map.get(rival.optionId)).set(c.id, to));
+        if (wins(targetId, input, trial)) {
+          rivalChanges.push({ criterionId: c.id, from: current, to });
+          break;
+        }
+      }
+    }
+    rivalChanges.sort((a, b) => (a.from ?? 0) - a.to - ((b.from ?? 0) - b.to));
 
     // Ein Gewicht verschieben (0–10), kleinste Änderung zuerst
     for (const c of input.criteria) {
@@ -190,6 +208,7 @@ export function analyze(input: MatrixInput, targetId: string, limit = 3): Analys
     isLeader,
     reasons: reasons.slice(0, limit),
     ratingChanges: ratingChanges.slice(0, limit),
+    rivalChanges: rivalChanges.slice(0, limit),
     weightChanges: weightChanges.slice(0, limit),
   };
 }
