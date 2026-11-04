@@ -6,8 +6,9 @@ import { config } from './config.js';
 import { secureRng } from './random.js';
 
 export class GameSession {
-  constructor(room, { send, onEnd, botPool, rng = secureRng() }) {
+  constructor(room, { send, sendLight, onEnd, botPool, rng = secureRng() }) {
     this.room = room;
+    this.sendLight = sendLight;
     this.game = getGame(room.gameId);
     this.send = send;
     this.onEnd = onEnd;
@@ -55,6 +56,15 @@ export class GameSession {
     }
     if (!res || res.error) return { error: res?.error ?? 'invalid' };
     this.state = res.state;
+    // Leichte Updates (z. B. Zeichenstriche): nur die Ereignisse verschicken, nicht alle Ansichten neu.
+    if (res.light && this.sendLight) {
+      for (const p of this.room.players.values()) {
+        if (p.isBot || !p.connected) continue;
+        const events = (res.events ?? []).filter((e) => this.visible(e, p.id));
+        if (events.length) this.sendLight(p, { gameId: this.game.id, events, now: Date.now() });
+      }
+      return { ok: true };
+    }
     this.update(res.events ?? []);
     return { ok: true };
   }
@@ -70,9 +80,13 @@ export class GameSession {
       if (p.isBot || !p.connected) continue;
       const seated = this.room.seats.some((s) => s.playerId === p.id);
       const payload = this.viewFor(seated ? p.id : null);
-      payload.events = events.filter((e) => !e.onlyFor || e.onlyFor.includes(p.id));
+      payload.events = events.filter((e) => this.visible(e, p.id));
       this.send(p, payload);
     }
+  }
+
+  visible(e, playerId) {
+    return (!e.onlyFor || e.onlyFor.includes(playerId)) && !e.notFor?.includes(playerId);
   }
 
   update(events) {
@@ -89,11 +103,17 @@ export class GameSession {
     this.scheduleAutomatic();
   }
 
+  /** Zeitlimits: Der Timer bleibt stehen, solange sich der Zeitpunkt nicht ändert – viele schnelle Aktionen verschieben ihn nicht. */
   scheduleTick() {
-    clearTimeout(this.tickTimer);
     const at = this.game.nextTick?.(this.state);
+    if (this.tickTimer && this.tickAt === at) return;
+    clearTimeout(this.tickTimer);
+    this.tickTimer = null;
+    this.tickAt = at;
     if (at == null) return;
     this.tickTimer = setTimeout(() => {
+      this.tickTimer = null;
+      this.tickAt = null;
       if (this.stopped) return;
       const res = this.game.tick(this.state, Date.now());
       if (res && !res.error) {

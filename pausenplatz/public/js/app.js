@@ -152,6 +152,7 @@ function boot() {
     wasConnected = true;
   });
   on('disconnect', () => app.room && toast(t('app.reconnecting')));
+  on('notice', (n) => n?.code === 'restart' && toast(t('app.restart')));
   window.addEventListener('popstate', route);
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
   route();

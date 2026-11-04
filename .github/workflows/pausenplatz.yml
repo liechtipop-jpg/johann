@@ -1,0 +1,45 @@
+# Pausenplatz: Tests und Docker-Image bei jeder Änderung im Ordner pausenplatz/
+name: Pausenplatz
+
+on:
+  push:
+    paths: ['pausenplatz/**', '.github/workflows/pausenplatz.yml']
+  pull_request:
+    paths: ['pausenplatz/**', '.github/workflows/pausenplatz.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: pausenplatz
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: pausenplatz/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Image bauen
+        run: docker build -t pausenplatz pausenplatz
+      - name: Container starten und prüfen
+        run: |
+          docker run -d --name pausenplatz -p 3000:3000 pausenplatz
+          curl -fsS --retry 30 --retry-connrefused --retry-delay 1 http://localhost:3000/health
+          curl -fsS http://localhost:3000/ | grep -qi '<html'
+          curl -fsS http://localhost:3000/vendor/chess.js > /dev/null
+          curl -fsS http://localhost:3000/qr/K7M2QX.svg | grep -q '<svg'
+          docker stop pausenplatz
+          docker logs pausenplatz

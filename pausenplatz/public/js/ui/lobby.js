@@ -62,6 +62,7 @@ export function renderLobby(room) {
       (game.optionDefs ?? []).some((d) => !d.hidden) ? button(t('room.options'), { kind: 'small', iconName: 'gear', onClick: () => optionsSheet(room, game) }) : null,
       button(t('room.changeGame'), { kind: 'small', iconName: 'grid', onClick: () => changeGameSheet(room) }),
       room.gameId === 'wahrheit' && room.phase === 'lobby' ? button(t('room.customCards'), { kind: 'small', iconName: 'plus', onClick: () => cardSheet() }) : null),
+    switchRow(t('room.lock'), room.locked, (v) => host({ type: 'lock', enabled: v })),
     switchRow(t('room.chatOn'), room.chatEnabled, (v) => host({ type: 'chat', enabled: v })),
     room.mode !== 'group' ? switchRow(t('room.teamChatOn'), room.teamChatEnabled, (v) => host({ type: 'teamChat', enabled: v })) : null) : null;
   const chat = chatPanel(room);

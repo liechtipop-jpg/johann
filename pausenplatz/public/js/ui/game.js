@@ -155,6 +155,9 @@ export function mountGame({ session, gameId, room, online, localPlayers = [], on
         recorded = false;
       }
     });
+    const offView = unsub;
+    const offLight = session.subscribeLight?.((events) => renderer.onLight?.(events)) ?? (() => {});
+    unsub = () => { offView(); offLight(); };
   });
   let unsub = () => {};
 

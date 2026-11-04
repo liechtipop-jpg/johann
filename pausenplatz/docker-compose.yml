@@ -1,0 +1,10 @@
+# Start mit: docker compose up -d   (danach http://localhost:3000)
+services:
+  pausenplatz:
+    build: .
+    image: pausenplatz
+    ports:
+      - "3000:3000"
+    environment:
+      SITE_NAME: Pausenplatz
+    restart: unless-stopped

@@ -8,6 +8,8 @@ export class OnlineSession {
     this.gameId = gameId;
     this.kind = 'online';
     this.subs = new Set();
+    this.lightSubs = new Set();
+    this.offLight = on('game:light', (payload) => payload.gameId === this.gameId && this.lightSubs.forEach((fn) => fn(payload.events)));
     this.off = on('game:view', (payload) => {
       if (payload.gameId !== this.gameId) return;
       this.last = payload;
@@ -19,12 +21,18 @@ export class OnlineSession {
     if (this.last) fn(this.last);
     return () => this.subs.delete(fn);
   }
+  subscribeLight(fn) {
+    this.lightSubs.add(fn);
+    return () => this.lightSubs.delete(fn);
+  }
   act(action) {
     return request('game:action', { action });
   }
   destroy() {
     this.off();
+    this.offLight();
     this.subs.clear();
+    this.lightSubs.clear();
   }
 }
 
@@ -67,6 +75,7 @@ export class LocalSession {
   }
   restart(swap = false) {
     clearTimeout(this.tickTimer);
+    this.tickTimer = null;
     if (swap) this.options = { ...this.options, firstTeam: this.options.firstTeam === 'blue' ? 'red' : 'blue' };
     this.state = this.game.setup(this.players, { ...this.options, now: Date.now() }, cryptoRng());
     this.thinking.clear();
@@ -85,17 +94,25 @@ export class LocalSession {
     const payload = this.payload(events);
     this.subs.forEach((fn) => fn(payload));
     if (payload.result.over) return;
-    clearTimeout(this.tickTimer);
-    const at = this.game.nextTick?.(this.state);
-    if (at != null) this.tickTimer = setTimeout(() => this.tick(), Math.max(0, at - Date.now()) + 5);
+    this.scheduleTick();
     this.runAi();
   }
+  /** Zeitlimit planen; der Timer bleibt, solange sich der Zeitpunkt nicht ändert. */
+  scheduleTick() {
+    const at = this.game.nextTick?.(this.state);
+    if (this.tickTimer && this.tickAt === at) return;
+    clearTimeout(this.tickTimer);
+    this.tickTimer = null;
+    this.tickAt = at;
+    if (at != null) this.tickTimer = setTimeout(() => { this.tickTimer = null; this.tickAt = null; this.tick(); }, Math.max(0, at - Date.now()) + 5);
+  }
   tick() {
+    if (!this.alive) return;
     const res = this.game.tick(this.state, Date.now());
     if (res && !res.error) {
       this.state = res.state;
       this.emit(res.events ?? []);
-    }
+    } else this.scheduleTick();
   }
   runAi() {
     for (const [id, level] of Object.entries(this.aiPlayers)) {

@@ -18,8 +18,17 @@ Budget-Vorgabe: max. 39 Dollar → sparsam arbeiten, Pflichtspiele zuerst (siehe
 - [x] Mühle  - [x] Schiffe versenken  - [x] Schach  - [x] Poker  - [x] Wahrheit oder Tat
 - [x] Ich sehe was – entfällt auf Wunsch des Auftraggebers (docs/ENTSCHEIDUNGEN.md, Punkt 1)
 
-## Phase 5 – Zusatzspiele
-- [x] entfällt wegen Budget, begründet in docs/ENTSCHEIDUNGEN.md (Punkt 2)
+## Phase 5 – Zusatzspiele (nachgeliefert)
+- [x] Vier gewinnt  - [x] Ultimate Tic-Tac-Toe  - [x] Stadt, Land, Fluss  - [x] Zeichnen & Raten  - [x] Wort-Raten  - [x] Schere, Stein, Papier
+
+## Phase 8 – Nachträge
+- [x] Raum abschliessen, Namenssperre nach dem Entfernen
+- [x] Wortfilter erkennt Tarnungen (Ziffern, Abstände, gestreckte Buchstaben), ohne falsche Treffer
+- [x] Zeitlimits verschieben sich nicht mehr durch viele Aktionen
+- [x] Live-Striche als leichte Ereignisse, Hinweis vor einem Server-Neustart
+- [x] Handy: Seitenname im Kopf ganz sichtbar
+- [x] GitHub-Workflow (Tests und Docker-Image), docker-compose.yml, render.yaml
+- [x] Gesamttest (109/109), Browser-Test aller 12 Spiele (375 px und 1280 px, ohne Konsolenfehler), ZIP, Commit, Push
 
 ## Phase 6 – Feinschliff (PWA/Offline, Barrierefreiheit, Töne)
 - [x] erledigt

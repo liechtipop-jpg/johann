@@ -52,6 +52,20 @@ describe('Räume und Teams', () => {
     assert.equal(m.hostCommand(room, b.id, { type: 'shuffle' }).error, 'not_host');
   });
 
+  it('Entfernte kommen auch mit neuem Gerät unter gleichem Namen nicht zurück; abgeschlossener Raum', () => {
+    const m = new RoomManager();
+    const { room, player } = m.create({ gameId: 'tictactoe', mode: '1v1', token: 'tok-a-123456789012', profile: profile('Anna') });
+    const b = m.join({ code: room.code, token: 'tok-b-123456789012', profile: profile('Ben') }).player;
+    m.hostCommand(room, player.id, { type: 'kick', playerId: b.id });
+    assert.equal(m.join({ code: room.code, token: 'tok-c-123456789012', profile: profile(' ben ') }).error, 'kicked');
+    const c = m.join({ code: room.code, token: 'tok-d-123456789012', profile: profile('Cleo') }).player;
+    assert.deepEqual(m.hostCommand(room, player.id, { type: 'lock', enabled: true }), { ok: true });
+    assert.equal(m.publicRoom(room, player.id).locked, true);
+    assert.equal(m.join({ code: room.code, token: 'tok-e-123456789012', profile: profile('Dana') }).error, 'room_locked');
+    assert.equal(m.join({ code: room.code, token: 'tok-d-123456789012', profile: profile('Cleo') }).player.id, c.id, 'wer schon drin war, kommt zurück');
+    assert.equal(m.hostCommand(room, c.id, { type: 'lock', enabled: false }).error, 'not_host');
+  });
+
   it('Reconnect: dasselbe Token bekommt seinen Platz zurück', () => {
     const m = new RoomManager();
     const { room } = m.create({ gameId: 'tictactoe', mode: '1v1', token: 'tok-a-123456789012', profile: profile('Anna') });

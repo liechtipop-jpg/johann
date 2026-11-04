@@ -38,6 +38,7 @@ export function attachSockets(io, { botPool }) {
     room.session = new GameSession(room, {
       botPool,
       send: (player, payload) => io.sockets.sockets.get(player.socketId)?.emit('game:view', payload),
+      sendLight: (player, payload) => io.sockets.sockets.get(player.socketId)?.emit('game:light', payload),
       onEnd: (result) => {
         room.phase = 'results';
         const winnerTeams = new Set(result.winners.map((id) => room.seats.find((s) => s.playerId === id)?.team).filter(Boolean));

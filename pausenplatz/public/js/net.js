@@ -8,7 +8,7 @@ let socket = null;
 export function connect() {
   if (socket) return socket;
   socket = io({ auth: { token: store.token }, transports: ['websocket', 'polling'], reconnectionDelayMax: 4000 });
-  for (const event of ['room:state', 'game:view', 'chat:msg', 'room:kicked', 'notice', 'connect', 'disconnect']) {
+  for (const event of ['room:state', 'game:view', 'game:light', 'chat:msg', 'room:kicked', 'notice', 'connect', 'disconnect']) {
     socket.on(event, (payload) => (listeners.get(event) ?? []).forEach((fn) => fn(payload)));
   }
   return socket;

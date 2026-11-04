@@ -57,7 +57,7 @@ export class RoomManager {
     const room = {
       code, gameId, mode, options: sanitizeOptions(game, options), phase: 'lobby',
       seats: buildSeats(game, mode), players: new Map(), byToken: new Map(), hostId: null,
-      chatEnabled: true, teamChatEnabled: true, banned: new Set(), series: { red: 0, blue: 0, draws: 0, wins: {} },
+      chatEnabled: true, teamChatEnabled: true, locked: false, banned: new Set(), bannedNames: new Set(), series: { red: 0, blue: 0, draws: 0, wins: {} },
       firstTeam: 'red', session: null, lastResult: null, customCards: [], createdAt: Date.now(), lastActivity: Date.now(),
     };
     this.rooms.set(code, room);
@@ -106,6 +106,9 @@ export class RoomManager {
     }
     const p = sanitizeProfile(profile);
     if (p.error) return p;
+    // Abgeschlossener Raum: nur wer schon drin war, kommt zurück. Entfernte Namen bleiben draussen.
+    if (room.locked) return { error: 'room_locked' };
+    if (room.bannedNames.has(p.name.trim().toLowerCase())) return { error: 'kicked' };
     const free = room.phase === 'lobby' ? room.seats.findIndex((s) => !s.playerId) : -1;
     const spectators = [...room.players.values()].filter((pl) => !pl.isBot && this.seatOf(room, pl.id) < 0).length;
     if (free < 0 && spectators >= config.limits.maxSpectators) return { error: 'room_full_spectators' };
@@ -198,6 +201,7 @@ export class RoomManager {
         const player = room.players.get(cmd.playerId);
         if (!player || player.id === hostId) return { error: 'invalid' };
         if (player.token) room.banned.add(player.token);
+        room.bannedNames.add(player.name.trim().toLowerCase());
         this.removePlayer(room, player.id, 'kicked');
         return { ok: true };
       }
@@ -248,6 +252,9 @@ export class RoomManager {
         return { ok: true };
       case 'teamChat':
         room.teamChatEnabled = Boolean(cmd.enabled);
+        return { ok: true };
+      case 'lock':
+        room.locked = Boolean(cmd.enabled);
         return { ok: true };
       case 'lobby':
         if (room.phase === 'playing') room.session?.stop();
@@ -327,7 +334,7 @@ export class RoomManager {
     const check = this.startCheck(room);
     return {
       code: room.code, gameId: room.gameId, mode: room.mode, options: room.options, phase: room.phase,
-      hostId: room.hostId, chatEnabled: room.chatEnabled, teamChatEnabled: room.teamChatEnabled,
+      hostId: room.hostId, chatEnabled: room.chatEnabled, teamChatEnabled: room.teamChatEnabled, locked: room.locked,
       series: room.series, lastResult: room.lastResult, customCards: room.customCards.length,
       seats: room.seats.map((s, index) => ({ index, team: s.team, player: s.playerId ? this.publicPlayer(room, room.players.get(s.playerId)) : null })),
       spectators: [...room.players.values()].filter((p) => !p.isBot && this.seatOf(room, p.id) < 0).map((p) => this.publicPlayer(room, p)),

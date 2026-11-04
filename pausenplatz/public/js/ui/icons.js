@@ -34,6 +34,12 @@ export function icon(name, size = 24) {
 }
 
 const G = {
+  viergewinnt: '<rect x="5" y="8" width="38" height="32" rx="5" stroke-width="2.5"/><circle cx="14" cy="17" r="3.5" stroke-width="2.2"/><circle cx="24" cy="17" r="3.5" stroke-width="2.2"/><circle cx="34" cy="17" r="3.5" stroke-width="2.2"/><circle cx="14" cy="31" r="3.5" fill="currentColor" stroke="none"/><circle cx="24" cy="31" r="3.5" fill="currentColor" stroke="none"/><circle cx="34" cy="31" r="3.5" stroke-width="2.2"/><path d="M11 44h26" stroke-width="2.5"/>',
+  ultimate: '<path d="M18 5v38M30 5v38M5 18h38M5 30h38" stroke-width="2.5"/><path d="M8 8l6 6M14 8l-6 6M34 34l6 6M40 34l-6 6" stroke-width="2"/><circle cx="24" cy="24" r="3" stroke-width="2"/>',
+  slf: '<path d="M24 43s-12-11-12-21a12 12 0 0 1 24 0c0 10-12 21-12 21z" stroke-width="2.5"/><path d="M19 26l5-12 5 12M21 22h6" stroke-width="2.2"/><path d="M5 44c4-3 8 3 12 0s8 3 12 0 8 3 14 0" stroke-width="2"/>',
+  zeichnen: '<path d="M33 6l9 9-22 22H11v-9z" stroke-width="2.5"/><path d="M28 11l9 9" stroke-width="2.5"/><path d="M6 43c5-4 9 2 14-1s8-5 12-2" stroke-width="2.2"/>',
+  wortraten: '<ellipse cx="24" cy="18" rx="12" ry="14" stroke-width="2.5"/><path d="M22 32l2 3 2-3M24 35c-3 4 3 6 0 10" stroke-width="2.2"/><path d="M19 12a6 6 0 0 1 5-3" stroke-width="2"/>',
+  ssp: '<circle cx="13" cy="36" r="5" stroke-width="2.5"/><circle cx="29" cy="36" r="5" stroke-width="2.5"/><path d="M16 32L30 9M26 32L12 9" stroke-width="2.5"/><path d="M34 14l8 4-3 9-8 1-3-7z" stroke-width="2.2"/>',
   tictactoe: '<path d="M17 6v36M31 6v36M6 17h36M6 31h36" stroke-width="3"/><path d="M8 8l6 6M14 8l-6 6" stroke-width="3"/><circle cx="24" cy="24" r="4" stroke-width="3"/><path d="M34 34l6 6M40 34l-6 6" stroke-width="3"/>',
   muehle: '<rect x="5" y="5" width="38" height="38" rx="2" stroke-width="2.5"/><rect x="13" y="13" width="22" height="22" stroke-width="2.5"/><rect x="20" y="20" width="8" height="8" stroke-width="2.5"/><path d="M24 5v15M24 28v15M5 24h15M28 24h15" stroke-width="2.5"/><circle cx="5" cy="5" r="4" fill="currentColor"/><circle cx="43" cy="24" r="4" fill="currentColor"/><circle cx="24" cy="35" r="4" fill="currentColor"/>',
   schiffe: '<path d="M6 30h36l-5 9H11z" fill="currentColor" stroke="none"/><path d="M14 30v-8h20v8M20 22v-7h8v7M24 15V8" stroke-width="2.5"/><path d="M4 43c4 0 4-2 8-2s4 2 8 2 4-2 8-2 4 2 8 2 4-2 8-2" stroke-width="2"/>',

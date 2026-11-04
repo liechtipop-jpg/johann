@@ -1,0 +1,16 @@
+# Render-Blueprint für Pausenplatz, wenn dieser Ordner ein eigenes Repository ist (z. B. aus der ZIP-Datei).
+# Im gemeinsamen Repository «johann» gehört die render.yaml im Hauptordner zu einem anderen Projekt –
+# dort Pausenplatz wie im README beschrieben von Hand als Web Service anlegen.
+services:
+  - type: web
+    name: pausenplatz
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: SITE_NAME
+        value: Pausenplatz

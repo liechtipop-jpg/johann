@@ -98,6 +98,18 @@ export function startServer(port = config.port) {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-  const { port } = await startServer();
-  console.log(`${config.siteName} läuft auf http://localhost:${port}`);
+  const running = await startServer();
+  console.log(`${config.siteName} läuft auf http://localhost:${running.port}`);
+  // Sauber beenden (Docker, Hosting, Strg+C): alle kurz informieren, dann schliessen
+  let closing = false;
+  const shutdown = (signal) => {
+    if (closing) return;
+    closing = true;
+    console.log(`${signal}: ${config.siteName} wird beendet …`);
+    running.io.emit('notice', { code: 'restart' });
+    setTimeout(() => running.close().finally(() => process.exit(0)), 1500);
+    setTimeout(() => process.exit(0), 6000).unref();
+  };
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }

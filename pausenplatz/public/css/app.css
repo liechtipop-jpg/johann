@@ -270,3 +270,63 @@ dialog.sheet::backdrop { background: rgb(5 7 12 / 0.6); }
   .pseat { position: static; transform: none; min-width: 0; padding: 4px 8px; order: -1; }
   .pseat.me { order: 1; }
 }
+
+/* Vier gewinnt */
+.c4 .colbtn .ghost { opacity: 0; transition: opacity 0.15s; }
+.c4 .colbtn.cellbtn:hover .ghost, .c4 .colbtn.cellbtn:focus-visible .ghost { opacity: 0.55; }
+.c4 .colbtn:focus-visible { outline: none; }
+.c4 .colbtn:focus-visible rect { stroke: var(--accent); stroke-width: 6; }
+.c4 .drop { animation: c4drop 0.38s cubic-bezier(0.3, 0.1, 0.5, 1.25); }
+@keyframes c4drop { from { transform: translateY(var(--from)); } }
+/* Schere, Stein, Papier */
+.ssp { display: grid; gap: 14px; justify-items: center; text-align: center; width: 100%; }
+.ssp-score { font-size: 34px; font-weight: 800; margin: 0; font-variant-numeric: tabular-nums; }
+.ssp-choices { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.ssp-btn { display: grid; justify-items: center; gap: 6px; padding: 14px 16px; min-width: 96px; border-radius: 18px; border: 2px solid var(--line); background: var(--surface-2); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+.ssp-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.ssp-btn:disabled { opacity: 0.55; cursor: default; }
+.ssp-btn:not(:disabled):hover { border-color: var(--accent); }
+.ssp-last { display: flex; align-items: center; gap: 18px; }
+.ssp-hand { display: grid; justify-items: center; gap: 4px; color: var(--accent); }
+.ssp-hand span { color: var(--text-2); font-size: 13px; }
+.bracket { display: flex; gap: 14px; overflow-x: auto; width: 100%; padding-bottom: 6px; text-align: left; }
+.bcol { display: flex; flex-direction: column; justify-content: space-around; gap: 10px; min-width: 150px; }
+.bcol h4 { margin: 0; font-size: 13px; color: var(--text-3); }
+.bmatch { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
+.bmatch.live { border-color: var(--accent); }
+.bslot { display: flex; gap: 8px; padding: 6px 10px; font-size: 14px; }
+.bslot + .bslot { border-top: 1px solid var(--line); }
+.bslot.won { font-weight: 800; }
+.bslot.lost { color: var(--text-3); text-decoration: line-through; }
+/* Wort-Raten */
+.wr-stage { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.balloon { width: 150px; height: 180px; flex: none; }
+.word-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.wl { display: inline-grid; place-items: center; width: 32px; height: 42px; border-bottom: 3px solid var(--text-2); font-size: 24px; font-weight: 800; }
+.wl.space { border-color: transparent; width: 14px; }
+.wl.missed { color: var(--danger); }
+.keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; }
+.key { height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font: inherit; font-weight: 800; font-size: 16px; cursor: pointer; }
+.key:disabled { cursor: default; opacity: 0.6; }
+.key.hit { background: color-mix(in srgb, var(--ok) 35%, var(--surface-2)); opacity: 1; }
+.key.miss { background: color-mix(in srgb, var(--danger) 30%, var(--surface-2)); }
+.key.hint { outline: 2px dashed var(--accent); outline-offset: -3px; }
+/* Zeichnen & Raten */
+.pad.drawable { cursor: crosshair; }
+.guess-list { display: grid; gap: 4px; max-height: 260px; overflow: auto; }
+/* Stadt, Land, Fluss */
+.slf-head { display: flex; gap: 16px; align-items: center; }
+.slf-letter { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 20px; background: var(--accent); color: #111; font-size: 42px; font-weight: 900; flex: none; }
+.slf-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.slf-field { display: grid; gap: 4px; }
+.slf-who { min-width: 70px; color: var(--text-2); font-size: 13px; }
+.slf-bad b { text-decoration: line-through; color: var(--text-3); }
+@media (prefers-reduced-motion: reduce) { .c4 .drop { animation: none; } }
+/* Schmale Handys: Name im Profil-Knopf nur für Screenreader, damit der Seitenname ganz sichtbar bleibt */
+@media (max-width: 420px) {
+  .top { gap: 6px; }
+  .profile-chip .name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+/* Wort-Raten auf dem Handy: Buchstabenfelder wachsen mit der Bildschirmbreite, kleinerer Ballon */
+.wl { width: clamp(20px, 7.4vw, 32px); height: clamp(32px, 10vw, 42px); font-size: clamp(17px, 5.6vw, 24px); }
+@media (max-width: 600px) { .balloon { width: 110px; height: 132px; } .word-row { gap: 4px; } }
