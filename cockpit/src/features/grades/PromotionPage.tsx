@@ -51,7 +51,7 @@ export default function PromotionPage() {
         actions={<SemesterSelect semesters={semesters} value={semester?.id} onChange={setSemester} />}
       />
 
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
         <Card>
           <StatusPill tone={status.tone} className="text-[14px]">
             {status.headline}

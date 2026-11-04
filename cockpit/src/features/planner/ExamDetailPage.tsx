@@ -112,7 +112,7 @@ export default function ExamDetailPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
         <Card title="Lernfortschritt">
           <div className="flex items-center gap-5">
             <ProgressRing

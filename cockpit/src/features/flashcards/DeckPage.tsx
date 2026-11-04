@@ -81,7 +81,7 @@ export default function DeckPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
         <Panel className="lg:order-2" title="Heute">
           <p className="text-[15px] text-ink-2">
             {today > 0 ? (

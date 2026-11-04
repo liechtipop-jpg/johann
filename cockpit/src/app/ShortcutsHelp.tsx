@@ -15,7 +15,7 @@ export function ShortcutsHelp() {
   const { shortcuts } = useUI();
   return (
     <Sheet open={shortcuts} onClose={ui.closeShortcuts} title="Tastenkürzel" variant="wide">
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <section>
           <h3 className="mb-2 text-sm font-semibold text-ink-2">Allgemein</h3>
           <dl className="space-y-2">

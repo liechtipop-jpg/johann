@@ -52,7 +52,7 @@ export default function GradesPage() {
           </EmptyState>
         </Card>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
           <PromotionCard promotion={promotion} rules={rules} to={`/noten/promotion${semesterQuery}`} className="lg:order-2" />
           <Card
             title="Fächer"

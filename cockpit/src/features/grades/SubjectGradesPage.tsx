@@ -81,7 +81,7 @@ export default function SubjectGradesPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-start">
         <Card
           title="Zeugnisnote"
           description={rules.roundingStep > 0 ? `Gewichteter Schnitt, gerundet auf ${rounding}` : 'Gewichteter Schnitt, nicht gerundet'}

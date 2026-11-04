@@ -33,7 +33,7 @@ export function QuickAddSheet() {
     <Sheet open={open} onClose={ui.closeQuickAdd} title={type ? TITLES[type] : 'Schnell erfassen'}>
       {type === null && (
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions -- Ziffern 1–3 als Abkürzung; die Knöpfe selbst sind normal bedienbar.
-        <div onKeyDown={onKeyDown} className="grid gap-2 sm:grid-cols-3">
+        <div onKeyDown={onKeyDown} className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           {TYPES.map(({ type: t, key, label, text, icon: Icon }, index) => (
             <button
               key={t}

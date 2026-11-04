@@ -145,12 +145,12 @@ export function ExamForm({ onDone, onBack, defaultSubjectId, initial }: ExamForm
           />
         )}
       </Field>
-      <div className="grid grid-cols-[1fr_auto_auto] gap-3">
-        <Field label="Datum" error={errors.date}>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-[1fr_auto_auto]">
+        <Field label="Datum" error={errors.date} className="col-span-2 sm:col-span-1">
           {(p) => <Input {...p} type="date" value={date} onChange={(e) => setDate(e.target.value)} />}
         </Field>
         <Field label="Zeit" optional>
-          {(p) => <Input {...p} type="time" value={time} onChange={(e) => setTime(e.target.value)} className="w-28" />}
+          {(p) => <Input {...p} type="time" value={time} onChange={(e) => setTime(e.target.value)} className="sm:w-28" />}
         </Field>
         <Field label="Gewicht" error={errors.weight}>
           {(p) => (
@@ -159,7 +159,7 @@ export function ExamForm({ onDone, onBack, defaultSubjectId, initial }: ExamForm
               inputMode="decimal"
               value={weightText}
               onChange={(e) => setWeightText(e.target.value)}
-              className="w-20 text-center tabular-nums"
+              className="text-center tabular-nums sm:w-20"
             />
           )}
         </Field>

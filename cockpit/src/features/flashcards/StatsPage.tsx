@@ -32,8 +32,8 @@ export default function StatsPage() {
   const streak = reviewStreak(data.logs, today);
   const segments = [
     { key: 'review', label: 'Gelernt', value: counts.review, color: 'var(--accent)' },
-    { key: 'learning', label: 'Am Lernen', value: counts.learning, color: 'color-mix(in oklab, var(--accent) 55%, var(--surface))' },
-    { key: 'new', label: 'Neu', value: counts.new, color: 'color-mix(in oklab, var(--accent) 22%, var(--surface))' },
+    { key: 'learning', label: 'Am Lernen', value: counts.learning, color: 'var(--chart-seq-mid)' },
+    { key: 'new', label: 'Neu', value: counts.new, color: 'var(--chart-seq-low)' },
   ];
 
   return (

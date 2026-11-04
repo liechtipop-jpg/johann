@@ -1,7 +1,7 @@
 # PLAN – Cockpit
 
 Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
-**Status:** Phase 4 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
+**Status:** Phase 5 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
 
 ---
 
@@ -109,15 +109,19 @@ Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
 - Startdecks gibt es im Onboarding und auf der Kartenseite. Der Import läuft in einer Transaktion.
 - Statistik mit Säulendiagrammen (Tabellenansicht) und Kartenstatus.
 
-### Phase 5 – Heute
-- [ ] Begrüssung (tageszeitabhängig) mit Datum und Kalenderwoche
-- [ ] Nächste Prüfungen mit Countdown und Fortschrittsring
-- [ ] Heutige Lerneinheiten zum Abhaken
-- [ ] Fällige Aufgaben und fällige Karteikarten
-- [ ] Eigene Countdowns
-- [ ] Banner für Backup-Erinnerung und verpasste Lerneinheiten
-- [ ] Leerzustände mit nächster Aktion
-- [ ] Visuelle Kontrolle, Runde 1: Screenshots aller Seiten (390 und 1440 px, hell und dunkel, Demo-Daten), danach Verbesserungen
+### Phase 5 – Heute ✅
+- [x] Begrüssung (tageszeitabhängig) mit Datum und Kalenderwoche
+- [x] Nächste Prüfungen mit Countdown und Fortschrittsring
+- [x] Heutige Lerneinheiten zum Abhaken
+- [x] Fällige Aufgaben und fällige Karteikarten
+- [x] Eigene Countdowns
+- [x] Banner für Backup-Erinnerung und verpasste Lerneinheiten
+- [x] Leerzustände mit nächster Aktion
+- [x] Visuelle Kontrolle, Runde 1: Screenshots aller Seiten (390 und 1440 px, hell und dunkel, Demo-Daten), danach Verbesserungen
+
+**Stand Phase 5:**
+- «Heute» zeigt: verpasste Einheiten (neu verteilen), heutige Lerneinheiten, Aufgaben bis morgen, nächste drei Prüfungen mit Fortschrittsring, fällige Karteikarten, Countdowns, «Erste Schritte» und den Installationshinweis.
+- Visuelle Kontrolle, Runde 1: 76 Screenshots (`npm run screenshots`). Behoben wurden: Überbreite auf dem Handy, Segment-Breiten, das Prüfungsformular auf schmalen Bildschirmen, Kontraste der Statusbalken im Dunkelmodus und doppelte Zahlen in den Deck-Beschreibungen.
 
 ### Phase 6 – Klavier & Fokus-Timer
 - [ ] Metronom:

@@ -101,6 +101,9 @@
     /* Diagramme: divergierendes Paar (über / unter der Grenze), geprüft auf Farbsehschwäche */
     --chart-pos: #3366e0;
     --chart-neg: #d4483f;
+    /* Sequenz einer Farbe (wenig → viel), z. B. Kartenstatus */
+    --chart-seq-low: color-mix(in oklab, var(--accent) 22%, var(--surface));
+    --chart-seq-mid: color-mix(in oklab, var(--accent) 55%, var(--surface));
 
     /* Fächerfarben */
     --subject-red: #e5484d;
@@ -143,6 +146,8 @@
     --toast-action: #2e4df2;
     --chart-pos: #6a84ec;
     --chart-neg: #e2615a;
+    --chart-seq-low: color-mix(in oklab, var(--accent-ink) 32%, var(--surface));
+    --chart-seq-mid: color-mix(in oklab, var(--accent-ink) 62%, var(--surface));
 
     --subject-red: #f0686c;
     --subject-orange: #f28a3e;
