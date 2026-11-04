@@ -263,3 +263,10 @@ dialog.sheet::backdrop { background: rgb(5 7 12 / 0.6); }
 .pad { width: 100%; max-width: 640px; aspect-ratio: 4 / 3; height: auto; border-radius: 14px; touch-action: none; border: 1px solid var(--line); }
 .swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--line-2); background: var(--c); }
 .swatch[aria-pressed='true'] { outline: 3px solid var(--accent); }
+/* Poker auf schmalen Bildschirmen: Plätze als Reihe über dem Tisch, eigener Platz darunter */
+@media (max-width: 600px) {
+  .ptable { aspect-ratio: auto; min-height: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+  .ptable .felt { position: relative; inset: auto; order: 0; flex-basis: 100%; padding: 22px 8px; border-width: 6px; border-radius: 48% / 50%; }
+  .pseat { position: static; transform: none; min-width: 0; padding: 4px 8px; order: -1; }
+  .pseat.me { order: 1; }
+}

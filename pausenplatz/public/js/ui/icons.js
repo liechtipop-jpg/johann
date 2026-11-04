@@ -40,7 +40,6 @@ const G = {
   schach: '<path d="M16 41h18l-2-6c4-3 5-8 4-13-1-6-6-11-13-12l1 4-6 5-4 7 3 3 4-3 3 1c-3 3-7 6-8 14z" fill="currentColor" stroke="none"/><path d="M13 44h22" stroke-width="3"/>',
   poker: '<rect x="8" y="10" width="20" height="28" rx="3" transform="rotate(-12 18 24)" stroke-width="2.5"/><rect x="20" y="9" width="20" height="28" rx="3" fill="currentColor" stroke="none" transform="rotate(10 30 23)"/><path d="M30 17c-4 4-7 6-7 9a3 3 0 0 0 6 1l-1 4h4l-1-4a3 3 0 0 0 6-1c0-3-3-5-7-9z" fill="var(--bg,#0e1117)" stroke="none" transform="rotate(10 30 23)"/>',
   wahrheit: '<path d="M20 4h8v8l4 6v24H16V18l4-6z" stroke-width="2.5"/><path d="M16 26h16" stroke-width="2.5"/><path d="M9 40l-4 4M39 40l4 4M8 30H3M40 30h5" stroke-width="2.5"/>',
-  ichsehe: '<path d="M3 24s7-12 21-12 21 12 21 12-7 12-21 12S3 24 3 24z" stroke-width="2.5"/><circle cx="24" cy="24" r="7" fill="currentColor" stroke="none"/><circle cx="26.5" cy="21.5" r="2" fill="var(--bg,#0e1117)" stroke="none"/>',
 };
 
 export function gameIcon(id) {

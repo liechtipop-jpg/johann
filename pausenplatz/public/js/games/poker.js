@@ -24,7 +24,7 @@ export function create(root, api) {
       const info = people.get(p.id) ?? { name: '…' };
       const reveal = view.showdown?.reveal?.[p.id];
       const isTurn = view.toMove === p.id;
-      const seat = h('div', { class: `pseat ${isTurn ? 'turn' : ''} ${p.folded ? 'folded' : ''} ${p.out ? 'out' : ''}`, style: { '--x': `${50 + Math.cos(angle) * 42}%`, '--y': `${50 + Math.sin(angle) * 40}%` } },
+      const seat = h('div', { class: `pseat ${rel === 0 ? 'me' : ''} ${isTurn ? 'turn' : ''} ${p.folded ? 'folded' : ''} ${p.out ? 'out' : ''}`, style: { '--x': `${50 + Math.cos(angle) * 42}%`, '--y': `${50 + Math.sin(angle) * 40}%` } },
         h('div', { class: 'pname' }, avatar(info), h('span', {}, info.name), p.team ? h('span', { class: `team-tag ${p.team}` }, t(`teams.${p.team}`)) : null),
         h('div', { class: 'pchips' }, `${fmt(p.chips)}`, i === view.dealer ? h('span', { class: 'dealer', title: 'Dealer' }, 'D') : null, i === view.blindsAt?.[0] ? h('span', { class: 'blind' }, 'SB') : i === view.blindsAt?.[1] ? h('span', { class: 'blind' }, 'BB') : null),
         h('div', { class: 'pcards' }, reveal ? reveal.map((c) => cardSvg(c, { w: 30, highlight: winCards.has(c) })) : p.hasCards && p.id !== me ? [cardSvg(null, { w: 26 }), cardSvg(null, { w: 26 })] : null),
