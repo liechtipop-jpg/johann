@@ -30,7 +30,7 @@ export class GameSession {
   }
 
   start() {
-    const options = { ...this.room.options, mode: this.room.mode, firstTeam: this.room.firstTeam, customCards: this.room.customCards };
+    const options = { ...this.room.options, mode: this.room.mode, firstTeam: this.room.firstTeam, customCards: this.room.customCards, now: Date.now() };
     this.state = this.game.setup(this.players(), options, this.rng);
     this.update([]);
   }
@@ -70,7 +70,7 @@ export class GameSession {
       if (p.isBot || !p.connected) continue;
       const seated = this.room.seats.some((s) => s.playerId === p.id);
       const payload = this.viewFor(seated ? p.id : null);
-      payload.events = events.filter((e) => !e.to || e.to.includes(p.id));
+      payload.events = events.filter((e) => !e.onlyFor || e.onlyFor.includes(p.id));
       this.send(p, payload);
     }
   }

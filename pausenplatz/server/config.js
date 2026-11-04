@@ -20,5 +20,7 @@ export const config = {
     customCardsMax: 60,
   },
   botDelayMs: num(env.BOT_DELAY_MS, 700),
+  /** Nur für Tests: Rate-Limits für Aktionen hochsetzen (simulierte Spieler sind sehr schnell). */
+  rateFactor: num(env.RATE_LIMIT_FACTOR, 1),
   disconnectedTurnMs: num(env.DISCONNECTED_TURN_MS, 30_000),
 };

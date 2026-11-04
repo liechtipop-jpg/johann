@@ -202,3 +202,16 @@ dialog.sheet::backdrop { background: rgb(5 7 12 / 0.6); }
 .pulse { animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: 0.45; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
+.slide { animation: slide 0.25s var(--ease); }
+@keyframes slide { from { transform: translate(var(--dx), var(--dy)); } }
+.ships-wrap { width: 100%; display: grid; gap: 12px; }
+.boards { display: grid; gap: 16px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 900px) { .boards { grid-template-columns: 3fr 2fr; } }
+.sea { width: 100%; max-width: 560px; }
+.small-board { max-width: 380px; }
+.board-box { display: grid; place-items: center; touch-action: none; }
+.ship-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.ship-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line-2); background: var(--surface-2); font-weight: 650; touch-action: none; }
+.ship-chip[aria-pressed='true'] { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.ship-chip[data-placed='true'] { opacity: 0.7; }
+.ship-bar { display: inline-block; height: 10px; width: calc(var(--len) * 9px); border-radius: 6px; background: #8a97a8; }

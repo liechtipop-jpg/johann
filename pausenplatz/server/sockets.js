@@ -62,7 +62,7 @@ export function attachSockets(io, { botPool }) {
       socket.disconnect(true);
       return;
     }
-    const limits = { action: tokenBucket(config.limits.actionsPerSecond), chat: tokenBucket(config.limits.chatPerSecond, 2), join: windowCounter(config.limits.wrongCodesPerMinute, 60_000), any: tokenBucket(40, 80) };
+    const limits = { action: tokenBucket(config.limits.actionsPerSecond * config.rateFactor), chat: tokenBucket(config.limits.chatPerSecond, 1), join: windowCounter(config.limits.wrongCodesPerMinute, 60_000), any: tokenBucket(40 * config.rateFactor, 80 * config.rateFactor) };
     const reply = (ack, value) => typeof ack === 'function' && ack(value);
     const current = () => {
       const room = socket.data.roomCode && manager.rooms.get(socket.data.roomCode);

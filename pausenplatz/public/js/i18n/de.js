@@ -36,6 +36,37 @@ export const de = {
       ],
       reasons: { line: 'Drei in einer Reihe', draw: 'Alle Felder belegt' },
     },
+    muehle: {
+      name: 'Mühle', short: 'Setzen, ziehen, springen – wer drei in einer Linie hat, schnappt sich einen Stein.',
+      options: { flying: 'Springen mit drei Steinen' },
+      sides: ['Hell', 'Dunkel'],
+      place: 'Setz einen Stein ({n} übrig).', move: 'Zieh einen Stein entlang einer Linie.', fly: 'Du hast nur noch drei Steine – spring auf ein freies Feld.', remove: 'Mühle! Nimm einen Stein des Gegners weg.', select: 'Wähle einen deiner Steine.',
+      rules: [
+        ['Ziel', 'Lass deinem Gegner nur noch zwei Steine übrig oder blockiere ihn, sodass er nicht mehr ziehen kann.'],
+        ['1. Setzen', 'Abwechselnd setzt ihr eure neun Steine auf freie Punkte.'],
+        ['2. Ziehen', 'Danach zieht ihr einen eigenen Stein entlang einer Linie auf einen benachbarten freien Punkt.'],
+        ['3. Springen', 'Wer nur noch drei Steine hat, darf auf jeden freien Punkt springen (in den Optionen abschaltbar).'],
+        ['Mühle', 'Drei eigene Steine in einer Linie sind eine Mühle: Du nimmst einen gegnerischen Stein weg. Steine in einer geschlossenen Mühle sind geschützt – ausser alle gegnerischen Steine stehen in Mühlen. Auch eine Doppelmühle bringt nur einen Stein.'],
+        ['Unentschieden', 'Bei dreifacher Stellungswiederholung oder nach 50 Zügen pro Seite ohne neue Mühle.'],
+        ['Staffel (2v2, 3v3)', 'Die Mitglieder eines Teams ziehen reihum für ihre Farbe.'],
+      ],
+      reasons: { stones: 'Nur noch zwei Steine übrig', blocked: 'Kein Zug mehr möglich', repetition: 'Dreifache Stellungswiederholung', fifty: '50 Züge ohne Mühle' },
+    },
+    schiffe: {
+      name: 'Schiffe versenken', short: 'Versteck deine Flotte und finde die gegnerischen Schiffe zuerst.',
+      options: { touching: 'Schiffe dürfen sich berühren', again: 'Bei Treffer nochmal', salvo: 'Salve (so viele Schüsse wie Schiffe)' },
+      ownBoard: 'Deine Flotte', enemyBoard: 'Gegnerisches Meer', yourShips: 'Deine Schiffe', placeTitle: 'Platziere deine Schiffe', placeHint: 'Schiff wählen und aufs Feld tippen oder ziehen. Drehen: Knopf, Taste R oder doppelt antippen.',
+      rotate: 'Drehen', horizontal: 'waagrecht', vertical: 'senkrecht', random: 'Zufällig platzieren', ready: 'Fertig', waitOthers: 'Warte, bis alle ihre Schiffe platziert haben …', left: 'Übrige Schiffe', shots: 'noch {n} Schüsse',
+      rules: [
+        ['Ziel', 'Versenke alle gegnerischen Schiffe, bevor deine Flotte untergeht.'],
+        ['Platzieren', 'Jede Seite verteilt ihre Schiffe auf dem eigenen Feld. Standard: Schiffe berühren sich nicht, auch nicht diagonal. Nach 90 Sekunden wird der Rest zufällig platziert.'],
+        ['Schiessen', 'Abwechselnd tippt ihr ein Feld im gegnerischen Meer an: Wasser, Treffer oder versenkt. Versenkte Schiffe werden ganz umrandet.'],
+        ['Team-Flotte (2v2, 3v3)', 'Jedes Team hat ein gemeinsames, grösseres Feld. Jedes Mitglied platziert einen Teil der Flotte, geschossen wird reihum.'],
+        ['Optionen', '«Bei Treffer nochmal» gibt nach einem Treffer einen weiteren Schuss. «Salve»: so viele Schüsse pro Zug, wie man noch Schiffe hat.'],
+        ['Beispiel', 'Triffst du B4 und B5, liegt das Schiff senkrecht – probier als Nächstes B3 oder B6.'],
+      ],
+      reasons: { fleet: 'Alle Schiffe versenkt' },
+    },
     // GAMES_END
   },
 };

@@ -68,7 +68,7 @@ export class LocalSession {
   restart(swap = false) {
     clearTimeout(this.tickTimer);
     if (swap) this.options = { ...this.options, firstTeam: this.options.firstTeam === 'blue' ? 'red' : 'blue' };
-    this.state = this.game.setup(this.players, this.options, cryptoRng());
+    this.state = this.game.setup(this.players, { ...this.options, now: Date.now() }, cryptoRng());
     this.thinking.clear();
     this.emit([]);
   }
