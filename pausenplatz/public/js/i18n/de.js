@@ -82,6 +82,23 @@ export const de = {
       ],
       reasons: { checkmate: 'Schachmatt', stalemate: 'Patt', insufficient: 'Ungenügendes Material', threefold: 'Dreifache Stellungswiederholung', fifty: '50-Züge-Regel', timeout: 'Zeit abgelaufen', timeoutDraw: 'Zeit abgelaufen, aber kein Matt mehr möglich', resign: 'Aufgabe', agreement: 'Remis vereinbart' },
     },
+    poker: {
+      name: 'Poker', short: 'Texas Hold’em mit Spielgeld – Chips ohne Wert, Spass mit Wert.',
+      options: { chips: 'Startchips', blinds: 'Blinds', rising: 'Steigende Blinds (alle 10 Hände doppelt)', turnSeconds: 'Zugzeit (Sekunden)', rebuy: 'Rebuy (Neustart mit Chips, wenn pleite)', hands: 'Anzahl Hände (Team-Poker und Rebuy)' },
+      fold: 'Fold', check: 'Check', call: 'Call', raise: 'Erhöhen', betBtn: 'Setzen', half: '½ Pot', potBtn: 'Pot', amount: 'Einsatz', pot: 'Pot', bet: 'Einsatz', best: 'Deine beste Hand', hand: 'Hand', folded: 'ausgestiegen', out: 'ausgeschieden', nextHand: 'Gleich startet die nächste Hand …',
+      wins: '{names} gewinnt {amount}{hand}', streets: { flop: 'Flop', turn: 'Turn', river: 'River' }, acts: { fold: 'Fold', check: 'Check', call: 'Call', raise: 'Erhöht auf', allin: 'All-in' },
+      rules: [
+        ['Spielgeld', 'Es geht nur um Chips ohne Wert. Es gibt keine Käufe, Einsätze mit echtem Geld oder Auszahlungen.'],
+        ['Ablauf', 'Jede Person bekommt zwei verdeckte Karten. Nach Setzrunden kommen drei (Flop), eine (Turn) und eine (River) offene Karte. Die beste Fünf-Karten-Hand aus sieben Karten gewinnt.'],
+        ['Setzen', 'Check (schieben), Call (mitgehen), Bet/Raise (setzen, erhöhen) oder Fold (aussteigen). Eine Erhöhung muss mindestens so gross sein wie die letzte. Ein kleiner All-in eröffnet die Runde nicht neu.'],
+        ['Blinds', 'Small und Big Blind sind Pflichteinsätze links vom Dealer. Zu zweit setzt der Dealer den Small Blind und handelt vor dem Flop zuerst.'],
+        ['Hände', 'Höchste Karte < Paar < Zwei Paare < Drilling < Strasse (auch A-2-3-4-5) < Flush < Full House < Vierling < Straight Flush.'],
+        ['Pots', 'Bei mehreren All-ins entstehen Side-Pots. Bei Gleichstand wird geteilt, ein ungerader Chip geht an den ersten Gewinner links vom Dealer.'],
+        ['Team-Poker', 'Teams sitzen abwechselnd. Es gewinnt das Team, das übrig bleibt – oder nach der eingestellten Anzahl Hände das Team mit den meisten Chips.'],
+        ['Zeit', 'Läuft die Zugzeit ab, wird automatisch geschoben oder ausgestiegen.'],
+      ],
+      reasons: { last_player: 'Hat alle Chips gewonnen', last_team: 'Das andere Team ist pleite', hands: 'Die meisten Chips nach allen Händen' },
+    },
     // GAMES_END
   },
 };

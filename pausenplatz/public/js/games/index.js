@@ -4,5 +4,6 @@ export const RENDERERS = {
   muehle: () => import('./muehle.js'),
   schiffe: () => import('./schiffe.js'),
   schach: () => import('./schach.js'),
+  poker: () => import('./poker.js'),
 };
 export const CATEGORY_OF = (game) => game.category;
