@@ -93,11 +93,18 @@ export default function ExamDetailPage() {
             <IconButton label="Prüfung bearbeiten" onClick={() => setEditing(true)} className="border border-line">
               <Pencil size={18} aria-hidden />
             </IconButton>
-            <Button icon={<CalendarPlus size={18} aria-hidden />} onClick={() => void exportExamsIcs([exam], `Prüfung ${subject?.name ?? ''} ${exam.title}`)}>
+            <Button
+              icon={<CalendarPlus size={18} aria-hidden />}
+              onClick={() => void exportExamsIcs([exam], `Prüfung ${subject?.name ?? ''} ${exam.title}`)}
+            >
               Kalender
             </Button>
             {!exam.gradeId && (
-              <Button variant={days <= 0 ? 'primary' : 'secondary'} icon={<GraduationCap size={18} aria-hidden />} onClick={() => setGrading(true)}>
+              <Button
+                variant={days <= 0 ? 'primary' : 'secondary'}
+                icon={<GraduationCap size={18} aria-hidden />}
+                onClick={() => setGrading(true)}
+              >
                 Note eintragen
               </Button>
             )}
@@ -138,7 +145,14 @@ export default function ExamDetailPage() {
           </div>
         </Card>
 
-        <Card title="Themen" description={exam.topics.length ? `Aufwand: S ${studyPlan.effortMinutes.S} · M ${studyPlan.effortMinutes.M} · L ${studyPlan.effortMinutes.L} min` : undefined}>
+        <Card
+          title="Themen"
+          description={
+            exam.topics.length
+              ? `Aufwand: S ${studyPlan.effortMinutes.S} · M ${studyPlan.effortMinutes.M} · L ${studyPlan.effortMinutes.L} min`
+              : undefined
+          }
+        >
           {exam.topics.length === 0 ? (
             <EmptyState
               icon={ListPlus}
@@ -174,7 +188,11 @@ export default function ExamDetailPage() {
         <Card title="Lernplan" className="lg:row-span-2">
           {sessions.length === 0 ? (
             <p className="text-[15px] text-ink-2">
-              {exam.topics.length === 0 ? 'Füge Themen hinzu, dann plant Cockpit die Lerneinheiten.' : days <= 0 ? 'Die Prüfung ist vorbei.' : 'Noch kein Lernplan erstellt.'}
+              {exam.topics.length === 0
+                ? 'Füge Themen hinzu, dann plant Cockpit die Lerneinheiten.'
+                : days <= 0
+                  ? 'Die Prüfung ist vorbei.'
+                  : 'Noch kein Lernplan erstellt.'}
             </p>
           ) : (
             <div className="space-y-4">
@@ -241,7 +259,13 @@ export default function ExamDetailPage() {
       <Sheet open={grading} onClose={() => setGrading(false)} title="Note eintragen">
         {grading && (
           <GradeForm
-            preset={{ subjectId: exam.subjectId, title: exam.title, weight: exam.weight, date: exam.date <= today ? exam.date : today, examId: exam.id }}
+            preset={{
+              subjectId: exam.subjectId,
+              title: exam.title,
+              weight: exam.weight,
+              date: exam.date <= today ? exam.date : today,
+              examId: exam.id,
+            }}
             onDone={() => setGrading(false)}
           />
         )}

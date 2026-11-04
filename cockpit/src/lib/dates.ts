@@ -139,3 +139,17 @@ export function semesterForDate<T extends { start: ISODate; end: ISODate }>(seme
   const started = sorted.filter((s) => s.start <= date);
   return started.at(-1) ?? sorted[0];
 }
+
+/** Beginn des lokalen Tages (ms). */
+export function startOfDay(ms: number): number {
+  const d = new Date(ms);
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+/** Ende des lokalen Tages (ms, 23:59:59.999). */
+export function endOfDay(ms: number): number {
+  const d = new Date(ms);
+  d.setHours(23, 59, 59, 999);
+  return d.getTime();
+}

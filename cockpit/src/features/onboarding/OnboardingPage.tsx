@@ -7,6 +7,7 @@ import type { SubjectColor } from '@/db/schemas';
 import { patchSetting, setSetting } from '@/db/settings';
 import { useSettings } from '@/db/settingsContext';
 import { importBackupFile } from '@/features/backup/useBackup';
+import { addStarterDeck } from '@/features/flashcards/actions';
 import { PromotionRulesEditor } from '@/features/grades/PromotionRulesEditor';
 import type { PromotionRules } from '@/features/grades/logic/rules';
 import { SUBJECT_SUGGESTIONS } from '@/features/subjects/suggestions';
@@ -37,6 +38,7 @@ export default function OnboardingPage() {
   const [semester, setSemester] = useState(() => suggestSemester(todayISO()));
   const [rules, setRules] = useState<PromotionRules>(settings.promotionRules);
   const [countdown, setCountdown] = useState({ enabled: false, title: 'Montpellier', date: '' });
+  const [starter, setStarter] = useState({ french: false, fce: false });
   const [busy, setBusy] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const first = useRef(true);
@@ -81,8 +83,14 @@ export default function OnboardingPage() {
       await setSetting('profile', { name: name.trim() });
       await setSetting('promotionRules', rules);
       await patchSetting('backup', { firstUseAt: now });
-      await setSetting('onboarding', { done: true, completedAt: now });
     });
+    // Startdecks nach den Fächern anlegen, damit sie dem passenden Fach zugeordnet werden.
+    const keys = [
+      ...(starter.french ? ['fr-montpellier'] : []),
+      ...(starter.fce ? ['fce-phrasal-verbs', 'fce-word-formation', 'fce-collocations'] : []),
+    ];
+    for (const key of keys) await addStarterDeck(key, { silent: true });
+    await setSetting('onboarding', { done: true, completedAt: now });
     await persist;
   }
 
@@ -177,7 +185,7 @@ export default function OnboardingPage() {
         {step === 4 && (
           <>
             <h1 {...headingProps}>Fast geschafft{name.trim() ? `, ${name.trim()}` : ''}</h1>
-            <Section title="Vorschlag">
+            <Section title="Vorschläge">
               <Switch
                 label={`Countdown «${countdown.title || 'Montpellier'}»`}
                 description="Zählt auf «Heute» die Tage bis zu deinem Sprachaufenthalt."
@@ -209,8 +217,22 @@ export default function OnboardingPage() {
                   </Field>
                 </div>
               )}
+              <div className="mt-3 space-y-1 border-t border-line pt-3">
+                <Switch
+                  label="Startdeck Französisch «Montpellier»"
+                  description="120 Karten A2–B1: Smalltalk, Gastfamilie, Essen, Unterwegs, Einkaufen, Sprachschule, Notfall"
+                  checked={starter.french}
+                  onChange={(french) => setStarter({ ...starter, french })}
+                />
+                <Switch
+                  label="Startdecks Cambridge B2 First (FCE)"
+                  description="170 Karten: Phrasal Verbs, Word Formation, Collocations"
+                  checked={starter.fce}
+                  onChange={(fce) => setStarter({ ...starter, fce })}
+                />
+              </div>
               <p className="mt-3 text-[13px] text-ink-2">
-                Startdecks, Klavierstücke und Studienoptionen schlägt dir Cockpit später direkt im jeweiligen Bereich vor.
+                Klavierstücke und Studienoptionen schlägt dir Cockpit später direkt im jeweiligen Bereich vor.
               </p>
             </Section>
             <Section title="Damit nichts verloren geht">

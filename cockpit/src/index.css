@@ -210,6 +210,41 @@
     }
   }
 
+  /* Karteikarte mit 3D-Flip (bei reduzierter Bewegung: Überblenden). */
+  .flip-scene {
+    perspective: 1400px;
+  }
+  .flip-card {
+    display: grid;
+    transform-style: preserve-3d;
+    transition: transform 250ms var(--ease-soft);
+  }
+  .flip-card[data-flipped='true'] {
+    transform: rotateY(180deg);
+  }
+  .flip-face {
+    grid-area: 1 / 1;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flip-card,
+    .flip-card[data-flipped='true'],
+    .flip-back {
+      transform: none;
+    }
+    .flip-face {
+      transition: opacity 150ms linear !important;
+    }
+    .flip-card[data-flipped='true'] .flip-front,
+    .flip-card:not([data-flipped='true']) .flip-back {
+      opacity: 0;
+    }
+  }
+
   /* Bottom-Sheet auf dem Handy, zentrierter Dialog auf dem Desktop (natives <dialog>). */
   .sheet {
     position: fixed;

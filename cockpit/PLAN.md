@@ -1,7 +1,7 @@
 # PLAN – Cockpit
 
 Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
-**Status:** Phase 3 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
+**Status:** Phase 4 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
 
 ---
 
@@ -90,18 +90,24 @@ Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
 - Prüfungsseite `/planer/pruefung/:id`: Fortschrittsring, Themen, Lernplan, Notizen, «Note eintragen» (verknüpft Note und Prüfung), Export in den Kalender.
 - Lernplan-Tab mit «Verpasstes neu verteilen» (ein Tap, mit Rückgängig). Aufgaben lassen sich jetzt auch bearbeiten.
 
-### Phase 4 – Karteikarten
-- [ ] Decks pro Fach: Sprache je Seite, Richtung (vorwärts, rückwärts, beide), Karten mit Beispielsatz
-- [ ] Lernen mit FSRS (`ts-fsrs`):
+### Phase 4 – Karteikarten ✅
+- [x] Decks pro Fach: Sprache je Seite, Richtung (vorwärts, rückwärts, beide), Karten mit Beispielsatz
+- [x] Lernen mit FSRS (`ts-fsrs`):
   - Bewertung über Tasten 1–4, Leertaste dreht um
   - Wischgesten (links Nochmal, unten Schwer, rechts Gut, oben Leicht) und Buttons zusätzlich
-- [ ] Modi Umdrehen (3D-Flip) und Eintippen: tolerant bei Gross-/Kleinschreibung; Akzentfehler gelten als «fast richtig» mit Hinweis
-- [ ] Aussprache per Web Speech API (fr-FR, en-GB), CSV-Import mit Vorschau (Quizlet: Tab/Zeilenumbruch, auch `;` und `,`)
-- [ ] Statistik: Wiederholungen pro Tag, Trefferquote, Kartenstatus, Prognose der nächsten 7 Tage
-- [ ] Startdecks (selbst geschrieben, jede Karte mit Beispielsatz):
+- [x] Modi Umdrehen (3D-Flip) und Eintippen: tolerant bei Gross-/Kleinschreibung; Akzentfehler gelten als «fast richtig» mit Hinweis
+- [x] Aussprache per Web Speech API (fr-FR, en-GB), CSV-Import mit Vorschau (Quizlet: Tab/Zeilenumbruch, auch `;` und `,`)
+- [x] Statistik: Wiederholungen pro Tag, Trefferquote, Kartenstatus, Prognose der nächsten 7 Tage
+- [x] Startdecks (selbst geschrieben, jede Karte mit Beispielsatz):
   - Französisch A2–B1 «Montpellier»: ca. 120 Karten in 7 Themen
   - FCE: 80 Phrasal Verbs, 50 Word-Formation-Familien, 40 Collocations
-- [ ] Tests: Planung (Warteschlange, neue Karten pro Tag, Richtungen), Antwortprüfung, CSV-Parser
+- [x] Tests: Planung (Warteschlange, neue Karten pro Tag, Richtungen), Antwortprüfung, CSV-Parser
+
+**Stand Phase 4:**
+- FSRS über die klassische Schnittstelle von `ts-fsrs` 6 (Lernschritte 1 und 10 min, höchstens 1 Jahr Abstand, einstellbare Trefferquote).
+- Lernansicht im Vollbild `/karten/lernen/:deck` (auch «alle»): Rücknahme der letzten Bewertung, Lernschritte kommen in derselben Sitzung wieder.
+- Startdecks gibt es im Onboarding und auf der Kartenseite. Der Import läuft in einer Transaktion.
+- Statistik mit Säulendiagrammen (Tabellenansicht) und Kartenstatus.
 
 ### Phase 5 – Heute
 - [ ] Begrüssung (tageszeitabhängig) mit Datum und Kalenderwoche

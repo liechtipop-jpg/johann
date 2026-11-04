@@ -135,7 +135,7 @@ export const cardStateSchema = z.object({
   due: ms,
   stability: z.number(),
   difficulty: z.number(),
-  elapsedDays: z.number(),
+  elapsedDays: z.number().optional(),
   scheduledDays: z.number(),
   learningSteps: z.number(),
   reps: z.number().int(),

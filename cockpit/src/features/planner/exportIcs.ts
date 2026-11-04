@@ -18,5 +18,8 @@ export async function exportExamsIcs(exams: Exam[], label: string): Promise<void
     if (result !== 'failed') return;
   }
   downloadFile(file);
-  toast(`${file.name} gespeichert – öffne die Datei, um die Termine in deinen Kalender zu übernehmen.`, { tone: 'success', duration: 6000 });
+  toast(`${file.name} gespeichert – öffne die Datei, um die Termine in deinen Kalender zu übernehmen.`, {
+    tone: 'success',
+    duration: 6000,
+  });
 }

@@ -61,7 +61,10 @@ export function foldLine(line: string): string {
 const compactDate = (iso: string) => iso.replace(/-/g, '');
 
 function utcStamp(date: Date): string {
-  return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  return date
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '');
 }
 
 function addHour(time: string): string {
@@ -72,14 +75,18 @@ function addHour(time: string): string {
 
 export function buildIcs(items: readonly IcsExam[], now: Date = new Date()): string {
   const timed = items.some((i) => i.exam.time);
-  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Cockpit//Lern-App//DE', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:Prüfungen (Cockpit)'];
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Cockpit//Lern-App//DE',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:Prüfungen (Cockpit)',
+  ];
   if (timed) lines.push(...VTIMEZONE_ZURICH);
   for (const { exam, subjectName } of items) {
     const summary = `${subjectName}: ${exam.title}`;
-    const description = [
-      exam.topics.length ? `Themen: ${exam.topics.map((t) => t.title).join(', ')}` : '',
-      exam.notes?.trim() ?? '',
-    ]
+    const description = [exam.topics.length ? `Themen: ${exam.topics.map((t) => t.title).join(', ')}` : '', exam.notes?.trim() ?? '']
       .filter(Boolean)
       .join('\n');
     lines.push('BEGIN:VEVENT', `UID:${exam.id}@cockpit.app`, `DTSTAMP:${utcStamp(now)}`);

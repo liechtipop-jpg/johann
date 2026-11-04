@@ -68,7 +68,9 @@ export function rulesEqual(a: PromotionRules, b: PromotionRules): boolean {
 export function describeRules(rules: PromotionRules): string[] {
   const lines: string[] = [];
   lines.push(
-    rules.roundingStep > 0 ? `Zeugnisnoten werden auf ${roundingPhrase(rules.roundingStep)} gerundet.` : 'Zeugnisnoten werden nicht gerundet.',
+    rules.roundingStep > 0
+      ? `Zeugnisnoten werden auf ${roundingPhrase(rules.roundingStep)} gerundet.`
+      : 'Zeugnisnoten werden nicht gerundet.',
   );
   lines.push(
     `Höchstens ${rules.maxInsufficient} ungenügende ${rules.maxInsufficient === 1 ? 'Note' : 'Noten'} (unter ${rules.passMark}) in den Promotionsfächern.`,

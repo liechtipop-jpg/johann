@@ -137,3 +137,41 @@ test('Prüfung mit Themen erzeugt einen Lernplan; Einheiten abhaken; .ics-Export
   const file = await download;
   expect(file.suggestedFilename()).toMatch(/\.ics$/);
 });
+
+test('Karteikarten: Startdeck, Umdrehen, Bewerten und Eintippen mit Akzent-Hinweis', async ({ page }) => {
+  await page.goto('/willkommen');
+  await page.getByLabel('Wie heisst du?').fill('Test');
+  await page.getByRole('button', { name: 'Weiter' }).click();
+  await page.getByRole('button', { name: 'Französisch' }).click();
+  for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Weiter' }).click();
+  await page.getByRole('switch', { name: 'Startdeck Französisch «Montpellier»' }).click();
+  await page.getByRole('button', { name: 'Los geht’s' }).click();
+  await expect(page).toHaveURL(/\/$/);
+
+  await page.goto('/karten');
+  const deck = page.getByRole('article').filter({ hasText: 'Französisch – Montpellier' });
+  await expect(deck).toContainText('120 Karten');
+  await expect(deck).toContainText('20 neu');
+  await deck.getByRole('link', { name: 'Lernen' }).click();
+
+  await expect(page.getByText('Hallo, wie geht’s?').first()).toBeVisible();
+  await page.getByRole('button', { name: 'Antwort zeigen' }).click();
+  await expect(page.getByRole('group', { name: 'Wie gut wusstest du es?' })).toBeVisible();
+  await page.keyboard.press('3');
+  await expect(page.getByText('noch 20')).toBeVisible(); // Karte kommt nach 10 min wieder (Lernschritt) → hinten angehängt
+  await page.getByRole('button', { name: 'Letzte Bewertung zurücknehmen' }).click();
+  await expect(page.getByRole('button', { name: 'Letzte Bewertung zurücknehmen' })).toBeDisabled();
+  await expect(page.getByText('noch 20')).toBeVisible();
+
+  await page.goto('/karten');
+  await page
+    .getByRole('article')
+    .filter({ hasText: 'Französisch – Montpellier' })
+    .getByRole('link', { name: /Montpellier/ })
+    .click();
+  await page.getByRole('link', { name: 'Eintippen' }).click();
+  await page.getByLabel('Deine Antwort').fill('salut, ca va');
+  await page.getByRole('button', { name: 'Prüfen' }).click();
+  await expect(page.getByText('Fast richtig')).toBeVisible();
+  await expect(page.getByText('Achte auf die Akzente: «ça»')).toBeVisible();
+});

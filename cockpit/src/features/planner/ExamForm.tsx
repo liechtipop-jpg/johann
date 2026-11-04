@@ -113,7 +113,10 @@ export function ExamForm({ onDone, onBack, defaultSubjectId, initial }: ExamForm
       const id = newId();
       await db.exams.add({ id, ...data, createdAt: Date.now() });
       const result = pending.length > 0 ? await rebuildPlan(id) : null;
-      const plan = result && result.sessions.length > 0 ? ` – Lernplan mit ${plural(result.sessions.length, 'Einheit', 'Einheiten')}${overflowNote(result)}` : '';
+      const plan =
+        result && result.sessions.length > 0
+          ? ` – Lernplan mit ${plural(result.sessions.length, 'Einheit', 'Einheiten')}${overflowNote(result)}`
+          : '';
       toastUndo(`Prüfung am ${formatDate(date, 'dayMonth')} gespeichert${plan}`, () =>
         db.transaction('rw', db.exams, db.studySessions, async () => {
           await db.studySessions.where('examId').equals(id).delete();

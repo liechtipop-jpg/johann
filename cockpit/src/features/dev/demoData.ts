@@ -1,4 +1,18 @@
-import type { Countdown, Exam, Grade, KvRow, Semester, StudySession, Subject, SubjectColor, Task } from '@/db/schemas';
+import type {
+  Card,
+  CardState,
+  Countdown,
+  Deck,
+  Exam,
+  Grade,
+  KvRow,
+  ReviewLog,
+  Semester,
+  StudySession,
+  Subject,
+  SubjectColor,
+  Task,
+} from '@/db/schemas';
 import { ZH_GYM_RULES } from '@/features/grades/logic/rules';
 import { DEFAULT_PLAN_PREFS, generatePlan } from '@/features/planner/logic/studyplan';
 import { addDays, diffDays, suggestSemester, type ISODate } from '@/lib/dates';
@@ -13,7 +27,26 @@ export interface DemoData {
   tasks: Task[];
   countdowns: Countdown[];
   studySessions: StudySession[];
+  decks: Deck[];
+  cards: Card[];
+  cardStates: CardState[];
+  reviewLogs: ReviewLog[];
 }
+
+const DEMO_CARDS: Array<[string, string, string]> = [
+  ['la famille', 'die Familie', 'Ma famille habite à Lyon.'],
+  ['le frère', 'der Bruder', "Mon frère s'appelle Luc."],
+  ['la sœur', 'die Schwester', 'Ma sœur a douze ans.'],
+  ['les parents', 'die Eltern', 'Mes parents travaillent beaucoup.'],
+  ['le grand-père', 'der Grossvater', 'Mon grand-père joue aux échecs.'],
+  ['la tante', 'die Tante', 'Ma tante vit au Canada.'],
+  ['le cousin', 'der Cousin', 'Mon cousin fait du foot.'],
+  ['se disputer', 'streiten', 'Mes frères se disputent souvent.'],
+  ["s'entendre bien", 'sich gut verstehen', "Je m'entends bien avec ma sœur."],
+  ['le mariage', 'die Hochzeit', 'Le mariage a lieu en juin.'],
+  ['divorcé(e)', 'geschieden', 'Ses parents sont divorcés.'],
+  ['élever', 'erziehen', 'Elle a été élevée par sa grand-mère.'],
+];
 
 const SUBJECTS: Array<[string, SubjectColor, boolean]> = [
   ['Deutsch', 'red', true],
@@ -157,6 +190,61 @@ export function buildDemoData(today: ISODate, now: number, theme: 'system' | 'li
     missed.doneAt = undefined;
   }
 
+  // Karteikarten mit etwas Lernverlauf (für «Heute» und die Statistik).
+  const DAY = 86_400_000;
+  const deck: Deck = {
+    id: id('deck', 1),
+    name: 'Vocabulaire Unité 4',
+    subjectId: subjects[1].id,
+    frontLang: 'fr-FR',
+    backLang: 'de-CH',
+    directions: 'fwd',
+    source: 'user',
+    createdAt: now - 20 * DAY,
+  };
+  const cards: Card[] = DEMO_CARDS.map(([front, back, example], i) => ({
+    id: id('card', i),
+    deckId: deck.id,
+    front,
+    back,
+    example,
+    createdAt: now - 20 * DAY + i,
+  }));
+  const cardStates: CardState[] = cards.map((card, i) => {
+    const learned = i < 8;
+    return {
+      id: `${card.id}:fwd`,
+      cardId: card.id,
+      deckId: deck.id,
+      dir: 'fwd',
+      due: learned ? now + (i % 3 === 0 ? -DAY : (i % 4) * DAY) : now,
+      stability: learned ? 3 + i : 0,
+      difficulty: learned ? 5 : 0,
+      scheduledDays: learned ? 2 + (i % 4) : 0,
+      learningSteps: 0,
+      reps: learned ? 3 : 0,
+      lapses: learned && i === 5 ? 1 : 0,
+      state: learned ? 2 : 0,
+      lastReview: learned ? now - 2 * DAY : undefined,
+    };
+  });
+  const reviewLogs: ReviewLog[] = [];
+  for (let day = 13; day >= 1; day--) {
+    const count = [4, 6, 0, 5, 8, 3, 0, 7, 9, 5, 6, 4, 8][day - 1];
+    for (let k = 0; k < count; k++) {
+      reviewLogs.push({
+        id: id(`log${day}`, k),
+        cardId: cards[(day + k) % 8].id,
+        deckId: deck.id,
+        dir: 'fwd',
+        rating: (day + k) % 6 === 0 ? 1 : 3,
+        mode: 'flip',
+        reviewedAt: now - day * DAY + k * 60_000,
+        state: 2,
+      });
+    }
+  }
+
   const task = (n: number, title: string, due: number | null, subject: number | null, done = false): Task => ({
     id: id('task', n),
     title,
@@ -191,5 +279,5 @@ export function buildDemoData(today: ISODate, now: number, theme: 'system' | 'li
     { key: 'dev', value: { enabled: true, demoActive: true } },
   ];
 
-  return { kv, subjects, semesters, grades, exams, tasks, countdowns, studySessions };
+  return { kv, subjects, semesters, grades, exams, tasks, countdowns, studySessions, decks: [deck], cards, cardStates, reviewLogs };
 }

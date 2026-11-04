@@ -51,7 +51,9 @@ export function StudyPlanSettings() {
       const today = todayISO();
       const exams = (await db.exams.where('date').above(today).sortBy('date')).filter((e) => e.topics.length > 0);
       for (const exam of exams) await rebuildPlan(exam.id, today);
-      toast(exams.length ? `${plural(exams.length, 'Lernplan', 'Lernpläne')} neu berechnet` : 'Keine anstehenden Prüfungen mit Themen', { tone: 'success' });
+      toast(exams.length ? `${plural(exams.length, 'Lernplan', 'Lernpläne')} neu berechnet` : 'Keine anstehenden Prüfungen mit Themen', {
+        tone: 'success',
+      });
     } finally {
       setBusy(false);
     }
@@ -94,7 +96,10 @@ export function StudyPlanSettings() {
           {prefs.blockedDates.length > 0 && (
             <ul className="mb-2 flex flex-wrap gap-1.5">
               {prefs.blockedDates.map((date) => (
-                <li key={date} className="inline-flex h-9 items-center gap-1 rounded-full bg-surface-2 pr-1 pl-3 text-sm tabular-nums dark:bg-surface-3">
+                <li
+                  key={date}
+                  className="inline-flex h-9 items-center gap-1 rounded-full bg-surface-2 pr-1 pl-3 text-sm tabular-nums dark:bg-surface-3"
+                >
                   {formatDate(date, 'weekday')}
                   <IconButton
                     label={`${formatDate(date, 'long')} freigeben`}
@@ -165,7 +170,9 @@ export function StudyPlanSettings() {
         />
 
         <div className="flex flex-wrap items-center gap-3 border-t border-line pt-4">
-          <p className="min-w-48 flex-1 text-[13px] text-ink-2">Änderungen gelten für neue Lernpläne. Bestehende kannst du neu berechnen; Erledigtes bleibt erhalten.</p>
+          <p className="min-w-48 flex-1 text-[13px] text-ink-2">
+            Änderungen gelten für neue Lernpläne. Bestehende kannst du neu berechnen; Erledigtes bleibt erhalten.
+          </p>
           <Button size="sm" icon={<RefreshCw size={16} aria-hidden />} disabled={busy} onClick={() => void rebuildAll()}>
             Alle neu berechnen
           </Button>

@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import type { StudySession } from '@/db/schemas';
 import { addDays, weekdayIndex } from '@/lib/dates';
-import { DEFAULT_PLAN_PREFS, availableDays, generatePlan, planProgress, redistributeMissed, reviewMinutes, type PlanPrefs } from './studyplan';
+import {
+  DEFAULT_PLAN_PREFS,
+  availableDays,
+  generatePlan,
+  planProgress,
+  redistributeMissed,
+  reviewMinutes,
+  type PlanPrefs,
+} from './studyplan';
 
 const today = '2026-11-02'; // Montag
 const prefs: PlanPrefs = { ...DEFAULT_PLAN_PREFS };
@@ -118,7 +126,12 @@ describe('Verpasstes neu verteilen', () => {
 
   it('verschiebt verpasste Einheiten auf freie Tage ab heute', () => {
     const r = redistributeMissed({
-      sessions: [session('m1', addDays(today, -2)), session('m2', addDays(today, -1)), session('f1', today, { minutes: 60 }), session('d1', addDays(today, -3), { done: true })],
+      sessions: [
+        session('m1', addDays(today, -2)),
+        session('m2', addDays(today, -1)),
+        session('f1', today, { minutes: 60 }),
+        session('d1', addDays(today, -3), { done: true }),
+      ],
       examDates,
       today,
       prefs,
@@ -150,7 +163,12 @@ describe('Verpasstes neu verteilen', () => {
 
 describe('Lernfortschritt', () => {
   it('rechnet mit erledigten Minuten', () => {
-    expect(planProgress([{ minutes: 30, done: true }, { minutes: 90, done: false }])).toEqual({ done: 30, total: 120, ratio: 0.25 });
+    expect(
+      planProgress([
+        { minutes: 30, done: true },
+        { minutes: 90, done: false },
+      ]),
+    ).toEqual({ done: 30, total: 120, ratio: 0.25 });
     expect(planProgress([])).toEqual({ done: 0, total: 0, ratio: 0 });
   });
 });

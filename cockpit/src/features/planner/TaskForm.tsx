@@ -44,7 +44,9 @@ export function TaskForm({ onDone, onBack, initial }: { onDone: () => void; onBa
         done: false,
         createdAt: Date.now(),
       });
-      toastUndo(isISODate(due) ? `Aufgabe bis ${formatDate(due, 'weekday')} gespeichert` : 'Aufgabe gespeichert', () => db.tasks.delete(id));
+      toastUndo(isISODate(due) ? `Aufgabe bis ${formatDate(due, 'weekday')} gespeichert` : 'Aufgabe gespeichert', () =>
+        db.tasks.delete(id),
+      );
     }
     onDone();
   }

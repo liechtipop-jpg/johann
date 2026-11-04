@@ -28,7 +28,11 @@ export async function rebuildPlan(examId: string, today: ISODate = todayISO()): 
     const result = generatePlan({
       examDate: exam.date,
       today,
-      topics: exam.topics.map((t) => ({ id: t.id, effort: t.effort, minutes: Math.max(0, prefs.effortMinutes[t.effort] - (learned.get(t.id) ?? 0)) })),
+      topics: exam.topics.map((t) => ({
+        id: t.id,
+        effort: t.effort,
+        minutes: Math.max(0, prefs.effortMinutes[t.effort] - (learned.get(t.id) ?? 0)),
+      })),
       prefs,
       load,
     });

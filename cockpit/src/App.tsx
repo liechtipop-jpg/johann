@@ -1,4 +1,4 @@
-import { Compass, Layers, Piano, Timer } from 'lucide-react';
+import { Compass, Piano, Timer } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayout from './app/AppLayout';
@@ -17,6 +17,10 @@ const GradesPage = lazy(() => import('./features/grades/GradesPage'));
 const SubjectGradesPage = lazy(() => import('./features/grades/SubjectGradesPage'));
 const PromotionPage = lazy(() => import('./features/grades/PromotionPage'));
 const SettingsPage = lazy(() => import('./features/settings/SettingsPage'));
+const DecksPage = lazy(() => import('./features/flashcards/DecksPage'));
+const DeckPage = lazy(() => import('./features/flashcards/DeckPage'));
+const StudyPage = lazy(() => import('./features/flashcards/StudyPage'));
+const CardStatsPage = lazy(() => import('./features/flashcards/StatsPage'));
 const OnboardingPage = lazy(() => import('./features/onboarding/OnboardingPage'));
 const MorePage = lazy(() => import('./app/MorePage'));
 const NotFound = lazy(() => import('./app/NotFound'));
@@ -31,6 +35,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: '/karten/lernen/:deckId',
+    element: (
+      <Suspense fallback={null}>
+        <StudyPage />
+      </Suspense>
+    ),
+  },
+  {
     path: '/',
     element: <AppLayout />,
     children: [
@@ -40,7 +52,9 @@ const router = createBrowserRouter([
       { path: 'noten', element: <GradesPage /> },
       { path: 'noten/fach/:subjectId', element: <SubjectGradesPage /> },
       { path: 'noten/promotion', element: <PromotionPage /> },
-      { path: 'karten', element: <ComingSoon title="Karteikarten" phase={4} icon={Layers} /> },
+      { path: 'karten', element: <DecksPage /> },
+      { path: 'karten/deck/:deckId', element: <DeckPage /> },
+      { path: 'karten/statistik', element: <CardStatsPage /> },
       { path: 'klavier', element: <ComingSoon title="Klavier" phase={6} icon={Piano} /> },
       { path: 'fokus', element: <ComingSoon title="Fokus-Timer" phase={6} icon={Timer} /> },
       { path: 'kompass', element: <ComingSoon title="Studienwahl-Kompass" phase={7} icon={Compass} /> },

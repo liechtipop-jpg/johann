@@ -88,7 +88,9 @@ function sortSessions<T extends PlannedSession>(sessions: T[]): T[] {
 export function generatePlan({ examDate, today, topics, prefs, load = {} }: PlanInput): PlanResult {
   const days = availableDays(today, examDate, prefs);
   const free = new Map(days.map((d) => [d, Math.max(0, prefs.maxMinutesPerDay - (load[d] ?? 0))]));
-  const items = topics.map((t) => ({ id: t.id, minutes: Math.max(0, Math.round(t.minutes ?? prefs.effortMinutes[t.effort])) })).filter((t) => t.minutes > 0);
+  const items = topics
+    .map((t) => ({ id: t.id, minutes: Math.max(0, Math.round(t.minutes ?? prefs.effortMinutes[t.effort])) }))
+    .filter((t) => t.minutes > 0);
   const totalMinutes = items.reduce((s, t) => s + t.minutes, 0);
   if (items.length === 0) return { sessions: [], overflowMinutes: 0, availableDays: days.length };
   if (days.length === 0) return { sessions: [], overflowMinutes: totalMinutes, availableDays: 0 };
@@ -99,7 +101,8 @@ export function generatePlan({ examDate, today, topics, prefs, load = {} }: Plan
     free.set(date, (free.get(date) ?? 0) - minutes);
   };
 
-  const repetition = prefs.repetitionDay && days.length >= 2 ? ([...days].reverse().find((d) => (free.get(d) ?? 0) >= MIN_PIECE) ?? null) : null;
+  const repetition =
+    prefs.repetitionDay && days.length >= 2 ? ([...days].reverse().find((d) => (free.get(d) ?? 0) >= MIN_PIECE) ?? null) : null;
   const learnDays = days.filter((d) => d !== repetition);
   const windowSize = Math.max(1, Math.ceil((learnDays.length * 2) / 3));
 
@@ -140,7 +143,8 @@ export function generatePlan({ examDate, today, topics, prefs, load = {} }: Plan
     }
     overflowMinutes += remaining;
     for (const s of sessions) {
-      if (s.topicId === chunk.topicId && s.kind === 'learn' && s.date > (lastLearned.get(chunk.topicId) ?? '')) lastLearned.set(chunk.topicId, s.date);
+      if (s.topicId === chunk.topicId && s.kind === 'learn' && s.date > (lastLearned.get(chunk.topicId) ?? ''))
+        lastLearned.set(chunk.topicId, s.date);
     }
   });
 

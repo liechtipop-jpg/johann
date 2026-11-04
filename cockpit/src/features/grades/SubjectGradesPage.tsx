@@ -82,7 +82,10 @@ export default function SubjectGradesPage() {
       />
 
       <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-        <Card title="Zeugnisnote" description={rules.roundingStep > 0 ? `Gewichteter Schnitt, gerundet auf ${rounding}` : 'Gewichteter Schnitt, nicht gerundet'}>
+        <Card
+          title="Zeugnisnote"
+          description={rules.roundingStep > 0 ? `Gewichteter Schnitt, gerundet auf ${rounding}` : 'Gewichteter Schnitt, nicht gerundet'}
+        >
           <div className="flex items-end gap-6">
             <GradeBadge grade={summary?.grade ?? null} passMark={rules.passMark} size="lg" />
             <dl className="grid grid-cols-[auto_auto] gap-x-4 gap-y-0.5 pb-1 text-sm">

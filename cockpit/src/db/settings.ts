@@ -37,6 +37,11 @@ export const SETTINGS = {
     reviewOffsets: z.array(z.number().int().min(1).max(60)).max(10).default(DEFAULT_PLAN_PREFS.reviewOffsets),
     repetitionDay: z.boolean().default(DEFAULT_PLAN_PREFS.repetitionDay),
   }),
+  flashcards: z.object({
+    newPerDay: z.number().int().min(0).max(200).default(20),
+    retention: z.number().min(0.7).max(0.97).default(0.9),
+    autoSpeak: z.boolean().default(false),
+  }),
   install: z.object({ hintDismissed: z.boolean().default(false) }),
   dev: z.object({ enabled: z.boolean().default(false), demoActive: z.boolean().default(false) }),
   ui: z.object({ lastSubjectId: z.string().optional() }),

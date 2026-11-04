@@ -46,13 +46,23 @@ export default function PlannerPage() {
         title="Planer"
         actions={
           tab !== 'lernplan' && (
-            <Button variant="primary" icon={<Plus size={18} aria-hidden />} onClick={() => ui.openQuickAdd(tab === 'aufgaben' ? 'task' : 'exam')}>
+            <Button
+              variant="primary"
+              icon={<Plus size={18} aria-hidden />}
+              onClick={() => ui.openQuickAdd(tab === 'aufgaben' ? 'task' : 'exam')}
+            >
               {tab === 'aufgaben' ? 'Aufgabe' : 'Prüfung'}
             </Button>
           )
         }
       />
-      <SegmentedControl label="Ansicht" options={TABS} value={tab} onChange={(v) => setParams({ tab: v }, { replace: true })} className="mb-5 max-w-md" />
+      <SegmentedControl
+        label="Ansicht"
+        options={TABS}
+        value={tab}
+        onChange={(v) => setParams({ tab: v }, { replace: true })}
+        className="mb-5 max-w-md"
+      />
       {tab === 'pruefungen' && <ExamList />}
       {tab === 'aufgaben' && <TaskList />}
       {tab === 'lernplan' && <StudyPlanView />}
@@ -91,7 +101,10 @@ function ExamList() {
     const progress = planProgress(sessions.filter((s) => s.examId === exam.id));
     return (
       <li key={exam.id}>
-        <Link to={`/planer/pruefung/${exam.id}`} className="flex items-center gap-3 rounded-[10px] px-2 py-2.5 transition-colors hover:bg-surface-2">
+        <Link
+          to={`/planer/pruefung/${exam.id}`}
+          className="flex items-center gap-3 rounded-[10px] px-2 py-2.5 transition-colors hover:bg-surface-2"
+        >
           <div
             className="subject grid w-12 shrink-0 place-items-center rounded-[10px] bg-(--sc-soft) py-1.5 text-(--sc-text)"
             style={subject ? subjectStyle(subject.color) : undefined}
@@ -107,7 +120,9 @@ function ExamList() {
             </p>
           </div>
           {days >= 0 && (
-            <span className={cn('hidden shrink-0 text-sm font-medium tabular-nums sm:block', days <= 3 ? 'text-warning' : 'text-ink-2')}>{relativeDays(days)}</span>
+            <span className={cn('hidden shrink-0 text-sm font-medium tabular-nums sm:block', days <= 3 ? 'text-warning' : 'text-ink-2')}>
+              {relativeDays(days)}
+            </span>
           )}
           {progress.total > 0 && (
             <ProgressRing
@@ -133,7 +148,12 @@ function ExamList() {
         description={upcoming.length ? plural(upcoming.length, 'Prüfung', 'Prüfungen') : 'Nichts geplant'}
         action={
           upcoming.length > 0 && (
-            <Button size="sm" variant="ghost" icon={<CalendarPlus size={16} aria-hidden />} onClick={() => void exportExamsIcs(upcoming, 'Prüfungen')}>
+            <Button
+              size="sm"
+              variant="ghost"
+              icon={<CalendarPlus size={16} aria-hidden />}
+              onClick={() => void exportExamsIcs(upcoming, 'Prüfungen')}
+            >
               Alle in den Kalender
             </Button>
           )
@@ -144,7 +164,9 @@ function ExamList() {
       </Card>
       {past.length > 0 && (
         <details className="rounded-[14px] border border-line bg-surface">
-          <summary className="flex h-12 cursor-pointer items-center px-4 text-[15px] font-medium lg:px-5">Vergangene Prüfungen ({past.length})</summary>
+          <summary className="flex h-12 cursor-pointer items-center px-4 text-[15px] font-medium lg:px-5">
+            Vergangene Prüfungen ({past.length})
+          </summary>
           <ul className="divide-y divide-line border-t border-line px-2 lg:px-3">{past.map(row)}</ul>
         </details>
       )}
@@ -190,10 +212,15 @@ function StudyPlanView() {
   return (
     <div className="space-y-4">
       {missed.length > 0 && (
-        <section aria-label="Verpasste Einheiten" className="flex flex-wrap items-center gap-3 rounded-[14px] border border-warning/25 bg-warning-soft p-4">
+        <section
+          aria-label="Verpasste Einheiten"
+          className="flex flex-wrap items-center gap-3 rounded-[14px] border border-warning/25 bg-warning-soft p-4"
+        >
           <div className="min-w-48 flex-1">
             <p className="font-semibold">{plural(missed.length, 'Einheit', 'Einheiten')} verpasst</p>
-            <p className="text-sm text-ink-2">{formatMinutes(missed.reduce((n, s) => n + s.minutes, 0))} – Cockpit verteilt sie auf deine freien Tage.</p>
+            <p className="text-sm text-ink-2">
+              {formatMinutes(missed.reduce((n, s) => n + s.minutes, 0))} – Cockpit verteilt sie auf deine freien Tage.
+            </p>
           </div>
           <Button size="sm" variant="primary" onClick={() => void redistributeAll(today)}>
             Neu verteilen
@@ -211,7 +238,12 @@ function StudyPlanView() {
           >
             <ul className="-my-1 divide-y divide-line">
               {list.map((s) => (
-                <SessionRow key={s.id} session={s} exam={examMap.get(s.examId)} subject={subjects.get(examMap.get(s.examId)?.subjectId ?? '')} />
+                <SessionRow
+                  key={s.id}
+                  session={s}
+                  exam={examMap.get(s.examId)}
+                  subject={subjects.get(examMap.get(s.examId)?.subjectId ?? '')}
+                />
               ))}
             </ul>
           </Card>
@@ -293,8 +325,15 @@ function TaskList() {
                       label={`${task.title} erledigt`}
                       color={subject ? subjectColorValue(subject.color) : undefined}
                     />
-                    <button type="button" onClick={() => setEditing(task)} className="min-w-0 flex-1 rounded-[8px] py-1 text-left" aria-label={`${task.title} bearbeiten`}>
-                      <span className={cn('block truncate text-[15px]', task.done && 'text-ink-2 line-through decoration-ink-3')}>{task.title}</span>
+                    <button
+                      type="button"
+                      onClick={() => setEditing(task)}
+                      className="min-w-0 flex-1 rounded-[8px] py-1 text-left"
+                      aria-label={`${task.title} bearbeiten`}
+                    >
+                      <span className={cn('block truncate text-[15px]', task.done && 'text-ink-2 line-through decoration-ink-3')}>
+                        {task.title}
+                      </span>
                       {(subject || task.due) && (
                         <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-2">
                           {subject && <SubjectChip name={subject.name} color={subject.color} />}
