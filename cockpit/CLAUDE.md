@@ -4,7 +4,7 @@ Persönliche Schul- und Lern-App als PWA. Alle Daten lokal (IndexedDB), kein Ser
 Spezifikation: `SPEC.md` · Plan und Fortschritt: `PLAN.md`. Die App liegt in `cockpit/`; das Poker-Projekt im Repo-Hauptordner ist davon unabhängig.
 
 ## Stack
-React + TypeScript (strict) + Vite, React Router, Tailwind CSS v4, Dexie + dexie-react-hooks (Live-Queries), Zod, ts-fsrs, dnd-kit, Recharts, vite-plugin-pwa, lucide-react, Fontsource (Inter Variable, Instrument Serif). Tests: Vitest (+ fake-indexeddb), Playwright.
+React + TypeScript (strict) + Vite, React Router, Tailwind CSS v4, Dexie + dexie-react-hooks (Live-Queries), Zod, ts-fsrs, dnd-kit, Recharts, vite-plugin-pwa, lucide-react, Fontsource (Inter Variable, Instrument Serif). Tests: Vitest (+ fake-indexeddb), Playwright. TypeScript 5.9 und ESLint 9, weil typescript-eslint bzw. jsx-a11y neuere Versionen noch nicht unterstützen.
 
 ## Befehle (im Ordner `cockpit/`)
 - `npm run dev` – Entwicklungsserver (Dev-Modus aktiv)
@@ -12,7 +12,8 @@ React + TypeScript (strict) + Vite, React Router, Tailwind CSS v4, Dexie + dexie
 - `npm run preview` – Build lokal ansehen (mit Service Worker)
 - `npm run lint` – ESLint
 - `npm test` – Unit-Tests (Vitest)
-- `npm run test:e2e` – Playwright-Tests
+- `npm run test:e2e` – Playwright-Tests (vorher `npm run build`; läuft gegen `vite preview`)
+- `npm run format` – Prettier (einfache Anführungszeichen, 140 Zeichen)
 - `npm run screenshots` – Screenshots aller Seiten (390/1440 px, hell/dunkel)
 
 ## Regeln
@@ -28,4 +29,5 @@ React + TypeScript (strict) + Vite, React Router, Tailwind CSS v4, Dexie + dexie
 - Löschen/Ersetzen sofort ausführen, mit Toast «Rückgängig» – keine Bestätigungsdialoge.
 - Keine Netzwerkanfragen zur Laufzeit (keine CDNs, kein Tracking).
 - Fakten (Promotionsregeln, Prüfungszeiten, Fristen) nur mit Link zur offiziellen Quelle; Unbestätigtes leer lassen oder als «bitte prüfen» markieren.
+- Dialoge: `ui/Sheet` (natives `<dialog>`); Fokus über `data-autofocus`. Meldungen: `toast()`/`toastUndo()` – es ist immer nur eine sichtbar.
 - Nach jeder Phase: `npm run build`, `npm run lint`, `npm test` grün → Commit → `PLAN.md` abhaken.

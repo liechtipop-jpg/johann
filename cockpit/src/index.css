@@ -1,0 +1,268 @@
+@import 'tailwindcss';
+
+/* Dunkelmodus folgt dem data-theme-Attribut auf <html> (System, Hell oder Dunkel). */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+
+  --ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --animate-fade-in: fade-in 200ms var(--ease-soft);
+  --animate-sheet-up: sheet-up 220ms var(--ease-soft);
+  --animate-pop-in: pop-in 200ms var(--ease-soft);
+  --animate-toast-in: toast-in 200ms var(--ease-soft);
+  --animate-check-in: check-in 180ms var(--ease-soft);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes sheet-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  @keyframes check-in {
+    from {
+      transform: scale(0.4);
+      opacity: 0;
+    }
+  }
+}
+
+/* Semantische Farben → Tailwind-Klassen wie bg-surface, text-ink-2, border-line … */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+    /* Warme Neutraltöne */
+    --bg: #f7f5f1;
+    --surface: #ffffff;
+    --surface-2: #f1eee8;
+    --surface-3: #e8e4dc;
+    --line: #e5e0d8;
+    --line-strong: #d3ccc1;
+    --ink: #1d1b18;
+    --ink-2: #57514a;
+    --ink-3: #756e65;
+    /* Akzent: Kobaltblau */
+    --accent: #3355ff;
+    --accent-hover: #2443e6;
+    --accent-soft: #e9edff;
+    --accent-ink: #2e4df2;
+    --on-accent: #ffffff;
+    /* Status (immer zusätzlich mit Symbol oder Text) */
+    --success: #18794a;
+    --success-soft: #e2f2e8;
+    --warning: #965a00;
+    --warning-soft: #f8edd9;
+    --danger: #b83232;
+    --danger-soft: #f9e3e1;
+    --shadow-overlay: 0 1px 2px rgb(29 27 24 / 0.06), 0 12px 32px rgb(29 27 24 / 0.14);
+    --toast-action: #aab6ff;
+
+    /* Fächerfarben */
+    --subject-red: #e5484d;
+    --subject-orange: #e8650a;
+    --subject-yellow: #cc9a06;
+    --subject-olive: #7a8d1c;
+    --subject-green: #2f9e5b;
+    --subject-teal: #0e9384;
+    --subject-cyan: #0b8db3;
+    --subject-sky: #3e8edb;
+    --subject-violet: #8a5cd1;
+    --subject-pink: #d6459a;
+    --subject-brown: #a06a3f;
+    --subject-slate: #64748b;
+  }
+
+  [data-theme='dark'] {
+    color-scheme: dark;
+    --bg: #131211;
+    --surface: #1b1a18;
+    --surface-2: #242220;
+    --surface-3: #2e2b28;
+    --line: #33302c;
+    --line-strong: #47423c;
+    --ink: #eeebe6;
+    --ink-2: #ada69c;
+    --ink-3: #8a8378;
+    --accent: #4762ff;
+    --accent-hover: #5a73ff;
+    --accent-soft: rgb(110 130 255 / 0.16);
+    --accent-ink: #8c9bff;
+    --on-accent: #ffffff;
+    --success: #4acf85;
+    --success-soft: rgb(74 207 133 / 0.14);
+    --warning: #f2b544;
+    --warning-soft: rgb(242 181 68 / 0.14);
+    --danger: #ff7a72;
+    --danger-soft: rgb(255 122 114 / 0.14);
+    --shadow-overlay: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px rgb(0 0 0 / 0.5);
+    --toast-action: #2e4df2;
+
+    --subject-red: #f0686c;
+    --subject-orange: #f28a3e;
+    --subject-yellow: #e3b53b;
+    --subject-olive: #9db43a;
+    --subject-green: #4cc27e;
+    --subject-teal: #2fb6a4;
+    --subject-cyan: #36aed4;
+    --subject-sky: #6aa9ec;
+    --subject-violet: #a685e8;
+    --subject-pink: #e86fb4;
+    --subject-brown: #c48c5f;
+    --subject-slate: #8d9aae;
+  }
+
+  html {
+    background-color: var(--bg);
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-ink);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--accent-soft);
+  }
+
+  /* Während ein Dialog offen ist, scrollt die Seite dahinter nicht mit. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  /* Fachfarbe: Element bekommt --sc per style, daraus entstehen weiche Fläche und lesbarer Text. */
+  .subject {
+    --sc-soft: color-mix(in oklab, var(--sc) 14%, var(--surface));
+    --sc-text: color-mix(in oklab, var(--sc) 62%, var(--ink));
+  }
+
+  /* Fortschrittsring: füllt sich beim Erscheinen und bei Änderungen. */
+  .ring-progress {
+    transition: stroke-dashoffset 250ms var(--ease-soft);
+    animation: ring-fill 250ms var(--ease-soft);
+  }
+  @keyframes ring-fill {
+    from {
+      stroke-dashoffset: var(--ring-from);
+    }
+  }
+
+  /* Bottom-Sheet auf dem Handy, zentrierter Dialog auf dem Desktop (natives <dialog>). */
+  .sheet {
+    position: fixed;
+    inset: 0;
+    margin: auto auto 0;
+    width: 100%;
+    max-width: 100%;
+    max-height: 92dvh;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    overflow: visible;
+  }
+  .sheet::backdrop {
+    background: rgb(15 14 13 / 0.42);
+    animation: var(--animate-fade-in);
+  }
+  .sheet[open] > .sheet-panel {
+    animation: var(--animate-sheet-up);
+  }
+  .sheet-panel {
+    display: flex;
+    flex-direction: column;
+    max-height: 92dvh;
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    box-shadow: var(--shadow-overlay);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  @media (min-width: 64rem) {
+    .sheet {
+      margin: auto;
+      width: min(560px, calc(100% - 48px));
+      max-height: 85dvh;
+    }
+    .sheet.sheet-wide {
+      width: min(720px, calc(100% - 48px));
+    }
+    .sheet.sheet-top {
+      margin-top: 12vh;
+    }
+    .sheet-panel {
+      border-radius: 16px;
+      max-height: 85dvh;
+      padding-bottom: 0;
+    }
+    .sheet[open] > .sheet-panel {
+      animation: var(--animate-pop-in);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

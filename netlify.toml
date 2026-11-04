@@ -1,0 +1,14 @@
+# Netlify: veröffentlicht die Cockpit-App aus dem Ordner cockpit/
+[build]
+  base = "cockpit"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Alle Seiten der App (z. B. /noten) liefern index.html aus
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

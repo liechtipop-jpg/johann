@@ -1,7 +1,7 @@
 # PLAN – Cockpit
 
 Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
-**Status:** Phase 0 erledigt – wartet auf OK.
+**Status:** Phase 1 erledigt – wartet auf «weiter» für Phase 2.
 
 ---
 
@@ -19,38 +19,44 @@ Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
 
 ### Phase 0 – Plan ✅
 - [x] `SPEC.md` (Prompt wörtlich), `PLAN.md`, `CLAUDE.md`
-- [ ] OK abwarten
+- [x] OK erhalten
 
-### Phase 1 – Fundament
-- [ ] Setup: Vite, React, TypeScript (strict), Tailwind v4, ESLint (mit jsx-a11y), Vitest (mit fake-indexeddb), Playwright
-- [ ] Designsystem: Tokens hell/dunkel, Fächerfarben, Schriften (Fontsource), UI-Bausteine (siehe unten)
-- [ ] Datenbank: Dexie-Schema v1 mit allen Tabellen für Stufe 1 und 2, Zod-Schemas, Migrationsgerüst mit Test
-- [ ] App-Hülle: Tab-Leiste (Handy) und Seitenleiste (Desktop), Routing mit Lazy-Loading
-- [ ] Onboarding in 5 Schritten:
+### Phase 1 – Fundament ✅
+- [x] Setup: Vite, React, TypeScript (strict), Tailwind v4, ESLint (mit jsx-a11y), Vitest (mit fake-indexeddb), Playwright
+- [x] Designsystem: Tokens hell/dunkel, Fächerfarben, Schriften (Fontsource), UI-Bausteine (siehe unten)
+- [x] Datenbank: Dexie-Schema v1 mit allen Tabellen für Stufe 1 und 2, Zod-Schemas, Migrationsgerüst mit Test
+- [x] App-Hülle: Tab-Leiste (Handy) und Seitenleiste (Desktop), Routing mit Lazy-Loading
+- [x] Onboarding in 5 Schritten:
   1. Name
   2. Fächer (Vorschlagsliste, Farbe, Promotionsfach ja/nein)
   3. Aktuelles Semester
   4. Promotionsregeln
   5. Vorschlagspakete, danach Speicher-Freigabe und Installationshinweis
-- [ ] Einstellungen:
+- [x] Einstellungen:
   - Profil und Darstellung (System, Hell, Dunkel)
   - Fächer (bearbeiten, mit dnd-kit sortieren, archivieren) und Semester
   - Regeln und Daten
-- [ ] Plus-Button für Note, Prüfung oder Aufgabe: 2 Taps bis zum Formular
-- [ ] Toasts mit «Rückgängig» als gemeinsamer Mechanismus für alles, was löscht oder ersetzt
-- [ ] Befehlspalette (Ctrl/Cmd+K), Tastenkürzel, Taste `?` zeigt die Übersicht
-- [ ] Backup:
+- [x] Plus-Button für Note, Prüfung oder Aufgabe: 2 Taps bis zum Formular
+- [x] Toasts mit «Rückgängig» als gemeinsamer Mechanismus für alles, was löscht oder ersetzt
+- [x] Befehlspalette (Ctrl/Cmd+K), Tastenkürzel, Taste `?` zeigt die Übersicht
+- [x] Backup:
   - Export als JSON (Web Share API, sonst Download)
   - Import mit Zod-Prüfung und «Rückgängig»
   - Erinnerung alle 14 Tage
   - `navigator.storage.persist()` anfragen
   - Installieren-Hinweis (Android-Prompt, iOS-Anleitung)
-- [ ] PWA: Manifest, Icons, Service Worker (alles offline), Update-Hinweis, App-Shortcuts (z. B. «Note erfassen»)
-- [ ] Dev-Modus mit Schalter «Demo-Daten laden» (fiktive Daten, wächst mit jeder Phase)
-- [ ] Tests: Backup-Export und -Import, Migration, Datumshelfer
+- [x] PWA: Manifest, Icons, Service Worker (alles offline), Update-Hinweis, App-Shortcuts (z. B. «Note erfassen»)
+- [x] Dev-Modus mit Schalter «Demo-Daten laden» (fiktive Daten, wächst mit jeder Phase)
+- [x] Tests: Backup-Export und -Import, Migration, Datumshelfer
+
+**Stand Phase 1:**
+- Vorgezogen: Recherche zu den Promotionsregeln, weil das Onboarding sie braucht. Die offiziellen Seiten von zh.ch waren aus der Bauumgebung gesperrt. Standardwerte deshalb sichtbar als «bitte prüfen» markiert, mit Link zu LS 413.251.1.
+- Vorläufige Listen für «Noten» und «Planer» zeigen schon alles Erfasste. Phase 2 und 3 bauen sie aus.
+- Karten, Klavier, Fokus und Kompass zeigen «Kommt bald»; diese Hinweise verschwinden mit ihrer Phase.
+- Deploy-Konfiguration: `netlify.toml` im Repo-Hauptordner und `vercel.json`.
 
 ### Phase 2 – Noten & Promotion
-- [ ] Recherche Promotionsreglement Zürcher Mittelschulen. Quelle wird in den Einstellungen verlinkt; nicht sicher Verifiziertes trägt den Hinweis «bitte mit dem Reglement deiner Schule prüfen».
+- [x] Recherche Promotionsreglement Zürcher Mittelschulen (in Phase 1 vorgezogen). Quelle ist in den Einstellungen verlinkt; nicht sicher Verifiziertes trägt den Hinweis «bitte mit dem Reglement deiner Schule prüfen».
 - [ ] Noten erfassen und bearbeiten: Note (Komma oder Punkt), Gewicht, Titel, Datum, Fach, Semester
 - [ ] Semesterübersicht: alle Fächer mit gewichtetem Schnitt und gerundeter Zeugnisnote
 - [ ] Fach-Detail: Notenliste, Verlauf als Diagramm (Einzelnoten und laufender Schnitt), Wunschnoten-Rechner mit Rundungsgrenze
