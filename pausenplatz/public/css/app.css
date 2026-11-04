@@ -247,3 +247,19 @@ dialog.sheet::backdrop { background: rgb(5 7 12 / 0.6); }
 .raise input[type='range'] { flex: 1; min-width: 140px; accent-color: var(--accent); }
 .raise-out { min-width: 60px; font-weight: 800; font-variant-numeric: tabular-nums; }
 .card { filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.3)); }
+.party { width: 100%; display: grid; gap: 14px; }
+.party-top { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.bottle-circle { position: relative; width: 190px; height: 190px; flex: none; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, var(--surface)), var(--surface)); border: 1px solid var(--line); }
+.bc-seat { position: absolute; left: 50%; top: 50%; transform: rotate(var(--a)) translateY(-78px) rotate(calc(-1 * var(--a))); margin: -17px 0 0 -17px; transition: transform 0.2s; }
+.bc-seat.on .avatar { box-shadow: 0 0 0 3px var(--accent); }
+.bottle { position: absolute; left: 50%; top: 50%; width: 16px; height: 96px; margin: -48px 0 0 -8px; border-radius: 8px 8px 6px 6px; background: linear-gradient(#7bd389, #2f8a5b); transform: rotate(var(--r)); transition: transform 2.4s cubic-bezier(0.15, 0.85, 0.25, 1); }
+.bottle::before { content: ''; position: absolute; left: 4px; top: -14px; width: 8px; height: 18px; border-radius: 3px; background: #2f8a5b; }
+.tcard { padding: 18px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); display: grid; gap: 8px; animation: pop 0.25s var(--ease); }
+.tcard.truth { border-top: 4px solid var(--blue); }
+.tcard.dare { border-top: 4px solid var(--accent); }
+.tcard-text { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.35; }
+.answer { margin: 0; padding: 12px 14px; border-left: 4px solid var(--accent); background: var(--surface-2); border-radius: 10px; }
+.scoreboard { display: grid; gap: 4px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+.pad { width: 100%; max-width: 640px; aspect-ratio: 4 / 3; height: auto; border-radius: 14px; touch-action: none; border: 1px solid var(--line); }
+.swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--line-2); background: var(--c); }
+.swatch[aria-pressed='true'] { outline: 3px solid var(--accent); }

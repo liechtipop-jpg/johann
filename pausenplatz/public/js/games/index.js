@@ -5,5 +5,6 @@ export const RENDERERS = {
   schiffe: () => import('./schiffe.js'),
   schach: () => import('./schach.js'),
   poker: () => import('./poker.js'),
+  wahrheit: () => import('./wahrheit.js'),
 };
 export const CATEGORY_OF = (game) => game.category;

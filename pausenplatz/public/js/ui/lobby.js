@@ -61,7 +61,7 @@ export function renderLobby(room) {
       hasAi(room.gameId) && (game.botModes ?? []).includes(room.mode) ? button(t('room.fillBots'), { kind: 'small', iconName: 'bot', onClick: () => botSheet() }) : null,
       (game.optionDefs ?? []).some((d) => !d.hidden) ? button(t('room.options'), { kind: 'small', iconName: 'gear', onClick: () => optionsSheet(room, game) }) : null,
       button(t('room.changeGame'), { kind: 'small', iconName: 'grid', onClick: () => changeGameSheet(room) }),
-      room.gameId === 'wahrheit' ? button(t('room.customCards'), { kind: 'small', iconName: 'plus', onClick: () => cardSheet() }) : null),
+      room.gameId === 'wahrheit' && room.phase === 'lobby' ? button(t('room.customCards'), { kind: 'small', iconName: 'plus', onClick: () => cardSheet() }) : null),
     switchRow(t('room.chatOn'), room.chatEnabled, (v) => host({ type: 'chat', enabled: v })),
     room.mode !== 'group' ? switchRow(t('room.teamChatOn'), room.teamChatEnabled, (v) => host({ type: 'teamChat', enabled: v })) : null) : null;
   const chat = chatPanel(room);

@@ -24,6 +24,7 @@ export const de = {
     seat_taken: 'Dieser Platz ist schon besetzt.', server_full: 'Der Server ist gerade voll. Versuch es gleich nochmal.', offline: 'Keine Verbindung zum Server.', timeout: 'Der Server antwortet nicht. Prüf die Verbindung.', text_bad: 'Dieser Text ist nicht erlaubt.', too_short: 'Der Text ist zu kurz.', too_many: 'Es sind schon genug eigene Karten.',
     invalid: 'Dieser Zug ist nicht erlaubt.', occupied: 'Dieses Feld ist schon besetzt.', game_over: 'Das Spiel ist vorbei.', spectator: 'Zuschauer können nicht mitspielen.', default: 'Das hat nicht geklappt.',
   },
+  canvas: { label: 'Zeichenfläche', color: 'Farbe', width: 'Strichstärke', eraser: 'Radierer', undo: 'Rückgängig' },
   reactions: { '👍': 'Daumen hoch', '😂': 'Lachen', '😮': 'Staunen', '🔥': 'Feuer', '👏': 'Applaus' },
   games: {
     tictactoe: {
@@ -98,6 +99,23 @@ export const de = {
         ['Zeit', 'Läuft die Zugzeit ab, wird automatisch geschoben oder ausgestiegen.'],
       ],
       reasons: { last_player: 'Hat alle Chips gewonnen', last_team: 'Das andere Team ist pleite', hands: 'Die meisten Chips nach allen Händen' },
+    },
+    wahrheit: {
+      name: 'Wahrheit oder Tat', short: 'Unterrichts-Edition: freundliche Fragen und leise Aufgaben – die Flasche entscheidet.',
+      options: { categories: 'Kategorien', rounds: 'Runden (jede Person so oft dran)' }, values: { categories: { leise: 'Unterricht (leise)', pause: 'Pause', kreativ: 'Kreativ', kopfnuss: 'Kopfnuss', eigene: 'Eigene Karte' } },
+      round: 'Zug {n} von {total}', spinning: 'Die Flasche dreht sich …', yourTurn: 'Die Flasche zeigt auf dich!', turnOf: '{name} ist dran', truth: 'Wahrheit', dare: 'Tat', jokers: 'Joker: {n}', choosing: '{name} wählt …',
+      answerPh: 'Antwort eintippen …', send: 'Senden', saidAloud: 'Laut gesagt', doneBtn: 'Erledigt', joker: 'Joker einsetzen ({n})', voteQ: 'Hat {name} es geschafft?', yes: 'Geschafft', no: 'Nicht geschafft', votes: '{n} von {total} haben abgestimmt', voteNow: 'Stimm ab!',
+      passed: '{name} hat es geschafft!', failed: '{name} hat es diesmal nicht geschafft.',
+      rules: [
+        ['Ablauf', 'Die Flasche wählt fair: nie zweimal hintereinander dieselbe Person, alle kommen etwa gleich oft dran. Wer dran ist, wählt «Wahrheit» oder «Tat» und bekommt eine Karte.'],
+        ['Wahrheit', 'Antwort eintippen (alle sehen sie) oder laut sagen.'],
+        ['Tat', 'Aufgabe erledigen – manche auf der Zeichenfläche, die alle sehen. Danach stimmt die Gruppe ab: geschafft oder nicht. Die Mehrheit entscheidet, Gleichstand zählt als geschafft.'],
+        ['Punkte', 'Wahrheit geschafft: 1 Punkt, Tat geschafft: 2 Punkte. In 2v2 und 3v3 zählt die Teamsumme.'],
+        ['Joker', 'Jede Person hat 2 Joker pro Spiel: Karte überspringen und eine neue ziehen – ohne Punktabzug und ohne Begründung.'],
+        ['Unterricht (leise)', 'Alles lässt sich unauffällig am Platz oder auf dem Gerät erledigen: zeichnen, schreiben, tippen. Wahrheiten werden schriftlich beantwortet.'],
+        ['Eigene Karten', 'Der Host kann in der Lobby eigene Karten hinzufügen. Sie laufen durch den Wortfilter.'],
+      ],
+      reasons: { points: 'Die meisten Punkte' },
     },
     // GAMES_END
   },
