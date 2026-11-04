@@ -15,6 +15,9 @@ const PAGES: Array<[string, string]> = [
   ['lernen', '/karten/lernen/demo-deck-1'],
   ['karten-statistik', '/karten/statistik'],
   ['klavier', '/klavier'],
+  ['klavier-metronom', '/klavier?tab=metronom'],
+  ['klavier-repertoire', '/klavier?tab=repertoire'],
+  ['klavier-stueck', '/klavier/stueck/demo-piece-1'],
   ['fokus', '/fokus'],
   ['kompass', '/kompass'],
   ['mehr', '/mehr'],
@@ -66,7 +69,8 @@ for (const size of SIZES) {
       await fresh.goto('/willkommen');
       await fresh.getByLabel('Wie heisst du?').fill('Alex');
       await fresh.getByRole('button', { name: 'Weiter' }).click();
-      for (const s of ['Deutsch', 'Französisch', 'Englisch', 'Mathematik']) await fresh.getByRole('button', { name: s, exact: true }).click();
+      for (const s of ['Deutsch', 'Französisch', 'Englisch', 'Mathematik'])
+        await fresh.getByRole('button', { name: s, exact: true }).click();
       await fresh.screenshot({ path: `${prefix}-onboarding.png`, fullPage: true });
 
       const page = await newPage(browser, size, theme);
@@ -74,7 +78,11 @@ for (const size of SIZES) {
       await loadDemo(page);
       for (const [name, url] of PAGES) {
         await page.goto(url);
-        await page.locator('main h1, h1').first().waitFor({ timeout: 10_000 }).catch(() => undefined);
+        await page
+          .locator('main h1, h1')
+          .first()
+          .waitFor({ timeout: 10_000 })
+          .catch(() => undefined);
         await page.waitForTimeout(500);
         await page.screenshot({ path: `${prefix}-${name}.png`, fullPage: true });
       }

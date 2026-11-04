@@ -4,8 +4,11 @@ import type {
   Countdown,
   Deck,
   Exam,
+  FocusSession,
   Grade,
   KvRow,
+  Piece,
+  PracticeLog,
   ReviewLog,
   Semester,
   StudySession,
@@ -31,6 +34,9 @@ export interface DemoData {
   cards: Card[];
   cardStates: CardState[];
   reviewLogs: ReviewLog[];
+  pieces: Piece[];
+  practiceLogs: PracticeLog[];
+  focusSessions: FocusSession[];
 }
 
 const DEMO_CARDS: Array<[string, string, string]> = [
@@ -269,6 +275,109 @@ export function buildDemoData(today: ISODate, now: number, theme: 'system' | 'li
     { id: id('cd', 2), title: 'Sportwoche', date: addDays(today, 38), createdAt: now },
   ];
 
+  // Klavier: drei Stücke mit selbst gewählten Abschnitten und zehn Wochen Übungslog (fünf Tage in Folge bis gestern).
+  const at = (date: ISODate, time: string) => new Date(`${date}T${time}:00`).getTime();
+  const section = (piece: number, n: number, bars: string, status: Piece['status'], bpm?: number, targetBpm?: number) => ({
+    id: id(`sec${piece}`, n),
+    name: `Abschnitt ${String.fromCharCode(64 + n)}`,
+    bars,
+    status,
+    bpm,
+    targetBpm,
+  });
+  const pieces: Piece[] = [
+    {
+      id: id('piece', 1),
+      title: 'Für Elise',
+      composer: 'Ludwig van Beethoven',
+      status: 'consolidating',
+      sections: [
+        section(1, 1, '1–8', 'ready', 66, 72),
+        section(1, 2, '9–16', 'consolidating', 58, 72),
+        section(1, 3, '17–24', 'learning', 44, 72),
+      ],
+      lessonNotes: [
+        {
+          id: id('note1', 1),
+          date: addDays(today, -6),
+          text: 'Abschnitt C: linke Hand allein und langsam mit Metronom (40 BPM). Pedal erst später dazunehmen.',
+        },
+        { id: id('note1', 2), date: addDays(today, -13), text: 'Abschnitt A sitzt – auf gleichmässige Sechzehntel achten.' },
+      ],
+      order: 1,
+      createdAt: now,
+    },
+    {
+      id: id('piece', 2),
+      title: 'Präludium C-Dur',
+      composer: 'Johann Sebastian Bach',
+      status: 'learning',
+      sections: [
+        section(2, 1, '1–11', 'consolidating', 60, 76),
+        section(2, 2, '12–23', 'learning', 52, 76),
+        section(2, 3, '24–35', 'learning'),
+      ],
+      lessonNotes: [{ id: id('note2', 1), date: addDays(today, -6), text: 'Akkorde zuerst als Block greifen, dann gebrochen spielen.' }],
+      order: 2,
+      createdAt: now,
+    },
+    {
+      id: id('piece', 3),
+      title: 'Gymnopédie Nr. 1',
+      composer: 'Erik Satie',
+      status: 'ready',
+      sections: [],
+      lessonNotes: [],
+      order: 3,
+      createdAt: now,
+    },
+  ];
+  const practiceLogs: PracticeLog[] = [];
+  for (let d = 1; d <= 70; d++) {
+    if (!(d <= 5 || (d !== 6 && (d * 7) % 10 < 5))) continue;
+    const date = addDays(today, -d);
+    practiceLogs.push({
+      id: id('practice', d),
+      pieceId: pieces[d % 3].id,
+      date,
+      startedAt: at(date, '17:30'),
+      seconds: (10 + ((d * 13) % 36)) * 60,
+    });
+  }
+
+  // Fokuszeiten der letzten zehn Tage: [vor Tagen, Fach, Minuten, Prüfung]
+  const FOCUS: Array<[number, number, number, number?]> = [
+    [0, 3, 25, 2],
+    [1, 1, 25, 1],
+    [1, 1, 25, 1],
+    [1, 3, 50],
+    [2, 2, 25],
+    [2, 4, 25, 3],
+    [3, 0, 25],
+    [3, 3, 25, 2],
+    [4, 1, 25],
+    [5, 2, 50],
+    [6, 4, 25],
+    [8, 3, 25],
+    [9, 5, 25],
+  ];
+  const perDay: Record<number, number> = {};
+  const focusSessions: FocusSession[] = FOCUS.map(([ago, subject, minutes, examNo], i) => {
+    const date = addDays(today, -ago);
+    const slot = (perDay[ago] = (perDay[ago] ?? -1) + 1);
+    const startedAt = at(date, ago === 0 ? '07:00' : '15:00') + slot * 35 * 60_000;
+    return {
+      id: id('focus', i),
+      kind: 'pomodoro',
+      subjectId: subjects[subject].id,
+      examId: examNo ? id('exam', examNo) : undefined,
+      date,
+      startedAt,
+      endedAt: startedAt + minutes * 60_000,
+      focusSeconds: minutes * 60,
+    };
+  });
+
   const kv: KvRow[] = [
     { key: 'profile', value: { name: 'Alex' } },
     { key: 'appearance', value: { theme } },
@@ -279,5 +388,21 @@ export function buildDemoData(today: ISODate, now: number, theme: 'system' | 'li
     { key: 'dev', value: { enabled: true, demoActive: true } },
   ];
 
-  return { kv, subjects, semesters, grades, exams, tasks, countdowns, studySessions, decks: [deck], cards, cardStates, reviewLogs };
+  return {
+    kv,
+    subjects,
+    semesters,
+    grades,
+    exams,
+    tasks,
+    countdowns,
+    studySessions,
+    decks: [deck],
+    cards,
+    cardStates,
+    reviewLogs,
+    pieces,
+    practiceLogs,
+    focusSessions,
+  };
 }

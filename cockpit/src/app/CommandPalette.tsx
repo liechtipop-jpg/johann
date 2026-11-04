@@ -5,6 +5,7 @@ import { useSubjects } from '@/db/hooks';
 import type { Subject } from '@/db/schemas';
 import { patchSetting } from '@/db/settings';
 import { exportBackup } from '@/features/backup/useBackup';
+import { startFocus } from '@/features/focus/actions';
 import { redistributeAll } from '@/features/planner/actions';
 import { cn } from '@/lib/cn';
 import { Sheet } from '@/ui/Sheet';
@@ -102,6 +103,49 @@ function buildCommands(navigate: NavigateFunction, subjects: Subject[]): Command
       icon: NAV_ITEMS[3].icon,
       keywords: 'trefferquote prognose',
       run: go('/karten/statistik'),
+    },
+    {
+      id: 'go:metronome',
+      label: 'Metronom',
+      group: 'Seite',
+      icon: NAV_ITEMS[4].icon,
+      keywords: 'klavier takt bpm tempo',
+      run: go('/klavier?tab=metronom'),
+    },
+    {
+      id: 'go:repertoire',
+      label: 'Repertoire',
+      group: 'Seite',
+      icon: NAV_ITEMS[4].icon,
+      keywords: 'klavier stücke',
+      run: go('/klavier?tab=repertoire'),
+    },
+    {
+      id: 'piano:practice',
+      label: 'Klavier üben',
+      group: 'Aktion',
+      icon: NAV_ITEMS[4].icon,
+      keywords: 'übungstimer übungslog',
+      run: go('/klavier?tab=ueben'),
+    },
+    {
+      id: 'focus:start',
+      label: 'Fokus-Timer starten',
+      group: 'Aktion',
+      icon: NAV_ITEMS[5].icon,
+      keywords: 'pomodoro konzentration lernen',
+      run: () => {
+        void startFocus();
+        void navigate('/fokus');
+      },
+    },
+    {
+      id: 'focus:fce',
+      label: 'FCE-Prüfungssimulation',
+      group: 'Aktion',
+      icon: NAV_ITEMS[5].icon,
+      keywords: 'b2 first cambridge englisch',
+      run: go('/fokus?vorlage=fce'),
     },
     {
       id: 'go:subjects',

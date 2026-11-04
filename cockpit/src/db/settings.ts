@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ZH_GYM_RULES } from '@/features/grades/logic/rules';
+import { DEFAULT_FOCUS_PREFS } from '@/features/focus/logic/timer';
 import { DEFAULT_PLAN_PREFS } from '@/features/planner/logic/studyplan';
 import { db as defaultDb, type CockpitDB } from './db';
 import type { KvRow } from './schemas';
@@ -42,6 +43,56 @@ export const SETTINGS = {
     retention: z.number().min(0.7).max(0.97).default(0.9),
     autoSpeak: z.boolean().default(false),
   }),
+  piano: z.object({ weeklyGoalMinutes: z.number().int().min(10).max(3000).default(120) }),
+  metronome: z.object({
+    bpm: z.number().int().min(30).max(240).default(80),
+    signature: z.string().max(8).default('4/4'),
+    subdivision: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4)]).default(1),
+    accent: z.boolean().default(true),
+    volume: z.number().min(0).max(1).default(0.8),
+    trainer: z
+      .object({
+        enabled: z.boolean(),
+        start: z.number().int().min(30).max(240),
+        target: z.number().int().min(30).max(240),
+        step: z.number().int().min(1).max(30),
+        everyBars: z.number().int().min(1).max(64),
+      })
+      .default({ enabled: false, start: 60, target: 90, step: 2, everyBars: 4 }),
+    gap: z
+      .object({ enabled: z.boolean(), play: z.number().int().min(1).max(16), mute: z.number().int().min(1).max(16) })
+      .default({ enabled: false, play: 3, mute: 1 }),
+  }),
+  focus: z.object({
+    focusMinutes: z.number().int().min(5).max(180).default(DEFAULT_FOCUS_PREFS.focusMinutes),
+    shortBreakMinutes: z.number().int().min(1).max(60).default(DEFAULT_FOCUS_PREFS.shortBreakMinutes),
+    longBreakMinutes: z.number().int().min(5).max(90).default(DEFAULT_FOCUS_PREFS.longBreakMinutes),
+    longEvery: z.number().int().min(2).max(12).default(DEFAULT_FOCUS_PREFS.longEvery),
+    autoStartBreaks: z.boolean().default(DEFAULT_FOCUS_PREFS.autoStartBreaks),
+    sound: z.boolean().default(true),
+  }),
+  /** Laufender Fokus-Timer (Zeitstempel, damit er App-Wechsel und Neuladen übersteht) */
+  focusTimer: z.object({
+    status: z.enum(['idle', 'running', 'paused']).default('idle'),
+    template: z.enum(['pomodoro', 'fce']).default('pomodoro'),
+    phase: z.enum(['focus', 'short', 'long', 'segment']).default('focus'),
+    plannedMs: z.number().nonnegative().default(0),
+    startedAt: z.number().nullable().default(null),
+    pausedAt: z.number().nullable().default(null),
+    pausedMs: z.number().nonnegative().default(0),
+    completedFocus: z.number().int().nonnegative().default(0),
+    segmentIndex: z.number().int().min(0).max(20).default(0),
+    subjectId: z.string().max(64).optional(),
+    examId: z.string().max(64).optional(),
+  }),
+  /** Laufender Übungstimer am Klavier */
+  practiceTimer: z.object({
+    status: z.enum(['idle', 'running', 'paused']).default('idle'),
+    startedAt: z.number().nullable().default(null),
+    pausedAt: z.number().nullable().default(null),
+    pausedMs: z.number().nonnegative().default(0),
+    pieceId: z.string().max(64).optional(),
+  }),
   install: z.object({ hintDismissed: z.boolean().default(false) }),
   dev: z.object({ enabled: z.boolean().default(false), demoActive: z.boolean().default(false) }),
   ui: z.object({ lastSubjectId: z.string().optional() }),
@@ -52,7 +103,7 @@ export type Settings = { [K in SettingKey]: z.output<(typeof SETTINGS)[K]> };
 export type ThemePreference = Settings['appearance']['theme'];
 
 /** Interne Schlüssel, die nie exportiert werden. */
-export const INTERNAL_KV_KEYS = ['demoSnapshot'] as const;
+export const INTERNAL_KV_KEYS = ['demoSnapshot', 'focusTimer', 'practiceTimer'] as const;
 
 export function readSetting<K extends SettingKey>(key: K, raw: unknown): Settings[K] {
   const schema = SETTINGS[key];

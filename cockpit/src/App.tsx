@@ -1,4 +1,4 @@
-import { Compass, Piano, Timer } from 'lucide-react';
+import { Compass } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayout from './app/AppLayout';
@@ -22,6 +22,9 @@ const DeckPage = lazy(() => import('./features/flashcards/DeckPage'));
 const StudyPage = lazy(() => import('./features/flashcards/StudyPage'));
 const CardStatsPage = lazy(() => import('./features/flashcards/StatsPage'));
 const OnboardingPage = lazy(() => import('./features/onboarding/OnboardingPage'));
+const KlavierPage = lazy(() => import('./features/piano/KlavierPage'));
+const PieceDetailPage = lazy(() => import('./features/piano/PieceDetailPage'));
+const FocusPage = lazy(() => import('./features/focus/FocusPage'));
 const MorePage = lazy(() => import('./app/MorePage'));
 const NotFound = lazy(() => import('./app/NotFound'));
 
@@ -55,8 +58,9 @@ const router = createBrowserRouter([
       { path: 'karten', element: <DecksPage /> },
       { path: 'karten/deck/:deckId', element: <DeckPage /> },
       { path: 'karten/statistik', element: <CardStatsPage /> },
-      { path: 'klavier', element: <ComingSoon title="Klavier" phase={6} icon={Piano} /> },
-      { path: 'fokus', element: <ComingSoon title="Fokus-Timer" phase={6} icon={Timer} /> },
+      { path: 'klavier', element: <KlavierPage /> },
+      { path: 'klavier/stueck/:pieceId', element: <PieceDetailPage /> },
+      { path: 'fokus', element: <FocusPage /> },
       { path: 'kompass', element: <ComingSoon title="Studienwahl-Kompass" phase={7} icon={Compass} /> },
       { path: 'mehr', element: <MorePage /> },
       { path: 'einstellungen', element: <SettingsPage /> },

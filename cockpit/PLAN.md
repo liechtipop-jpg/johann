@@ -1,7 +1,7 @@
 # PLAN – Cockpit
 
 Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
-**Status:** Phase 5 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
+**Status:** Phase 6 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
 
 ---
 
@@ -123,21 +123,29 @@ Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
 - «Heute» zeigt: verpasste Einheiten (neu verteilen), heutige Lerneinheiten, Aufgaben bis morgen, nächste drei Prüfungen mit Fortschrittsring, fällige Karteikarten, Countdowns, «Erste Schritte» und den Installationshinweis.
 - Visuelle Kontrolle, Runde 1: 76 Screenshots (`npm run screenshots`). Behoben wurden: Überbreite auf dem Handy, Segment-Breiten, das Prüfungsformular auf schmalen Bildschirmen, Kontraste der Statusbalken im Dunkelmodus und doppelte Zahlen in den Deck-Beschreibungen.
 
-### Phase 6 – Klavier & Fokus-Timer
-- [ ] Metronom:
+### Phase 6 – Klavier & Fokus-Timer ✅
+- [x] Metronom:
   - Lookahead-Scheduler mit Worker-Takt, 30–240 BPM, Tap-Tempo
   - Taktarten, Unterteilungen, Betonung auf 1, grosser Puls
   - Tempo-Trainer und stumme Takte
   - Wake Lock
-- [ ] Repertoire: Stücke mit Abschnitten (Takte, Status, aktuelles und Ziel-Tempo) und datierten Lektionsnotizen
-- [ ] Übungslog: Timer pro Stück, Wochenziel, Streak, Kalender-Heatmap
-- [ ] Fokus-Timer:
+- [x] Repertoire: Stücke mit Abschnitten (Takte, Status, aktuelles und Ziel-Tempo) und datierten Lektionsnotizen
+- [x] Übungslog: Timer pro Stück, Wochenziel, Streak, Kalender-Heatmap
+- [x] Fokus-Timer:
   - Pomodoro (einstellbar), verknüpft mit Fach oder Prüfung
   - zeitstempelbasiert, überlebt App-Wechsel und Neuladen
   - Wochenstatistik pro Fach
   - Vorlage FCE-Simulation (Zeiten von der offiziellen Cambridge-Seite)
-- [ ] Widgets auf «Heute»: Klavier-Streak (mit Knöpfen «Üben» und «Metronom»), Fokuszeit der Woche
-- [ ] Tests: Tap-Tempo, Tempo-Trainer, stumme Takte, Streak, Heatmap, Timer-Zustandsmaschine
+- [x] Widgets auf «Heute»: Klavier-Streak (mit Knöpfen «Üben» und «Metronom»), Fokuszeit der Woche
+- [x] Tests: Tap-Tempo, Tempo-Trainer, stumme Takte, Streak, Heatmap, Timer-Zustandsmaschine
+
+**Stand Phase 6:**
+- Metronom: Ein Worker weckt alle 25 ms den Planer, der Klicks 100 ms im Voraus im `AudioContext` einplant. Die Anzeige folgt der Audio-Ausgabe (`getOutputTimestamp`). Taktarten 2/4 bis 12/8 mit Gruppenbetonung, Unterteilungen, Tempo-Trainer, stumme Takte, Lautstärke. Tasten: Leertaste, ↑/↓ (mit Shift ±10) und T. Die letzten Einstellungen werden gespeichert; Abschnitte öffnen das Metronom mit ihrem Tempo.
+- Klavier `/klavier` mit den Ansichten Üben, Metronom und Repertoire, dazu `/klavier/stueck/:id`. Vorschlagspaket (Cordelia, Carol of the Bells, Golden Brown, Golden Hour) im Onboarding und im Leerzustand, ohne erfundene Taktangaben.
+- Übungstimer und Fokus-Timer speichern nur Zeitstempel (Schlüssel `practiceTimer` und `focusTimer`, nicht im Backup). Ein globaler Runner schaltet Phasen genau zum Ende weiter, holt verpasste Wechsel nach dem Zurückkehren nach, speichert die Fokuszeit (in einer Transaktion, also ohne Doppelte bei zwei Tabs), spielt einen Gong und zeigt die Restzeit im Fenstertitel.
+- FCE-Simulation: Reading & Use of English 75 min, Writing 80 min, Listening ca. 40 min, Speaking 14 min, mit Link auf cambridgeenglish.org.
+- Prüfungen zeigen ihre Fokuszeit und öffnen den Timer mit der Verknüpfung. Neue Befehle in der Palette. Die Demo-Daten enthalten Stücke, Übungslog und Fokuszeiten.
+- 153 Unit-Tests und 7 End-to-End-Tests. Der Fokus-Test spult die Uhr 25 Minuten vor, der Metronom-Test prüft den laufenden Puls.
 
 ### Phase 7 – Studienwahl-Kompass
 - [ ] Optionen × Kriterien:

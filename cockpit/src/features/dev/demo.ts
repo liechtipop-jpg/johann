@@ -26,6 +26,9 @@ export async function enableDemo(db: CockpitDB): Promise<void> {
     await db.cards.bulkPut(data.cards);
     await db.cardStates.bulkPut(data.cardStates);
     await db.reviewLogs.bulkPut(data.reviewLogs);
+    await db.pieces.bulkPut(data.pieces);
+    await db.practiceLogs.bulkPut(data.practiceLogs);
+    await db.focusSessions.bulkPut(data.focusSessions);
   });
 }
 

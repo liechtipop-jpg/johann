@@ -1,6 +1,7 @@
 import { Suspense, useEffect } from 'react';
 import { Navigate, Outlet, ScrollRestoration, useSearchParams } from 'react-router';
 import { useSettings } from '@/db/settingsContext';
+import { useFocusRunner } from '@/features/focus/useFocusRunner';
 import { CommandPalette } from './CommandPalette';
 import { PlusButton } from './PlusButton';
 import { QuickAddSheet } from './QuickAddSheet';
@@ -18,6 +19,7 @@ export default function AppLayout() {
   const [params, setParams] = useSearchParams();
   const neu = params.get('neu');
   useGlobalShortcuts();
+  useFocusRunner();
 
   useEffect(() => {
     if (!neu) return;

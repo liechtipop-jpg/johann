@@ -1,5 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { CalendarPlus, CircleCheck, GraduationCap, ListPlus, Pencil, RefreshCw, Trash2 } from 'lucide-react';
+import { CalendarPlus, CircleCheck, GraduationCap, ListPlus, Pencil, RefreshCw, Timer, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { db } from '@/db/db';
@@ -34,6 +34,15 @@ export default function ExamDetailPage() {
   const exam = useLiveQuery(() => db.exams.get(examId).then((e) => e ?? null), [examId]);
   const sessions = useLiveQuery(() => db.studySessions.where('examId').equals(examId).sortBy('date'), [examId]);
   const grade = useLiveQuery(() => (exam?.gradeId ? db.grades.get(exam.gradeId).then((g) => g ?? null) : null), [exam?.gradeId]);
+  const focusMinutes = useLiveQuery(
+    () =>
+      db.focusSessions
+        .where('examId')
+        .equals(examId)
+        .toArray()
+        .then((rows) => rows.reduce((n, r) => n + r.focusSeconds / 60, 0)),
+    [examId],
+  );
   const subjects = useSubjectMap();
   const { studyPlan } = useSettings();
   const today = useToday();
@@ -142,7 +151,17 @@ export default function ExamDetailPage() {
                 {missed.length} verpasste neu verteilen
               </Button>
             )}
+            {days >= 0 && (
+              <Link
+                to={`/fokus?pruefung=${exam.id}`}
+                className="inline-flex h-9 items-center gap-2 rounded-[10px] border border-line bg-surface px-3 text-sm font-medium hover:border-line-strong hover:bg-surface-2 pointer-coarse:h-11"
+              >
+                <Timer size={16} aria-hidden />
+                Fokus-Timer
+              </Link>
+            )}
           </div>
+          {!!focusMinutes && <p className="mt-3 text-[13px] text-ink-2">Fokuszeit für diese Prüfung: {formatMinutes(focusMinutes)}</p>}
         </Card>
 
         <Card

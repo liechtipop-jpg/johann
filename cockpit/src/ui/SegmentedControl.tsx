@@ -22,7 +22,11 @@ export function SegmentedControl<T extends string | number>({ label, options, va
     onChange,
   );
   return (
-    <div role="radiogroup" aria-label={label} className={cn('flex gap-1 rounded-[10px] bg-surface-2 p-1', !/(^|\s)w-/.test(className ?? '') && 'w-full', className)}>
+    <div
+      role="radiogroup"
+      aria-label={label}
+      className={cn('flex gap-1 rounded-[10px] bg-surface-2 p-1', !/(^|\s)w-/.test(className ?? '') && 'w-full', className)}
+    >
       {options.map((option, index) => (
         <button
           key={String(option.value)}

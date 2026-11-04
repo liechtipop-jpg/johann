@@ -26,8 +26,10 @@ import { SubjectChip } from '@/ui/Subject';
 import { subjectColorValue } from '@/ui/subject';
 import { Countdowns } from './Countdowns';
 import { FirstSteps } from './FirstSteps';
+import { FocusWidget, PianoWidget } from './PracticeWidgets';
 
-const actionLink = 'inline-flex h-9 items-center gap-0.5 rounded-[8px] px-2 text-sm font-medium text-accent-ink hover:bg-surface-2 pointer-coarse:h-11';
+const actionLink =
+  'inline-flex h-9 items-center gap-0.5 rounded-[8px] px-2 text-sm font-medium text-accent-ink hover:bg-surface-2 pointer-coarse:h-11';
 
 export default function TodayPage() {
   const { profile, install } = useSettings();
@@ -39,7 +41,10 @@ export default function TodayPage() {
 
   return (
     <>
-      <PageHeader title={`${greeting(date.getHours())}${name ? `, ${name}` : ''}`} subtitle={`${formatDate(today, 'full')} · KW ${isoWeek(today)}`} />
+      <PageHeader
+        title={`${greeting(date.getHours())}${name ? `, ${name}` : ''}`}
+        subtitle={`${formatDate(today, 'full')} · KW ${isoWeek(today)}`}
+      />
       <div className="space-y-4">
         <BackupReminder />
         <MissedBanner today={today} />
@@ -47,10 +52,12 @@ export default function TodayPage() {
           <div className="min-w-0 space-y-4">
             <TodaySessions today={today} />
             <DueTasks today={today} />
+            <FocusWidget today={today} />
           </div>
           <div className="min-w-0 space-y-4">
             <NextExams today={today} />
             <FlashcardsWidget />
+            <PianoWidget today={today} />
             <Countdowns today={today} />
           </div>
         </div>
@@ -60,7 +67,11 @@ export default function TodayPage() {
             <Card
               title="Als App installieren"
               action={
-                <IconButton label="Hinweis ausblenden" onClick={() => void patchSetting('install', { hintDismissed: true })} className="-mr-2">
+                <IconButton
+                  label="Hinweis ausblenden"
+                  onClick={() => void patchSetting('install', { hintDismissed: true })}
+                  className="-mr-2"
+                >
                   <X size={18} aria-hidden />
                 </IconButton>
               }
@@ -80,7 +91,10 @@ function MissedBanner({ today }: { today: ISODate }) {
   const missed = data.sessions.filter((s) => !s.done && s.date < today && (data.examMap.get(s.examId)?.date ?? '') > today);
   if (missed.length === 0) return null;
   return (
-    <section aria-label="Verpasste Lerneinheiten" className="flex flex-wrap items-center gap-3 rounded-[14px] border border-warning/25 bg-warning-soft p-4">
+    <section
+      aria-label="Verpasste Lerneinheiten"
+      className="flex flex-wrap items-center gap-3 rounded-[14px] border border-warning/25 bg-warning-soft p-4"
+    >
       <CalendarClock size={22} aria-hidden className="shrink-0 text-warning" />
       <div className="min-w-48 flex-1">
         <p className="font-semibold">{plural(missed.length, 'Lerneinheit', 'Lerneinheiten')} verpasst</p>
@@ -118,7 +132,11 @@ function TodaySessions({ today }: { today: ISODate }) {
           ) : (
             <span>
               Kein Lernplan.{' '}
-              <button type="button" className="font-medium text-accent-ink underline underline-offset-2" onClick={() => ui.openQuickAdd('exam')}>
+              <button
+                type="button"
+                className="font-medium text-accent-ink underline underline-offset-2"
+                onClick={() => ui.openQuickAdd('exam')}
+              >
                 Prüfung mit Themen erfassen
               </button>
             </span>
@@ -166,7 +184,10 @@ function NextExams({ today }: { today: ISODate }) {
             const days = diffDays(today, exam.date);
             return (
               <li key={exam.id}>
-                <Link to={`/planer/pruefung/${exam.id}`} className="flex items-center gap-3 rounded-[10px] px-2 py-2.5 transition-colors hover:bg-surface-2">
+                <Link
+                  to={`/planer/pruefung/${exam.id}`}
+                  className="flex items-center gap-3 rounded-[10px] px-2 py-2.5 transition-colors hover:bg-surface-2"
+                >
                   <div className="w-16 shrink-0 text-center">
                     <p className={cn('text-[22px] leading-none font-semibold tabular-nums', days <= 3 && 'text-warning')}>{days}</p>
                     <p className="mt-1 text-[12px] text-ink-2">{days === 1 ? 'Tag' : 'Tage'}</p>
@@ -218,7 +239,10 @@ function FlashcardsWidget() {
       {rows.length === 0 ? (
         <div className="flex items-center justify-between gap-3">
           <span className="text-[15px] text-ink-2">Noch keine Decks – fertige Startdecks warten.</span>
-          <Link to="/karten" className="inline-flex h-9 shrink-0 items-center rounded-[10px] border border-line px-3 text-sm font-medium hover:bg-surface-2 pointer-coarse:h-11">
+          <Link
+            to="/karten"
+            className="inline-flex h-9 shrink-0 items-center rounded-[10px] border border-line px-3 text-sm font-medium hover:bg-surface-2 pointer-coarse:h-11"
+          >
             Ansehen
           </Link>
         </div>
@@ -235,7 +259,10 @@ function FlashcardsWidget() {
             </p>
           </div>
           {totalDue > 0 ? (
-            <Link to="/karten/lernen/alle" className="inline-flex h-11 shrink-0 items-center rounded-[10px] bg-accent px-4 font-medium text-on-accent hover:bg-accent-hover">
+            <Link
+              to="/karten/lernen/alle"
+              className="inline-flex h-11 shrink-0 items-center rounded-[10px] bg-accent px-4 font-medium text-on-accent hover:bg-accent-hover"
+            >
               Lernen
             </Link>
           ) : (

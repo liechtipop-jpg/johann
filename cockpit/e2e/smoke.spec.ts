@@ -175,3 +175,85 @@ test('Karteikarten: Startdeck, Umdrehen, Bewerten und Eintippen mit Akzent-Hinwe
   await expect(page.getByText('Fast richtig')).toBeVisible();
   await expect(page.getByText('Achte auf die Akzente: «ça»')).toBeVisible();
 });
+
+async function quickOnboarding(page: import('@playwright/test').Page, subject: string, switches: string[] = []) {
+  await page.goto('/willkommen');
+  await page.getByLabel('Wie heisst du?').fill('Test');
+  await page.getByRole('button', { name: 'Weiter' }).click();
+  await page.getByRole('button', { name: subject }).click();
+  for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Weiter' }).click();
+  for (const name of switches) await page.getByRole('switch', { name }).click();
+  await page.getByRole('button', { name: 'Los geht’s' }).click();
+  await expect(page).toHaveURL(/\/$/);
+}
+
+test('Klavier: Vorschläge, Abschnitt mit Tempo, Lektionsnotiz, Übungszeit und Metronom', async ({ page }) => {
+  await quickOnboarding(page, 'Musik', ['Klavierstücke fürs Repertoire']);
+
+  // Widget auf «Heute» führt mit einem Tap zum Repertoire-Stück
+  await page.goto('/klavier?tab=repertoire');
+  await page.getByRole('link', { name: /Cordelia/ }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'Cordelia' })).toBeVisible();
+  await expect(page.getByText('Juan Arenosa')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Abschnitt', exact: true }).click();
+  await page.getByLabel('Takte').fill('1–16');
+  await page.getByLabel('Tempo jetzt').fill('60');
+  await page.getByLabel('Ziel-Tempo').fill('80');
+  await page.getByRole('button', { name: 'Hinzufügen' }).click();
+  await expect(page.getByText('60 → 80 BPM')).toBeVisible();
+  await expect(page.getByRole('img', { name: '75 Prozent des Ziel-Tempos' })).toBeVisible();
+
+  await page.getByLabel('Neue Lektionsnotiz').fill('Linke Hand legato üben');
+  await page.getByRole('button', { name: 'Notiz speichern' }).click();
+  await expect(page.getByText('Linke Hand legato üben')).toBeVisible();
+
+  // Übungszeit nachtragen → Streak und Wochenziel
+  await page.goto('/klavier');
+  await page.getByRole('button', { name: 'Nachtragen' }).click();
+  await page.getByLabel('Stück').last().selectOption({ label: 'Cordelia' });
+  await page.getByRole('button', { name: 'Eintragen' }).click();
+  await expect(page.getByRole('status').filter({ hasText: '30 min eingetragen' })).toBeVisible();
+  await expect(page.getByText('1 Tag in Folge')).toBeVisible();
+  await expect(page.getByText('30 min von 2 h')).toBeVisible();
+
+  // Metronom über den Link aus dem Abschnitt (Tempo wird übernommen)
+  await page.goto('/klavier?tab=metronom&bpm=96');
+  await expect(page.getByRole('slider', { name: 'Tempo in BPM' })).toHaveValue('96');
+  await page.getByRole('button', { name: 'Start', exact: true }).click();
+  await expect(page.locator('li[aria-current="step"]')).toHaveCount(1, { timeout: 5000 });
+  await page.getByRole('button', { name: 'Stopp', exact: true }).click();
+  await expect(page.locator('li[aria-current="step"]')).toHaveCount(0);
+
+  await page.goto('/');
+  await expect(page.getByRole('region', { name: 'Klavier' })).toContainText('1 Tag in Folge');
+});
+
+test('Fokus-Timer: läuft nach dem Neuladen weiter und speichert die Fokuszeit', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-11-04T09:00:00') });
+  await quickOnboarding(page, 'Englisch');
+
+  await page.goto('/fokus');
+  await page.getByLabel('Fach').selectOption({ label: 'Englisch' });
+  await page.getByRole('button', { name: 'Fokus starten' }).click();
+  await expect(page.getByRole('timer')).toContainText('läuft bis');
+  await page.reload();
+  await expect(page.getByRole('timer')).toContainText('läuft bis');
+
+  // 25 Minuten später: Fokusrunde fertig, Pause läuft automatisch, Zeit ist gespeichert
+  await page.clock.fastForward('25:05');
+  await expect(page.getByRole('status').filter({ hasText: 'Fokusrunde geschafft' })).toBeVisible();
+  await expect(page.getByRole('timer')).toContainText('Kurze Pause');
+  await expect(page.getByRole('region', { name: 'Letzte Fokuszeiten' })).toContainText('25 min');
+  await page.getByRole('button', { name: 'Stopp' }).click();
+  await expect(page.getByRole('timer')).toContainText('bereit');
+
+  // FCE-Vorlage mit den offiziellen Zeiten
+  await page.getByRole('radio', { name: 'FCE-Simulation' }).click();
+  await expect(page.getByRole('timer')).toContainText('Reading & Use of English');
+  await expect(page.getByRole('timer')).toContainText('1:15:00');
+  await expect(page.getByRole('link', { name: /Cambridge English/ })).toHaveAttribute('href', /cambridgeenglish\.org/);
+
+  await page.goto('/');
+  await expect(page.getByRole('region', { name: 'Fokuszeit' })).toContainText('25 min');
+});

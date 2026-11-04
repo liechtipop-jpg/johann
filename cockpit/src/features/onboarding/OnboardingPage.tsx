@@ -8,6 +8,8 @@ import { patchSetting, setSetting } from '@/db/settings';
 import { useSettings } from '@/db/settingsContext';
 import { importBackupFile } from '@/features/backup/useBackup';
 import { addStarterDeck } from '@/features/flashcards/actions';
+import { addSuggestedPieces } from '@/features/piano/actions';
+import { PIECE_SUGGESTIONS } from '@/features/piano/suggestions';
 import { PromotionRulesEditor } from '@/features/grades/PromotionRulesEditor';
 import type { PromotionRules } from '@/features/grades/logic/rules';
 import { SUBJECT_SUGGESTIONS } from '@/features/subjects/suggestions';
@@ -38,7 +40,7 @@ export default function OnboardingPage() {
   const [semester, setSemester] = useState(() => suggestSemester(todayISO()));
   const [rules, setRules] = useState<PromotionRules>(settings.promotionRules);
   const [countdown, setCountdown] = useState({ enabled: false, title: 'Montpellier', date: '' });
-  const [starter, setStarter] = useState({ french: false, fce: false });
+  const [starter, setStarter] = useState({ french: false, fce: false, piano: false });
   const [busy, setBusy] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const first = useRef(true);
@@ -90,6 +92,7 @@ export default function OnboardingPage() {
       ...(starter.fce ? ['fce-phrasal-verbs', 'fce-word-formation', 'fce-collocations'] : []),
     ];
     for (const key of keys) await addStarterDeck(key, { silent: true });
+    if (starter.piano) await addSuggestedPieces();
     await setSetting('onboarding', { done: true, completedAt: now });
     await persist;
   }
@@ -230,10 +233,14 @@ export default function OnboardingPage() {
                   checked={starter.fce}
                   onChange={(fce) => setStarter({ ...starter, fce })}
                 />
+                <Switch
+                  label="Klavierstücke fürs Repertoire"
+                  description={PIECE_SUGGESTIONS.map((p) => p.title).join(', ')}
+                  checked={starter.piano}
+                  onChange={(piano) => setStarter({ ...starter, piano })}
+                />
               </div>
-              <p className="mt-3 text-[13px] text-ink-2">
-                Klavierstücke und Studienoptionen schlägt dir Cockpit später direkt im jeweiligen Bereich vor.
-              </p>
+              <p className="mt-3 text-[13px] text-ink-2">Studienoptionen und Kriterien schlägt dir Cockpit später im Kompass vor.</p>
             </Section>
             <Section title="Damit nichts verloren geht">
               <ul className="space-y-2 text-[15px]">

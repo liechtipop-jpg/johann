@@ -104,6 +104,12 @@
     /* Sequenz einer Farbe (wenig → viel), z. B. Kartenstatus */
     --chart-seq-low: color-mix(in oklab, var(--accent) 22%, var(--surface));
     --chart-seq-mid: color-mix(in oklab, var(--accent) 55%, var(--surface));
+    /* Heatmap (eine Farbe, hell → dunkel) */
+    --heat-0: var(--surface-2);
+    --heat-1: color-mix(in oklab, var(--accent) 22%, var(--surface));
+    --heat-2: color-mix(in oklab, var(--accent) 45%, var(--surface));
+    --heat-3: color-mix(in oklab, var(--accent) 72%, var(--surface));
+    --heat-4: var(--accent);
 
     /* Fächerfarben */
     --subject-red: #e5484d;
@@ -148,6 +154,11 @@
     --chart-neg: #e2615a;
     --chart-seq-low: color-mix(in oklab, var(--accent-ink) 32%, var(--surface));
     --chart-seq-mid: color-mix(in oklab, var(--accent-ink) 62%, var(--surface));
+    --heat-0: var(--surface-3);
+    --heat-1: color-mix(in oklab, var(--accent-ink) 28%, var(--surface));
+    --heat-2: color-mix(in oklab, var(--accent-ink) 50%, var(--surface));
+    --heat-3: color-mix(in oklab, var(--accent-ink) 74%, var(--surface));
+    --heat-4: var(--accent-ink);
 
     --subject-red: #f0686c;
     --subject-orange: #f28a3e;
@@ -213,6 +224,21 @@
     from {
       stroke-dashoffset: var(--ring-from);
     }
+  }
+
+  /* Metronom: kurzer Puls pro Schlag */
+  .metronome-pulse {
+    animation: metronome-pulse 160ms var(--ease-soft);
+  }
+  @keyframes metronome-pulse {
+    from {
+      transform: scale(1.06);
+    }
+  }
+
+  /* Fokus-Timer: Ring läuft sekundengenau weiter */
+  .timer-ring {
+    transition: stroke-dashoffset 1s linear;
   }
 
   /* Karteikarte mit 3D-Flip (bei reduzierter Bewegung: Überblenden). */
