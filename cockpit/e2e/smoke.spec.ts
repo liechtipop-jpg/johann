@@ -257,3 +257,44 @@ test('Fokus-Timer: läuft nach dem Neuladen weiter und speichert die Fokuszeit',
   await page.goto('/');
   await expect(page.getByRole('region', { name: 'Fokuszeit' })).toContainText('25 min');
 });
+
+test('Studienwahl-Kompass: Vorschläge, Bewerten, Ranking mit Analyse, Zeitstrahl und Option', async ({ page }) => {
+  await quickOnboarding(page, 'Mathematik');
+  await page.goto('/kompass');
+  await page.getByRole('button', { name: 'Vorschläge übernehmen' }).click();
+  await expect(page.getByRole('status').filter({ hasText: '6 Optionen, 10 Kriterien, 6 Termine übernommen' })).toBeVisible();
+
+  const mavt = 'ETH Maschineningenieurwissenschaften (BSc) → MTEC (MSc)';
+  await page.getByRole('radio', { name: 'Bewerten' }).click();
+  await page.getByLabel(`«${mavt}» bei «Interesse am Stoff»`).selectOption('9');
+  await page.getByLabel('«ETH Informatik» bei «Interesse am Stoff»').selectOption('7');
+
+  await page.getByRole('radio', { name: 'Ranking' }).click();
+  const ranking = page.getByRole('region', { name: 'Ranking' });
+  await expect(ranking.getByRole('listitem').first()).toContainText(mavt);
+  await expect(ranking.getByRole('listitem').first()).toContainText('9.0');
+  const analysis = page.getByRole('region', { name: 'Was müsste sich ändern?' });
+  await expect(analysis).toContainText('«ETH Informatik» liegt 2.0 Punkte hinter');
+  await expect(analysis).toContainText('«Interesse am Stoff» von 7 auf 10');
+  await expect(analysis).toContainText('Keine einzelne Gewichtung reicht');
+
+  await page.getByRole('radio', { name: 'Zeitstrahl' }).click();
+  const deadline = page.getByRole('listitem').filter({ hasText: 'ETH Zürich: Anmeldeschluss Bachelor' });
+  await expect(deadline).toContainText(/30\. April/);
+  await expect(deadline.getByRole('link', { name: 'Offizielle Seite' })).toHaveAttribute('href', /^https:\/\/ethz\.ch\//);
+  await expect(page.getByRole('listitem').filter({ hasText: 'Stanford MS&E' })).toContainText('Datum noch offen');
+
+  await page.goto('/kompass');
+  await ranking.getByRole('link', { name: /ETH Informatik/ }).click();
+  await expect(page.getByRole('heading', { level: 1, name: 'ETH Informatik' })).toBeVisible();
+  await page.getByLabel('Dafür spricht: neuer Punkt').fill('Sehr gefragt');
+  await page.getByRole('button', { name: 'Dafür spricht: hinzufügen' }).click();
+  await expect(page.getByText('Sehr gefragt')).toBeVisible();
+  await page.getByLabel('Adresse des Links').fill('keine-adresse');
+  await page.getByRole('button', { name: 'Link hinzufügen' }).click();
+  await expect(page.getByText('Bitte eine vollständige Adresse mit https:// eingeben.')).toBeVisible();
+  await page.getByLabel('Bezeichnung des Links').fill('Studiengang');
+  await page.getByLabel('Adresse des Links').fill('https://example.org/informatik');
+  await page.getByRole('button', { name: 'Link hinzufügen' }).click();
+  await expect(page.getByRole('link', { name: 'Studiengang' })).toHaveAttribute('href', 'https://example.org/informatik');
+});

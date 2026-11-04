@@ -20,6 +20,9 @@ const PAGES: Array<[string, string]> = [
   ['klavier-stueck', '/klavier/stueck/demo-piece-1'],
   ['fokus', '/fokus'],
   ['kompass', '/kompass'],
+  ['kompass-bewerten', '/kompass?tab=bewerten'],
+  ['kompass-zeitstrahl', '/kompass?tab=zeitstrahl'],
+  ['kompass-option', '/kompass/option/demo-opt-0'],
   ['mehr', '/mehr'],
   ['einstellungen', '/einstellungen'],
 ];

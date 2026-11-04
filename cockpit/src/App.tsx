@@ -1,8 +1,6 @@
-import { Compass } from 'lucide-react';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayout from './app/AppLayout';
-import { ComingSoon } from './app/ComingSoon';
 import { ErrorBoundary } from './app/ErrorBoundary';
 import { useThemeSync } from './app/theme';
 import { UpdatePrompt } from './app/UpdatePrompt';
@@ -25,6 +23,8 @@ const OnboardingPage = lazy(() => import('./features/onboarding/OnboardingPage')
 const KlavierPage = lazy(() => import('./features/piano/KlavierPage'));
 const PieceDetailPage = lazy(() => import('./features/piano/PieceDetailPage'));
 const FocusPage = lazy(() => import('./features/focus/FocusPage'));
+const KompassPage = lazy(() => import('./features/compass/KompassPage'));
+const OptionDetailPage = lazy(() => import('./features/compass/OptionDetailPage'));
 const MorePage = lazy(() => import('./app/MorePage'));
 const NotFound = lazy(() => import('./app/NotFound'));
 
@@ -61,7 +61,8 @@ const router = createBrowserRouter([
       { path: 'klavier', element: <KlavierPage /> },
       { path: 'klavier/stueck/:pieceId', element: <PieceDetailPage /> },
       { path: 'fokus', element: <FocusPage /> },
-      { path: 'kompass', element: <ComingSoon title="Studienwahl-Kompass" phase={7} icon={Compass} /> },
+      { path: 'kompass', element: <KompassPage /> },
+      { path: 'kompass/option/:optionId', element: <OptionDetailPage /> },
       { path: 'mehr', element: <MorePage /> },
       { path: 'einstellungen', element: <SettingsPage /> },
       { path: '*', element: <NotFound /> },

@@ -1,7 +1,7 @@
 # PLAN – Cockpit
 
 Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
-**Status:** Phase 6 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
+**Status:** Phase 7 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
 
 ---
 
@@ -147,15 +147,26 @@ Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
 - Prüfungen zeigen ihre Fokuszeit und öffnen den Timer mit der Verknüpfung. Neue Befehle in der Palette. Die Demo-Daten enthalten Stücke, Übungslog und Fokuszeiten.
 - 153 Unit-Tests und 7 End-to-End-Tests. Der Fokus-Test spult die Uhr 25 Minuten vor, der Metronom-Test prüft den laufenden Puls.
 
-### Phase 7 – Studienwahl-Kompass
-- [ ] Optionen × Kriterien:
+### Phase 7 – Studienwahl-Kompass ✅
+- [x] Optionen × Kriterien:
   - Gewichte 0–10, Bewertung 1–10
   - mobil als Karten, auf dem Desktop als Tabelle
-- [ ] Ranking-Diagramm und Analyse «Was müsste sich ändern, damit Option X gewinnt?»
-- [ ] Pro/Contra, Notizen und Links pro Option
-- [ ] Zeitstrahl mit Fristen und Infotagen: nur Termine mit offiziellem Link, Unbestätigtes bleibt leer
-- [ ] Vorschlagspakete für Optionen und Kriterien
-- [ ] Tests: Punktzahl, Ranking, Analyse
+- [x] Ranking-Diagramm und Analyse «Was müsste sich ändern, damit Option X gewinnt?»
+- [x] Pro/Contra, Notizen und Links pro Option
+- [x] Zeitstrahl mit Fristen und Infotagen: nur Termine mit offiziellem Link, Unbestätigtes bleibt leer
+- [x] Vorschlagspakete für Optionen und Kriterien
+- [x] Tests: Punktzahl, Ranking, Analyse
+
+**Stand Phase 7:**
+- Punktzahl = gewichteter Schnitt der Bewertungen über die bewerteten Kriterien mit Gewicht > 0. Gleichstand ergibt denselben Platz. Unvollständige Optionen zeigen «x von y Kriterien bewertet».
+- Die Analyse sucht für die gewählte Option die kleinste einzelne Änderung: eine Bewertung anheben (auch ein offenes Kriterium bewerten) oder ein Gewicht verschieben (0–10). Dazu kommen die Kriterien, in denen die Rivalin besser abschneidet. Gerechnet wird durch Ausprobieren, also auch mit unvollständigen Bewertungen korrekt.
+- `/kompass` mit den Ansichten Ranking, Bewerten und Zeitstrahl, dazu `/kompass/option/:id` mit Bewertung, Pro & Contra, Notizen (automatisch gespeichert), Links (nur http/https) und eigenen Terminen.
+- Vorschläge: 6 Optionen und 10 Kriterien aus der SPEC. Termine (Recherche November 2026, offizielle Seiten):
+  - ETH, UZH und HSG: Anmeldeschluss Bachelor mit Schweizer Maturität jeweils am 30. April
+  - ETH-Infotage: 8. und 9. September 2027
+  - UZH-Infotag: Datum offen
+  - Stanford MS&E: Datum offen, mit Hinweis auf die Frist vom 1. Dezember 2026 für den Start im Herbst 2027
+- 163 Unit-Tests und 8 End-to-End-Tests.
 
 ### Phase 8 – Feinschliff
 - [ ] Barrierefreiheit: Tastatur, Fokus, Kontrast, Labels für Screenreader

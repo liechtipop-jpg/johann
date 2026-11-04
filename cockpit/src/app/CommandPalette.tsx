@@ -148,6 +148,22 @@ function buildCommands(navigate: NavigateFunction, subjects: Subject[]): Command
       run: go('/fokus?vorlage=fce'),
     },
     {
+      id: 'go:compass-rate',
+      label: 'Kompass: Bewerten',
+      group: 'Seite',
+      icon: NAV_ITEMS[6].icon,
+      keywords: 'studienwahl matrix kriterien',
+      run: go('/kompass?tab=bewerten'),
+    },
+    {
+      id: 'go:compass-timeline',
+      label: 'Kompass: Zeitstrahl',
+      group: 'Seite',
+      icon: NAV_ITEMS[6].icon,
+      keywords: 'fristen infotage anmeldung',
+      run: go('/kompass?tab=zeitstrahl'),
+    },
+    {
       id: 'go:subjects',
       label: 'Fächer verwalten',
       group: 'Einstellungen',

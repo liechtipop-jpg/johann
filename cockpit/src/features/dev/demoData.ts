@@ -2,6 +2,7 @@ import type {
   Card,
   CardState,
   Countdown,
+  Criterion,
   Deck,
   Exam,
   FocusSession,
@@ -9,13 +10,17 @@ import type {
   KvRow,
   Piece,
   PracticeLog,
+  Rating,
   ReviewLog,
   Semester,
   StudySession,
+  StudyOption,
   Subject,
   SubjectColor,
   Task,
+  TimelineEvent,
 } from '@/db/schemas';
+import { CRITERION_SUGGESTIONS, OPTION_SUGGESTIONS, timelineSuggestions } from '@/features/compass/suggestions';
 import { ZH_GYM_RULES } from '@/features/grades/logic/rules';
 import { DEFAULT_PLAN_PREFS, generatePlan } from '@/features/planner/logic/studyplan';
 import { addDays, diffDays, suggestSemester, type ISODate } from '@/lib/dates';
@@ -37,6 +42,10 @@ export interface DemoData {
   pieces: Piece[];
   practiceLogs: PracticeLog[];
   focusSessions: FocusSession[];
+  studyOptions: StudyOption[];
+  criteria: Criterion[];
+  ratings: Rating[];
+  timeline: TimelineEvent[];
 }
 
 const DEMO_CARDS: Array<[string, string, string]> = [
@@ -378,6 +387,42 @@ export function buildDemoData(today: ISODate, now: number, theme: 'system' | 'li
     };
   });
 
+  // Studienwahl-Kompass: Vorschlagspaket mit fiktiven Gewichten und Bewertungen (die sechste Option erst teilweise bewertet)
+  const WEIGHTS = [8, 7, 6, 7, 5, 4, 6, 8, 9, 7];
+  const SCORES = [
+    [7, 8, 8, 8, 8, 5, 8, 9, 7, 6],
+    [9, 8, 9, 7, 7, 6, 5, 5, 8, 4],
+    [9, 9, 8, 5, 5, 5, 8, 9, 6, 6],
+    [8, 7, 7, 5, 6, 9, 7, 9, 7, 8],
+    [8, 7, 8, 5, 9, 8, 7, 9, 6, 7],
+    [7, 7, 7, 6, 6],
+  ];
+  const studyOptions: StudyOption[] = OPTION_SUGGESTIONS.map((o, i) => ({
+    id: id('opt', i),
+    name: o.name,
+    pros: i === 0 ? ['Technik und Management kombiniert', 'Starkes Netzwerk in der Industrie'] : [],
+    cons: i === 0 ? ['Viel Mathematik und Physik im Basisjahr'] : [],
+    notes: i === 0 ? 'Am Infotag die Fachstudienberatung nach dem Wechsel in den MTEC-Master fragen.' : '',
+    links: o.links,
+    order: i,
+    createdAt: now,
+  }));
+  const criteria: Criterion[] = CRITERION_SUGGESTIONS.map((name, i) => ({
+    id: id('crit', i),
+    name,
+    weight: WEIGHTS[i],
+    order: i,
+    createdAt: now,
+  }));
+  const ratings: Rating[] = SCORES.flatMap((row, o) =>
+    row.map((score, c) => ({ optionId: studyOptions[o].id, criterionId: criteria[c].id, score })),
+  );
+  const timeline: TimelineEvent[] = timelineSuggestions(today).map(({ optionKey, ...event }, i) => ({
+    ...event,
+    id: id('event', i),
+    optionId: optionKey ? studyOptions[OPTION_SUGGESTIONS.findIndex((o) => o.key === optionKey)].id : undefined,
+  }));
+
   const kv: KvRow[] = [
     { key: 'profile', value: { name: 'Alex' } },
     { key: 'appearance', value: { theme } },
@@ -404,5 +449,9 @@ export function buildDemoData(today: ISODate, now: number, theme: 'system' | 'li
     pieces,
     practiceLogs,
     focusSessions,
+    studyOptions,
+    criteria,
+    ratings,
+    timeline,
   };
 }
