@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ZH_GYM_RULES } from '@/features/grades/logic/rules';
+import { DEFAULT_PLAN_PREFS } from '@/features/planner/logic/studyplan';
 import { db as defaultDb, type CockpitDB } from './db';
 import type { KvRow } from './schemas';
 
@@ -25,6 +26,16 @@ export const SETTINGS = {
     lastExportAt: z.number().nullable().default(null),
     snoozedUntil: z.number().nullable().default(null),
     firstUseAt: z.number().nullable().default(null),
+  }),
+  studyPlan: z.object({
+    maxMinutesPerDay: z.number().int().min(15).max(600).default(DEFAULT_PLAN_PREFS.maxMinutesPerDay),
+    blockedWeekdays: z.array(z.number().int().min(0).max(6)).max(7).default(DEFAULT_PLAN_PREFS.blockedWeekdays),
+    blockedDates: z.array(z.iso.date()).max(366).default(DEFAULT_PLAN_PREFS.blockedDates),
+    effortMinutes: z
+      .object({ S: z.number().int().min(5).max(600), M: z.number().int().min(5).max(600), L: z.number().int().min(5).max(600) })
+      .default(DEFAULT_PLAN_PREFS.effortMinutes),
+    reviewOffsets: z.array(z.number().int().min(1).max(60)).max(10).default(DEFAULT_PLAN_PREFS.reviewOffsets),
+    repetitionDay: z.boolean().default(DEFAULT_PLAN_PREFS.repetitionDay),
   }),
   install: z.object({ hintDismissed: z.boolean().default(false) }),
   dev: z.object({ enabled: z.boolean().default(false), demoActive: z.boolean().default(false) }),

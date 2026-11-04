@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { db } from '@/db/db';
 import { useSubjects } from '@/db/hooks';
+import type { Task } from '@/db/schemas';
 import { cn } from '@/lib/cn';
 import { addDays, formatDate, isISODate, todayISO } from '@/lib/dates';
 import { newId } from '@/lib/ids';
@@ -9,11 +10,11 @@ import { FormActions } from '@/ui/FormActions';
 import { SubjectPicker } from '@/ui/Subject';
 import { toastUndo } from '@/ui/toast';
 
-export function TaskForm({ onDone, onBack }: { onDone: () => void; onBack?: () => void }) {
+export function TaskForm({ onDone, onBack, initial }: { onDone: () => void; onBack?: () => void; initial?: Task }) {
   const subjects = useSubjects();
-  const [title, setTitle] = useState('');
-  const [due, setDue] = useState('');
-  const [subjectId, setSubjectId] = useState<string | undefined>();
+  const [title, setTitle] = useState(initial?.title ?? '');
+  const [due, setDue] = useState(initial?.due ?? '');
+  const [subjectId, setSubjectId] = useState<string | undefined>(initial?.subjectId);
   const [error, setError] = useState<string>();
   const today = todayISO();
 
@@ -30,16 +31,21 @@ export function TaskForm({ onDone, onBack }: { onDone: () => void; onBack?: () =
       setError('Bitte beschreibe die Aufgabe.');
       return;
     }
-    const id = newId();
-    await db.tasks.add({
-      id,
-      title: title.trim(),
-      subjectId,
-      due: isISODate(due) ? due : undefined,
-      done: false,
-      createdAt: Date.now(),
-    });
-    toastUndo(isISODate(due) ? `Aufgabe bis ${formatDate(due, 'weekday')} gespeichert` : 'Aufgabe gespeichert', () => db.tasks.delete(id));
+    if (initial) {
+      await db.tasks.put({ ...initial, title: title.trim(), subjectId, due: isISODate(due) ? due : undefined });
+      toastUndo('Aufgabe geändert', () => db.tasks.put(initial));
+    } else {
+      const id = newId();
+      await db.tasks.add({
+        id,
+        title: title.trim(),
+        subjectId,
+        due: isISODate(due) ? due : undefined,
+        done: false,
+        createdAt: Date.now(),
+      });
+      toastUndo(isISODate(due) ? `Aufgabe bis ${formatDate(due, 'weekday')} gespeichert` : 'Aufgabe gespeichert', () => db.tasks.delete(id));
+    }
     onDone();
   }
 
@@ -83,7 +89,7 @@ export function TaskForm({ onDone, onBack }: { onDone: () => void; onBack?: () =
           <SubjectPicker label="Fach" subjects={subjects} value={subjectId} onChange={setSubjectId} allowNone />
         </fieldset>
       )}
-      <FormActions submitLabel="Aufgabe speichern" onBack={onBack} />
+      <FormActions submitLabel={initial ? 'Änderungen speichern' : 'Aufgabe speichern'} onBack={onBack} />
     </form>
   );
 }

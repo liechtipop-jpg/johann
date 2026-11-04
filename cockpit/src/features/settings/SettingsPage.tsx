@@ -12,6 +12,7 @@ import { SegmentedControl } from '@/ui/SegmentedControl';
 import { toast } from '@/ui/toast';
 import { DataSettings } from './DataSettings';
 import { SemestersSettings } from './SemestersSettings';
+import { StudyPlanSettings } from './StudyPlanSettings';
 import { SubjectsSettings } from './SubjectsSettings';
 
 const THEME_OPTIONS = [
@@ -61,6 +62,7 @@ export default function SettingsPage() {
         </Card>
         <SubjectsSettings />
         <SemestersSettings />
+        <StudyPlanSettings />
         <Card id="promotion" title="Promotionsregeln" description="Grundlage für den Promotionsrechner im Bereich Noten.">
           <PromotionRulesEditor value={settings.promotionRules} onChange={(rules) => void setSetting('promotionRules', rules)} />
         </Card>

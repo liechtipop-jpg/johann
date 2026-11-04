@@ -102,3 +102,38 @@ test('Noten: Zeugnisnote, Wunschnote und Promotion', async ({ page }) => {
   await expect(page.getByText('Doppelte Kompensation', { exact: true })).toBeVisible();
   await expect(page.getByRole('row', { name: /Physik/ })).toContainText('−1');
 });
+
+test('Prüfung mit Themen erzeugt einen Lernplan; Einheiten abhaken; .ics-Export', async ({ page }) => {
+  await page.goto('/willkommen');
+  await page.getByLabel('Wie heisst du?').fill('Test');
+  await page.getByRole('button', { name: 'Weiter' }).click();
+  await page.getByRole('button', { name: 'Französisch' }).click();
+  for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Weiter' }).click();
+  await page.getByRole('button', { name: 'Los geht’s' }).click();
+  await expect(page).toHaveURL(/\/$/);
+
+  await page.getByRole('button', { name: 'Schnell erfassen' }).click();
+  await page.getByRole('button', { name: /^Prüfung/ }).click();
+  await page.getByLabel('Titel').fill('Unité 4');
+  await page.getByLabel('Neues Thema').fill('Passé composé');
+  await page.keyboard.press('Enter');
+  await page.getByLabel('Neues Thema').fill('Vocabulaire');
+  await page.keyboard.press('Enter');
+  await page.getByRole('button', { name: 'Prüfung speichern' }).click();
+  await expect(page.getByText(/Lernplan mit \d+ Einheiten/)).toBeVisible();
+
+  await page.goto('/planer?tab=lernplan');
+  const first = page.getByRole('checkbox', { name: /erledigt$/ }).first();
+  await first.click();
+  await expect(first).toHaveAttribute('aria-checked', 'true');
+
+  await page.goto('/planer');
+  await page.getByRole('link', { name: /Unité 4/ }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Unité 4');
+  await expect(page.getByRole('img', { name: /Prozent gelernt/ })).toBeVisible();
+
+  const download = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Kalender' }).click();
+  const file = await download;
+  expect(file.suggestedFilename()).toMatch(/\.ics$/);
+});

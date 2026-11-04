@@ -12,6 +12,7 @@ import { Toaster } from './ui/Toaster';
 
 const TodayPage = lazy(() => import('./features/today/TodayPage'));
 const PlannerPage = lazy(() => import('./features/planner/PlannerPage'));
+const ExamDetailPage = lazy(() => import('./features/planner/ExamDetailPage'));
 const GradesPage = lazy(() => import('./features/grades/GradesPage'));
 const SubjectGradesPage = lazy(() => import('./features/grades/SubjectGradesPage'));
 const PromotionPage = lazy(() => import('./features/grades/PromotionPage'));
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <TodayPage /> },
       { path: 'planer', element: <PlannerPage /> },
+      { path: 'planer/pruefung/:examId', element: <ExamDetailPage /> },
       { path: 'noten', element: <GradesPage /> },
       { path: 'noten/fach/:subjectId', element: <SubjectGradesPage /> },
       { path: 'noten/promotion', element: <PromotionPage /> },

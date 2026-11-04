@@ -30,18 +30,22 @@ interface GradeFormProps {
   /** Bearbeiten statt neu erfassen */
   initial?: Grade;
   defaultSubjectId?: string;
+  /** Vorbelegung, z. B. «Note eintragen» bei einer Prüfung */
+  preset?: { subjectId?: string; title?: string; weight?: number; date?: string; examId?: string };
 }
 
-export function GradeForm({ onDone, onBack, initial, defaultSubjectId }: GradeFormProps) {
+export function GradeForm({ onDone, onBack, initial, defaultSubjectId, preset }: GradeFormProps) {
   const settings = useSettings();
   const subjects = useSubjects();
   const semesters = useSemesters();
   const navigate = useNavigate();
-  const [subjectId, setSubjectId] = useState<string | undefined>(initial?.subjectId ?? defaultSubjectId ?? settings.ui.lastSubjectId);
+  const [subjectId, setSubjectId] = useState<string | undefined>(
+    initial?.subjectId ?? preset?.subjectId ?? defaultSubjectId ?? settings.ui.lastSubjectId,
+  );
   const [valueText, setValueText] = useState(initial ? formatGrade(initial.value) : '');
-  const [weightText, setWeightText] = useState(initial ? String(initial.weight) : '1');
-  const [title, setTitle] = useState(initial?.title ?? '');
-  const [date, setDate] = useState(() => initial?.date ?? todayISO());
+  const [weightText, setWeightText] = useState(String(initial?.weight ?? preset?.weight ?? 1));
+  const [title, setTitle] = useState(initial?.title ?? preset?.title ?? '');
+  const [date, setDate] = useState(() => initial?.date ?? preset?.date ?? todayISO());
   const [semesterChoice, setSemesterChoice] = useState(initial?.semesterId ?? 'auto');
   const [errors, setErrors] = useState<{ value?: string; weight?: string; date?: string }>({});
 
@@ -92,8 +96,13 @@ export function GradeForm({ onDone, onBack, initial, defaultSubjectId }: GradeFo
       toastUndo(`Note ${formatGrade(value)} geändert`, () => db.grades.put(initial));
     } else {
       const id = newId();
-      await db.grades.add({ id, ...data, createdAt: Date.now() });
-      toastUndo(`Note ${formatGrade(value)} in ${subject.name} gespeichert`, () => db.grades.delete(id));
+      const examId = preset?.examId;
+      await db.grades.add({ id, ...data, examId, createdAt: Date.now() });
+      if (examId) await db.exams.update(examId, { gradeId: id });
+      toastUndo(`Note ${formatGrade(value)} in ${subject.name} gespeichert`, async () => {
+        await db.grades.delete(id);
+        if (examId) await db.exams.update(examId, { gradeId: undefined });
+      });
     }
     await patchSetting('ui', { lastSubjectId: subject.id });
     onDone();

@@ -1,7 +1,7 @@
 # PLAN – Cockpit
 
 Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
-**Status:** Phase 2 erledigt – wartet auf «weiter» für Phase 3.
+**Status:** Phase 3 erledigt – Arbeit läuft am Stück weiter (Auftrag: ohne Zwischenstopps).
 
 ---
 
@@ -70,19 +70,25 @@ Umsetzungsplan zu [SPEC.md](SPEC.md). Nach jeder Phase wird hier abgehakt.
 - Seiten: `/noten` (Übersicht mit Promotionskarte), `/noten/fach/:id` (Zeugnisnote, Wunschnote, Verlauf, Noten bearbeiten) und `/noten/promotion` (Ampel, Regelprüfung, Kompensationsbilanz, Promotionsfächer umschalten).
 - Diagramme: Recharts wird nur auf der Fachseite nachgeladen. Das Farbpaar für Plus/Minus ist mit dem Palette-Validator geprüft (hell und dunkel, Farbsehschwäche).
 
-### Phase 3 – Prüfungen, Aufgaben & Lernplan
-- [ ] Prüfungen: Fach, Titel, Datum (Zeit optional), Gewicht, Themen mit Aufwand S/M/L, Notizen. Nach der Prüfung «Note eintragen».
-- [ ] Aufgaben/Abgaben mit Fälligkeit, gruppiert nach Überfällig, Heute, Diese Woche, Später, Erledigt
-- [ ] Lernplan-Generator (Algorithmus unten), Tagesansicht, «Verpasstes neu verteilen» mit einem Tap
-- [ ] Einstellungen für den Lernplan:
+### Phase 3 – Prüfungen, Aufgaben & Lernplan ✅
+- [x] Prüfungen: Fach, Titel, Datum (Zeit optional), Gewicht, Themen mit Aufwand S/M/L, Notizen. Nach der Prüfung «Note eintragen».
+- [x] Aufgaben/Abgaben mit Fälligkeit, gruppiert nach Überfällig, Heute, Diese Woche, Später, Erledigt
+- [x] Lernplan-Generator (Algorithmus unten), Tagesansicht, «Verpasstes neu verteilen» mit einem Tap
+- [x] Einstellungen für den Lernplan:
   - max. Minuten pro Tag
   - gesperrte Wochentage und Daten
   - Minuten für S/M/L
   - Wiederholungsintervalle und Repetitionstag
-- [ ] .ics-Export einzeln oder alle, Erinnerung am Vortag
-- [ ] Tests:
+- [x] .ics-Export einzeln oder alle, Erinnerung am Vortag
+- [x] Tests:
   - Generator: Kapazität, Sperrtage, Wiederholungen, Repetitionstag, Überlauf
   - Neuverteilung und .ics
+
+**Stand Phase 3:**
+- Eine neue Prüfung mit Themen bekommt sofort einen Lernplan. Ändern sich Themen oder Datum, wird er angepasst; Erledigtes bleibt.
+- Mehrere Prüfungen teilen sich die tägliche Lernzeit.
+- Prüfungsseite `/planer/pruefung/:id`: Fortschrittsring, Themen, Lernplan, Notizen, «Note eintragen» (verknüpft Note und Prüfung), Export in den Kalender.
+- Lernplan-Tab mit «Verpasstes neu verteilen» (ein Tap, mit Rückgängig). Aufgaben lassen sich jetzt auch bearbeiten.
 
 ### Phase 4 – Karteikarten
 - [ ] Decks pro Fach: Sprache je Seite, Richtung (vorwärts, rückwärts, beide), Karten mit Beispielsatz

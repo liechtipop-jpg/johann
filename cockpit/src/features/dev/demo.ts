@@ -21,6 +21,7 @@ export async function enableDemo(db: CockpitDB): Promise<void> {
     await db.exams.bulkPut(data.exams);
     await db.tasks.bulkPut(data.tasks);
     await db.countdowns.bulkPut(data.countdowns);
+    await db.studySessions.bulkPut(data.studySessions);
   });
 }
 

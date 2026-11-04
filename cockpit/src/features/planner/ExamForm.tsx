@@ -3,11 +3,11 @@ import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { db } from '@/db/db';
 import { useSubjects } from '@/db/hooks';
-import type { Effort, Topic } from '@/db/schemas';
+import type { Effort, Exam, Topic } from '@/db/schemas';
 import { patchSetting } from '@/db/settings';
 import { useSettings } from '@/db/settingsContext';
 import { addDays, formatDate, isISODate, todayISO } from '@/lib/dates';
-import { parseWeight } from '@/lib/format';
+import { parseWeight, plural } from '@/lib/format';
 import { newId } from '@/lib/ids';
 import { Button, IconButton } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
@@ -16,18 +16,32 @@ import { FormActions } from '@/ui/FormActions';
 import { SegmentedControl } from '@/ui/SegmentedControl';
 import { SubjectPicker } from '@/ui/Subject';
 import { toastUndo } from '@/ui/toast';
+import { rebuildPlan } from './actions';
 import { EFFORT_OPTIONS } from './effort';
+import type { PlanResult } from './logic/studyplan';
 
-export function ExamForm({ onDone, onBack, defaultSubjectId }: { onDone: () => void; onBack?: () => void; defaultSubjectId?: string }) {
+function overflowNote(result: PlanResult): string {
+  return result.overflowMinutes > 0 ? ` (${result.overflowMinutes} min passen nicht)` : '';
+}
+
+interface ExamFormProps {
+  onDone: () => void;
+  onBack?: () => void;
+  defaultSubjectId?: string;
+  /** Bearbeiten statt neu erfassen */
+  initial?: Exam;
+}
+
+export function ExamForm({ onDone, onBack, defaultSubjectId, initial }: ExamFormProps) {
   const settings = useSettings();
   const subjects = useSubjects();
   const navigate = useNavigate();
-  const [subjectId, setSubjectId] = useState<string | undefined>(defaultSubjectId ?? settings.ui.lastSubjectId);
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState(() => addDays(todayISO(), 7));
-  const [time, setTime] = useState('');
-  const [weightText, setWeightText] = useState('1');
-  const [topics, setTopics] = useState<Topic[]>([]);
+  const [subjectId, setSubjectId] = useState<string | undefined>(initial?.subjectId ?? defaultSubjectId ?? settings.ui.lastSubjectId);
+  const [title, setTitle] = useState(initial?.title ?? '');
+  const [date, setDate] = useState(() => initial?.date ?? addDays(todayISO(), 7));
+  const [time, setTime] = useState(initial?.time ?? '');
+  const [weightText, setWeightText] = useState(initial?.weight !== undefined ? String(initial.weight) : '1');
+  const [topics, setTopics] = useState<Topic[]>(initial?.topics ?? []);
   const [draft, setDraft] = useState('');
   const [draftEffort, setDraftEffort] = useState<Effort>('M');
   const [errors, setErrors] = useState<{ title?: string; date?: string; weight?: string }>({});
@@ -80,19 +94,33 @@ export function ExamForm({ onDone, onBack, defaultSubjectId }: { onDone: () => v
     setErrors(next);
     if (Object.keys(next).length > 0 || weight === null) return;
     const pending = draft.trim() ? [...topics, { id: newId(), title: draft.trim().slice(0, 120), effort: draftEffort }] : topics;
-    const id = newId();
-    await db.exams.add({
-      id,
-      subjectId: subject.id,
-      title: title.trim(),
-      date,
-      time: time || undefined,
-      weight,
-      topics: pending,
-      createdAt: Date.now(),
-    });
+    const data = { subjectId: subject.id, title: title.trim(), date, time: time || undefined, weight, topics: pending };
     await patchSetting('ui', { lastSubjectId: subject.id });
-    toastUndo(`Prüfung «${title.trim()}» am ${formatDate(date, 'dayMonth')} gespeichert`, () => db.exams.delete(id));
+
+    if (initial) {
+      const sessionsBefore = await db.studySessions.where('examId').equals(initial.id).toArray();
+      await db.exams.put({ ...initial, ...data });
+      const planChanged = initial.date !== date || JSON.stringify(initial.topics) !== JSON.stringify(pending);
+      const result = planChanged && sessionsBefore.length + pending.length > 0 ? await rebuildPlan(initial.id) : null;
+      toastUndo(result ? `Prüfung geändert – Lernplan angepasst${overflowNote(result)}` : 'Prüfung geändert', () =>
+        db.transaction('rw', db.exams, db.studySessions, async () => {
+          await db.exams.put(initial);
+          await db.studySessions.where('examId').equals(initial.id).delete();
+          await db.studySessions.bulkPut(sessionsBefore);
+        }),
+      );
+    } else {
+      const id = newId();
+      await db.exams.add({ id, ...data, createdAt: Date.now() });
+      const result = pending.length > 0 ? await rebuildPlan(id) : null;
+      const plan = result && result.sessions.length > 0 ? ` – Lernplan mit ${plural(result.sessions.length, 'Einheit', 'Einheiten')}${overflowNote(result)}` : '';
+      toastUndo(`Prüfung am ${formatDate(date, 'dayMonth')} gespeichert${plan}`, () =>
+        db.transaction('rw', db.exams, db.studySessions, async () => {
+          await db.studySessions.where('examId').equals(id).delete();
+          await db.exams.delete(id);
+        }),
+      );
+    }
     onDone();
   }
 
@@ -179,7 +207,7 @@ export function ExamForm({ onDone, onBack, defaultSubjectId }: { onDone: () => v
         </div>
       </fieldset>
 
-      <FormActions submitLabel="Prüfung speichern" onBack={onBack} />
+      <FormActions submitLabel={initial ? 'Änderungen speichern' : 'Prüfung speichern'} onBack={onBack} />
     </form>
   );
 }

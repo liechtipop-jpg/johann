@@ -1,10 +1,11 @@
-import { CornerDownLeft, Download, Keyboard, Monitor, Moon, Plus, Search, Settings, Sun, type LucideIcon } from 'lucide-react';
+import { CornerDownLeft, Download, Keyboard, Monitor, Moon, Plus, RefreshCw, Search, Settings, Sun, type LucideIcon } from 'lucide-react';
 import { useEffect, useId, useMemo, useState, type KeyboardEvent } from 'react';
 import { useNavigate, type NavigateFunction } from 'react-router';
 import { useSubjects } from '@/db/hooks';
 import type { Subject } from '@/db/schemas';
 import { patchSetting } from '@/db/settings';
 import { exportBackup } from '@/features/backup/useBackup';
+import { redistributeAll } from '@/features/planner/actions';
 import { cn } from '@/lib/cn';
 import { Sheet } from '@/ui/Sheet';
 import { SubjectDot } from '@/ui/Subject';
@@ -62,6 +63,9 @@ function buildCommands(navigate: NavigateFunction, subjects: Subject[]): Command
       keywords: 'planer hausaufgaben abgaben',
       run: go('/planer?tab=aufgaben'),
     },
+    { id: 'go:plan', label: 'Lernplan', group: 'Seite', icon: NAV_ITEMS[1].icon, keywords: 'planer lerneinheiten heute', run: go('/planer?tab=lernplan') },
+    { id: 'plan:redistribute', label: 'Verpasstes neu verteilen', group: 'Aktion', icon: RefreshCw, keywords: 'lernplan verpasst', run: () => void redistributeAll() },
+    { id: 'go:planprefs', label: 'Lernplan-Einstellungen', group: 'Einstellungen', icon: Settings, keywords: 'lernzeit gesperrt wiederholung', run: go('/einstellungen#lernplan') },
     {
       id: 'go:subjects',
       label: 'Fächer verwalten',

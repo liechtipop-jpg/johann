@@ -1,5 +1,6 @@
-import type { Countdown, Exam, Grade, KvRow, Semester, Subject, SubjectColor, Task } from '@/db/schemas';
+import type { Countdown, Exam, Grade, KvRow, Semester, StudySession, Subject, SubjectColor, Task } from '@/db/schemas';
 import { ZH_GYM_RULES } from '@/features/grades/logic/rules';
+import { DEFAULT_PLAN_PREFS, generatePlan } from '@/features/planner/logic/studyplan';
 import { addDays, diffDays, suggestSemester, type ISODate } from '@/lib/dates';
 
 /** Fiktive Beispieldaten (Dev-Modus) – relativ zum heutigen Datum, ohne Zufall. */
@@ -11,6 +12,7 @@ export interface DemoData {
   exams: Exam[];
   tasks: Task[];
   countdowns: Countdown[];
+  studySessions: StudySession[];
 }
 
 const SUBJECTS: Array<[string, SubjectColor, boolean]> = [
@@ -138,6 +140,23 @@ export function buildDemoData(today: ISODate, now: number, theme: 'system' | 'li
     exam(5, 2, 'Use of English', -9, [['Phrasal verbs', 'M']]),
   ];
 
+  // Lernpläne, als hätte Alex vor vier Tagen angefangen: Vergangenes ist erledigt, eine Einheit wurde verpasst.
+  const planStart = addDays(today, -4);
+  const load: Record<string, number> = {};
+  const studySessions: StudySession[] = [];
+  for (const e of exams.filter((x) => x.date > today)) {
+    const plan = generatePlan({ examDate: e.date, today: planStart, topics: e.topics, prefs: DEFAULT_PLAN_PREFS, load });
+    plan.sessions.forEach((s, i) => {
+      load[s.date] = (load[s.date] ?? 0) + s.minutes;
+      studySessions.push({ ...s, id: id(`sess-${e.id}`, i), examId: e.id, done: s.date < today, doneAt: s.date < today ? now : undefined });
+    });
+  }
+  const missed = studySessions.filter((s) => s.date < today).at(-1);
+  if (missed) {
+    missed.done = false;
+    missed.doneAt = undefined;
+  }
+
   const task = (n: number, title: string, due: number | null, subject: number | null, done = false): Task => ({
     id: id('task', n),
     title,
@@ -172,5 +191,5 @@ export function buildDemoData(today: ISODate, now: number, theme: 'system' | 'li
     { key: 'dev', value: { enabled: true, demoActive: true } },
   ];
 
-  return { kv, subjects, semesters, grades, exams, tasks, countdowns };
+  return { kv, subjects, semesters, grades, exams, tasks, countdowns, studySessions };
 }
