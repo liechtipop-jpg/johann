@@ -212,7 +212,7 @@ export const de = {
       values: { size: { klassisch: 'Klassisch 9×9', mini: 'Mini 6×6' }, difficulty: { leicht: 'Leicht', mittel: 'Mittel', schwer: 'Schwer' } },
       grid: 'Sudoku-Gitter', cell: 'Zeile {r}, Spalte {c}', empty: 'leer', given: 'vorgegeben', notesOf: 'Notizen {list}', wrongCell: '{value} ist falsch',
       pad: 'Zahlen', notes: 'Notizen', erase: 'Löschen', eraseLong: 'Notizen im gewählten Feld löschen', hint: 'Tipp ({n})', time: 'Zeit', mistakes: 'Fehler {n}/{max}', left: 'noch {n}', digit: 'Zahl {d}',
-      solo: 'Fülle das Gitter!', race: 'Wettrennen – wer ist zuerst fertig?', watch: 'Du schaust zu.', out: 'Ausgeschieden – zu viele Fehler. Schau den anderen zu.',
+      solo: 'Fülle das Gitter!', race: 'Wer ist zuerst fertig?', watch: 'Du schaust zu.', out: 'Ausgeschieden – zu viele Fehler. Schau den anderen zu.',
       done: 'fertig', outShort: 'ausgeschieden', you: 'du', progress: '{filled} von {total}', team: 'Team {team}', finished: '{name} ist fertig!', outLog: '{name} ist ausgeschieden.',
       resultTime: 'Zeit {time}', resultLine: '{time} · {mistakes} Fehler', resultHints: 'Tipps: {n}', resultProgress: '{filled} von {total} Feldern · {mistakes} Fehler', levelHint: 'Die Stärke bestimmt, wie schnell der Computer ist.',
       rules: [
