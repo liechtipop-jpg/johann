@@ -12,5 +12,6 @@ export const RENDERERS = {
   zeichnen: () => import('./zeichnen.js'),
   wortraten: () => import('./wortraten.js'),
   ssp: () => import('./ssp.js'),
+  sudoku: () => import('./sudoku.js'),
 };
 export const CATEGORY_OF = (game) => game.category;

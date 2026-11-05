@@ -18,6 +18,8 @@
   color-scheme: light;
 }
 * { box-sizing: border-box; }
+/* hidden gilt immer – auch bei Elementen, deren Klasse eine eigene Anzeige setzt (z. B. .badge, .btn) */
+[hidden] { display: none !important; }
 html, body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.45 var(--font); -webkit-text-size-adjust: 100%; }
 body { min-height: 100dvh; overflow-x: hidden; }
 button, input, select, textarea { font: inherit; color: inherit; }
@@ -330,3 +332,58 @@ dialog.sheet::backdrop { background: rgb(5 7 12 / 0.6); }
 /* Wort-Raten auf dem Handy: Buchstabenfelder wachsen mit der Bildschirmbreite, kleinerer Ballon */
 .wl { width: clamp(20px, 7.4vw, 32px); height: clamp(32px, 10vw, 42px); font-size: clamp(17px, 5.6vw, 24px); }
 @media (max-width: 600px) { .balloon { width: 110px; height: 132px; } .word-row { gap: 4px; } }
+/* Sudoku: Gitter skaliert mit der Breite (Container-Einheiten), dicke Linien zwischen den Blöcken */
+.sudoku { --sd-ink: #d2b0ff; --sd-line: var(--line-2); --sd-box: var(--text-3); display: grid; gap: 12px; width: min(100%, 520px); }
+[data-theme='light'] .sudoku { --sd-ink: #6a2fc2; --sd-box: var(--text-2); }
+.sd-info { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.sd-time { font-weight: 800; font-size: 18px; }
+.sd-mist { color: var(--text-2); font-size: 14px; }
+.sd-mist.warn { color: var(--danger); font-weight: 700; }
+.sd-info .badge { margin-left: auto; }
+.sd-race { display: grid; gap: 8px; }
+.sd-race:empty { display: none; }
+.sd-side { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 10px; font-size: 14px; color: var(--text-2); }
+.sd-side.me { color: var(--text); font-weight: 700; }
+.sd-side.out { opacity: 0.6; }
+.sd-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sd-count { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sd-bar { grid-column: 1 / -1; height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; }
+.sd-bar i { display: block; height: 100%; width: var(--p, 0%); border-radius: inherit; background: var(--accent); transition: width 0.3s var(--ease); }
+.sd-side.red .sd-bar i { background: var(--red); }
+.sd-side.blue .sd-bar i { background: var(--blue); }
+.sd-side.done .sd-bar i { background: var(--ok); }
+.sd-grid { container-type: inline-size; position: relative; display: grid; border: 2px solid var(--sd-box); border-radius: 10px; overflow: hidden; background: var(--surface); user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.sd-row { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+.sd-cell { aspect-ratio: 1; min-width: 0; display: grid; place-items: center; padding: 0; margin: 0; border: 0; border-right: 1px solid var(--sd-line); border-bottom: 1px solid var(--sd-line); border-radius: 0; background: transparent; color: var(--text); font-weight: 600; font-size: clamp(15px, calc(58cqw / var(--n)), 40px); line-height: 1; font-variant-numeric: tabular-nums; cursor: pointer; }
+.sd-row:last-child .sd-cell { border-bottom: 0; }
+.sd-cell:last-child { border-right: 0; }
+.sd-lines { position: absolute; inset: 0; pointer-events: none; }
+.sd-lines i { position: absolute; background: var(--sd-box); }
+.sd-lines .v { top: 0; bottom: 0; width: 2px; left: calc(var(--at) - 1px); }
+.sd-lines .h { left: 0; right: 0; height: 2px; top: calc(var(--at) - 1px); }
+.sd-cell.given { font-weight: 800; }
+.sd-cell.mine { color: var(--sd-ink); }
+.sd-cell.reveal { color: var(--text-3); font-weight: 500; }
+.sd-cell.peer { background: var(--surface-2); }
+.sd-cell.same { background: color-mix(in srgb, var(--accent) 22%, var(--surface)); }
+.sd-cell.sel { background: color-mix(in srgb, var(--accent) 38%, var(--surface)); }
+.sd-cell.wrong { color: var(--danger); background: var(--red-soft); animation: sd-shake 0.35s; }
+.sd-cell:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; border-radius: 0; }
+.sd-notes { display: grid; grid-template-columns: repeat(var(--bc), 1fr); align-content: space-evenly; width: 100%; height: 100%; padding: 1px; }
+.sd-notes i { font-style: normal; font-weight: 650; font-size: clamp(8px, calc(19cqw / var(--n)), 15px); line-height: 1.15; text-align: center; color: var(--text-2); }
+.sd-pad { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 6px; }
+.sd-key { display: grid; place-items: center; align-content: center; gap: 2px; min-width: 0; height: 56px; padding: 0; border-radius: 12px; border: 1px solid var(--line-2); background: var(--surface-2); color: var(--text); font: inherit; cursor: pointer; touch-action: manipulation; }
+.sd-key b { font-size: 22px; line-height: 1; }
+.sd-key small { font-size: 11px; line-height: 1; color: var(--text-3); }
+.sd-key.marked { border-color: var(--accent); background: var(--accent-soft); }
+.sd-key:disabled { opacity: 0.4; cursor: default; }
+.sd-key:not(:disabled):hover { border-color: var(--accent); }
+.sd-pad.notes .sd-key { border-style: dashed; border-color: var(--accent); }
+.sd-pad.notes .sd-key b { font-size: 16px; color: var(--text-2); }
+.sd-tools { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.sd-tools .btn[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+.sd-msg { margin: 0; text-align: center; color: var(--text-2); }
+.sd-msg:empty { display: none; }
+.sd-ranking { margin: 0 0 4px; padding-left: 22px; text-align: left; display: grid; gap: 4px; }
+@keyframes sd-shake { 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+@media (max-width: 420px) { .sd-pad { gap: 4px; } .sd-key { height: 52px; border-radius: 10px; } .sd-key b { font-size: 20px; } }

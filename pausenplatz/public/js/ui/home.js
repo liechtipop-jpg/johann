@@ -127,6 +127,10 @@ export function playSheet(game, only) {
       ),
     );
   }
+  if (only !== 'room' && game.modes.includes('solo')) {
+    body.append(h('div', { class: 'panel' }, h('h3', {}, t('play.solo')), h('p', { class: 'tiny' }, t('play.soloHint')),
+      button(t('play.start'), { kind: 'block', iconName: 'user', onClick: () => { ref.close(); navigate(`/spiel/${game.id}?modus=solo&opt=${encodeURIComponent(JSON.stringify(state.options))}`); } })));
+  }
   if (only !== 'room' && game.modes.includes('ai')) {
     body.append(h('div', { class: 'panel' }, h('h3', {}, t('play.ai')), h('p', { class: 'tiny' }, t('play.aiHint')),
       h('div', { class: 'field' }, h('span', {}, t('play.level')), seg(['leicht', 'mittel', 'schwer'].map((l) => [l, t(`play.levels.${l}`)]), state.level, (l) => (state.level = l), t('play.level'))),

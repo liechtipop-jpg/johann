@@ -8,6 +8,7 @@ import viergewinnt from './viergewinnt.js';
 import ultimate from './ultimate.js';
 import wortraten from './wortraten.js';
 import ssp from './ssp.js';
+import sudoku from './sudoku.js';
 
-export const AI = { tictactoe, muehle, schiffe, schach, poker, viergewinnt, ultimate, wortraten, ssp };
+export const AI = { tictactoe, muehle, schiffe, schach, poker, viergewinnt, ultimate, wortraten, ssp, sudoku };
 export const hasAi = (gameId) => Boolean(AI[gameId]);

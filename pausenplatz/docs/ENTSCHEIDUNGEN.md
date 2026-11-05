@@ -73,6 +73,15 @@ Der Auftrag liess einige Punkte offen. Hier steht, wie sie gelöst wurden und wo
     - **Turnier:** Für ein volles K.-o.-Turnier gibt es Freilose nur in der ersten Runde. Ein Unentschieden wird wiederholt.
     - **Zeit:** Pro Wurf gibt es 20 Sekunden, danach wählt die App zufällig. Das ist der faire Ersatzzug.
     - **Modi:** Teams sind nicht vorgesehen, denn der Auftrag nennt 1v1 und die Gruppe.
+28. **Sudoku (nachträglich gewünscht):**
+    - **Modi:** Allein, 1 gegen 1 und 2 gegen 2 wie gewünscht. Dazu kommen die Gruppe (jede Person für sich, bis 16) und das Wettrennen gegen den Computer, weil beides ohne Mehraufwand aus denselben Regeln folgt.
+    - **Rätsel:** Jedes Rätsel wird neu erzeugt, hat genau eine Lösung und ist ohne Raten lösbar. «Leicht» und «Mittel» brauchen nur Singles, «Schwer» zusätzlich Block-Linien-Regeln und nackte Paare. Es gibt das klassische 9×9 und ein Mini-Gitter 6×6 für kurze Pausen.
+    - **Wettrennen:** Alle lösen dasselbe Rätsel. Darum sieht man von den anderen nur den Fortschritt, nie ihre Zahlen, und die Lösung kommt erst am Ende. Wer zuerst fertig ist, gewinnt. Scheiden alle anderen wegen zu vieler Fehler aus, gewinnt die Seite, die übrig bleibt.
+    - **Sofort prüfen:** Falsche Zahlen bleiben nicht stehen und zählen als Fehler (3, 5 oder 10 erlaubt). So endet niemand mit einem vollen, aber falschen Gitter, und blindes Probieren lohnt sich nicht.
+    - **2 gegen 2:** Das Team teilt ein Gitter samt Notizen und Fehlern. Keine Staffel, weil gemeinsames Lösen die natürliche Teamform ist.
+    - **Tipps nur allein:** Im Wettrennen würden Tipps nur ein paar Felder verschenken, die alle gleich nutzen.
+    - **Computer:** Er kennt die Lösung, setzt aber nur Felder, die man gerade logisch herausfinden kann, und macht nie Fehler. Die Stärke bestimmt sein Tempo, anfangs langsamer, gegen Ende schneller. Das Spielmodul hält das Tempo selbst, weil die KI für jeden Zug sonst nur ein paar Millisekunden bräuchte.
+    - **Keine Ersatzzüge:** Für getrennte oder gegangene Personen zieht niemand (`standIn: false`). Zufällige Ersatzzüge würden im Sudoku vor allem Fehler machen und im Team die anderen mit ausscheiden lassen.
 
 ## Betrieb
 

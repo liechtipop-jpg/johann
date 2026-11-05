@@ -62,7 +62,7 @@ export function mountGame({ session, gameId, room, online, localPlayers = [], on
     const custom = renderer.turnText?.(v, payload);
     if (payload.result.over) turnEl.textContent = '';
     else if (custom) turnEl.textContent = custom;
-    else if (mine) turnEl.textContent = online || session.kind === 'ai' ? t('game.yourTurn') : t('game.localTurn', { name: nameOf(meId()) });
+    else if (mine) turnEl.textContent = online || session.kind !== 'local' ? t('game.yourTurn') : t('game.localTurn', { name: nameOf(meId()) });
     else if (v.toMove) turnEl.textContent = session.kind === 'ai' && !online ? t('game.thinking') : t('game.theirTurn', { name: nameOf(v.toMove) });
     else turnEl.textContent = t('game.waiting');
     turnEl.classList.toggle('me', mine);
@@ -92,13 +92,15 @@ export function mountGame({ session, gameId, room, online, localPlayers = [], on
     const me = meId();
     const won = r.winners.includes(me);
     const isPlayer = people().some((p) => p.id === me);
-    if (!recorded && isPlayer && (online || session.kind === 'ai')) {
+    if (!recorded && isPlayer && (online || session.kind !== 'local')) {
       store.record(gameId, won);
       recorded = true;
     }
     play(won ? 'win' : 'lose');
     const winnerTeam = online ? current.lastResult?.winnerTeam : null;
-    const title = !r.winners.length ? t('game.draw') : online && winnerTeam && current.mode !== 'group' ? t('game.teamWins', { team: t(`teams.${winnerTeam}`) }) : won && (online || session.kind === 'ai') ? t('game.won') : t('game.winner', { name: r.winners.map(nameOf).join(', ') });
+    // Ohne Gewinner: unentschieden – ausser das Spiel meldet ausdrücklich eine Niederlage (z. B. Sudoku allein).
+    const draw = !r.winners.length && !r.lost;
+    const title = draw ? t('game.draw') : r.lost && !r.winners.length ? t('game.lost') : online && winnerTeam && current.mode !== 'group' ? t('game.teamWins', { team: t(`teams.${winnerTeam}`) }) : won && (online || session.kind !== 'local') ? t('game.won') : t('game.winner', { name: r.winners.map(nameOf).join(', ') });
     const reason = t(`games.${gameId}.reasons.${r.reason}`);
     const buttons = h('div', { class: 'stack' });
     if (online) {
@@ -113,7 +115,7 @@ export function mountGame({ session, gameId, room, online, localPlayers = [], on
         button(t('app.back'), { kind: 'ghost block', onClick: () => navigate('/') }));
     }
     overlay = h('div', { class: 'overlay', role: 'dialog', 'aria-modal': 'true', 'aria-label': title },
-      h('div', { class: 'result-card' }, h('div', { class: 'big', 'aria-hidden': 'true' }, !r.winners.length ? '🤝' : won ? '🏆' : '🎲'), h('h2', {}, title), reason !== `games.${gameId}.reasons.${r.reason}` ? h('p', { class: 'muted' }, reason) : null,
+      h('div', { class: 'result-card' }, h('div', { class: 'big', 'aria-hidden': 'true' }, draw ? '🤝' : won ? '🏆' : '🎲'), h('h2', {}, title), reason !== `games.${gameId}.reasons.${r.reason}` ? h('p', { class: 'muted' }, reason) : null,
         renderer.resultExtra?.(payload) ?? null,
         online && current.mode !== 'group' ? h('p', { class: 'badge' }, `${t('teams.red')} ${current.series.red} : ${current.series.blue} ${t('teams.blue')}`) : null,
         buttons,

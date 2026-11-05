@@ -30,6 +30,12 @@ Budget-Vorgabe: max. 39 Dollar → sparsam arbeiten, Pflichtspiele zuerst (siehe
 - [x] GitHub-Workflow (Tests und Docker-Image), docker-compose.yml, render.yaml
 - [x] Gesamttest (109/109), Browser-Test aller 12 Spiele (375 px und 1280 px, ohne Konsolenfehler), ZIP, Commit, Push
 
+## Phase 9 – Sudoku
+- [x] Generator (eindeutig, ohne Raten lösbar; 9×9 und 6×6; drei Stufen), Spielmodul, Tests
+- [x] Allein (Tipps), 1v1 und Gruppe als Wettrennen, 2v2 mit gemeinsamem Gitter, gegen den Computer
+- [x] Darstellung mit Notizen, Tastatur, Fortschritt der anderen; Browser-Test 375 px und 1280 px, online und lokal
+- [x] Keine Ersatzzüge für Abwesende im Wettrennen (Servertest)
+
 ## Phase 6 – Feinschliff (PWA/Offline, Barrierefreiheit, Töne)
 - [x] erledigt
 

@@ -17,16 +17,17 @@ Eine Spiele-Website für Pausen und Unterricht: Freunde mit einem Raumcode einla
 | **Zeichnen & Raten** (Striche live auf allen Geräten, 362 Begriffe in drei Stufen, Buchstabentipps) | Gruppe, 2v2, 3v3 | – |
 | **Wort-Raten** (wie Galgenmännchen, aber mit einem Ballon; Wort von der App oder von Mitspielenden) | Gruppe, 2v2, 3v3, gegen KI | leicht / mittel / schwer |
 | **Schere, Stein, Papier** (Best of 3 oder 5, in der Gruppe als Turnier mit Turnierbaum) | 1v1, Gruppe, gegen KI | leicht / mittel / schwer |
+| **Sudoku** (klassisch 9×9 oder Mini 6×6, jedes Rätsel ohne Raten lösbar; Notizen, Tipps allein; im Wettrennen sieht man nur den Fortschritt der anderen) | allein, 1v1, 2v2 (Team teilt ein Gitter), Gruppe, gegen KI | langsam bis schnell (leicht / mittel / schwer) |
 | **Tic-Tac-Toe** | 1v1, gegen KI, lokal | leicht / mittel / schwer |
 
 Dazu kommen:
 
 - **Räume:** Code wie `K7M-2QX`, Link `/r/K7M2QX` und QR-Code. Es gibt Teams Rot und Blau, Bereit-Häkchen, Zuschauer und Host-Werkzeuge (Plätze tauschen, mischen, mit Bots auffüllen, entfernen, Raum abschliessen, Chat ausschalten). Wer entfernt wurde, kommt weder mit demselben Browser noch unter demselben Namen zurück.
-- **Verbindungsabbruch:** Wer die Verbindung verliert, kann 3 Minuten lang zurückkehren. Fehlende Spieler ersetzt ein Bot.
+- **Verbindungsabbruch:** Wer die Verbindung verliert, kann 3 Minuten lang zurückkehren. Fehlende Spieler ersetzt ein Bot. Ausnahme: Im Sudoku-Wettrennen zieht niemand für Abwesende, ihre Seite bleibt einfach stehen.
 - **Nach der Partie:** Revanche mit getauschten Seiten, ein anderes Spiel wählen und Serienstand.
 - **Chat:** im Raum oder nur im Team, mit Reaktionen. Ein Filter für Schimpfwörter auf Deutsch, Schweizerdeutsch und Englisch ist eingebaut. Man kann einzelne Personen stummschalten.
 - **Oberfläche:** dunkles und helles Design, für Handy bis Grossbildschirm, mit Tastatur bedienbar.
-- **Installierbar als App (PWA):** Spiele gegen die KI und lokale Spiele laufen auch offline. Die Statistik bleibt nur im eigenen Browser.
+- **Installierbar als App (PWA):** Spiele gegen die KI, Sudoku allein und lokale Spiele laufen auch offline. Die Statistik bleibt nur im eigenen Browser.
 
 ## Lokal starten
 

@@ -57,12 +57,12 @@ export function askAi(gameId, view, legal, level, playerId) {
   });
 }
 
-/** Lokales Spiel: das gleiche Spielmodul wie auf dem Server, KI im Web Worker. */
+/** Lokales Spiel: das gleiche Spielmodul wie auf dem Server, KI im Web Worker. kind: 'ai', 'local' (zu zweit) oder 'solo'. */
 export class LocalSession {
-  constructor(gameId, { players, options = {}, aiPlayers = {}, humans = [] }) {
+  constructor(gameId, { players, options = {}, aiPlayers = {}, humans = [], kind }) {
     this.gameId = gameId;
     this.game = getGame(gameId);
-    this.kind = Object.keys(aiPlayers).length ? 'ai' : 'local';
+    this.kind = kind ?? (Object.keys(aiPlayers).length ? 'ai' : 'local');
     this.players = players;
     this.aiPlayers = aiPlayers;
     this.humans = humans;

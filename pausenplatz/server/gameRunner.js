@@ -26,7 +26,7 @@ export class GameSession {
       .filter(({ s }) => s.playerId)
       .map(({ seat, s }) => {
         const p = this.room.players.get(s.playerId);
-        return { id: p.id, name: p.name, team: s.team, seat, isBot: p.isBot };
+        return { id: p.id, name: p.name, team: s.team, seat, isBot: p.isBot, botLevel: p.botLevel };
       });
   }
 
@@ -129,10 +129,12 @@ export class GameSession {
       const player = this.room.players.get(id);
       const legal = this.game.getLegalActions(this.state, id);
       if (!legal.length) continue;
-      const auto = player.isBot || player.gone;
+      // Wettrennen (standIn: false): Für abwesende Personen zieht niemand – ihre Seite bleibt einfach stehen.
+      const standIn = this.game.standIn !== false;
+      const auto = player.isBot || (player.gone && standIn);
       if (auto && !this.pending.has(id)) {
         this.pending.set(id, setTimeout(() => this.autoMove(id, player.botLevel ?? 'mittel'), config.botDelayMs));
-      } else if (!auto && !player.connected && !this.fallback.has(id)) {
+      } else if (!auto && standIn && !player.connected && !this.fallback.has(id)) {
         this.fallback.set(id, setTimeout(() => {
           this.fallback.delete(id);
           if (!player.connected) this.autoMove(id, 'mittel');
